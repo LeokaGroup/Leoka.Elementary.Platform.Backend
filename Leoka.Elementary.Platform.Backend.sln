@@ -2,6 +2,24 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Backend", "Leoka.Elementary.Platform.Backend\Leoka.Elementary.Platform.Backend.csproj", "{09F4BAB8-2BA0-49CC-B996-28E73256BB51}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Models", "Leoka.Elementary.Platform.Models\Leoka.Elementary.Platform.Models.csproj", "{B41F531E-7EFA-40CC-9EF7-7CBE456D0C6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Abstractions", "Leoka.Elementary.Platform.Abstractions\Leoka.Elementary.Platform.Abstractions.csproj", "{A3F64EB6-CBAC-4CB5-B1B4-76CE837B387A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Base", "Leoka.Elementary.Platform.Base\Leoka.Elementary.Platform.Base.csproj", "{F94CB760-0BB7-4434-B008-7A8357D2B9B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Core", "Leoka.Elementary.Platform.Core\Leoka.Elementary.Platform.Core.csproj", "{0CDDBB87-5896-4130-B0D5-15DF0145574D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Configurator", "Leoka.Elementary.Platform.Configurator\Leoka.Elementary.Platform.Configurator.csproj", "{BBFB2AAD-8D08-4C11-B002-536FE7959883}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Controllers", "Leoka.Elementary.Platform.Controllers\Leoka.Elementary.Platform.Controllers.csproj", "{0D0C43FC-952A-419E-8011-979AB6EBD6D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Integrations", "Leoka.Elementary.Platform.Integrations\Leoka.Elementary.Platform.Integrations.csproj", "{D8673294-02CB-49E5-AF61-9FA78D10AA17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Services", "Leoka.Elementary.Platform.Services\Leoka.Elementary.Platform.Services.csproj", "{60DF3D61-A90B-4E06-8EDB-66841A899088}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Tests", "Leoka.Elementary.Platform.Tests\Leoka.Elementary.Platform.Tests.csproj", "{5C09DE3A-11AE-4CCA-8F68-A131B58248DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +30,41 @@ Global
 		{09F4BAB8-2BA0-49CC-B996-28E73256BB51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09F4BAB8-2BA0-49CC-B996-28E73256BB51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09F4BAB8-2BA0-49CC-B996-28E73256BB51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B41F531E-7EFA-40CC-9EF7-7CBE456D0C6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B41F531E-7EFA-40CC-9EF7-7CBE456D0C6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B41F531E-7EFA-40CC-9EF7-7CBE456D0C6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B41F531E-7EFA-40CC-9EF7-7CBE456D0C6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3F64EB6-CBAC-4CB5-B1B4-76CE837B387A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3F64EB6-CBAC-4CB5-B1B4-76CE837B387A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3F64EB6-CBAC-4CB5-B1B4-76CE837B387A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3F64EB6-CBAC-4CB5-B1B4-76CE837B387A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F94CB760-0BB7-4434-B008-7A8357D2B9B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F94CB760-0BB7-4434-B008-7A8357D2B9B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F94CB760-0BB7-4434-B008-7A8357D2B9B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F94CB760-0BB7-4434-B008-7A8357D2B9B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0CDDBB87-5896-4130-B0D5-15DF0145574D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0CDDBB87-5896-4130-B0D5-15DF0145574D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0CDDBB87-5896-4130-B0D5-15DF0145574D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0CDDBB87-5896-4130-B0D5-15DF0145574D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBFB2AAD-8D08-4C11-B002-536FE7959883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBFB2AAD-8D08-4C11-B002-536FE7959883}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBFB2AAD-8D08-4C11-B002-536FE7959883}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBFB2AAD-8D08-4C11-B002-536FE7959883}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D0C43FC-952A-419E-8011-979AB6EBD6D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D0C43FC-952A-419E-8011-979AB6EBD6D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D0C43FC-952A-419E-8011-979AB6EBD6D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D0C43FC-952A-419E-8011-979AB6EBD6D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8673294-02CB-49E5-AF61-9FA78D10AA17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8673294-02CB-49E5-AF61-9FA78D10AA17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8673294-02CB-49E5-AF61-9FA78D10AA17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8673294-02CB-49E5-AF61-9FA78D10AA17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60DF3D61-A90B-4E06-8EDB-66841A899088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60DF3D61-A90B-4E06-8EDB-66841A899088}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60DF3D61-A90B-4E06-8EDB-66841A899088}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60DF3D61-A90B-4E06-8EDB-66841A899088}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C09DE3A-11AE-4CCA-8F68-A131B58248DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C09DE3A-11AE-4CCA-8F68-A131B58248DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C09DE3A-11AE-4CCA-8F68-A131B58248DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C09DE3A-11AE-4CCA-8F68-A131B58248DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

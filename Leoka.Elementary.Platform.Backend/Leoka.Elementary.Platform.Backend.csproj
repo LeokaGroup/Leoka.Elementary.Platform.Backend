@@ -11,7 +11,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers" />
+      <ProjectReference Include="..\Leoka.Elementary.Platform.Controllers\Leoka.Elementary.Platform.Controllers.csproj" />
+      <ProjectReference Include="..\Leoka.Elementary.Platform.Core\Leoka.Elementary.Platform.Core.csproj" />
+      <ProjectReference Include="..\Leoka.Elementary.Platform.Models\Leoka.Elementary.Platform.Models.csproj" />
+      <ProjectReference Include="..\Leoka.Elementary.Platform.Services\Leoka.Elementary.Platform.Services.csproj" />
     </ItemGroup>
 
 </Project>
