@@ -2,7 +2,7 @@
 
 # Стек проекта бэка:
 <strong>Серверный язык:</strong> C#, ASP.NET Core Web API (.NET 6).<br/>
-<strong>Tests:</strong> xUnit (юнит-тесты + интеграционные).<br/>
+<strong>Tests:</strong> NUnit (юнит-тесты + интеграционные).<br/>
 <strong>ORM:</strong> LINQ, Entity Framework Core.<br/>
 <strong>БД:</strong> Postgres.<br/>
 <strong>DI:</strong> Autofac.<br/>
