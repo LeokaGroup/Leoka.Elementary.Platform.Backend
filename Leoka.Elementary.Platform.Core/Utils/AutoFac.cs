@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Autofac;
 using Leoka.Elementary.Platform.Core.Attributes;
+using Leoka.Elementary.Platform.Core.Data;
+using Microsoft.EntityFrameworkCore;
 using Module = Autofac.Module;
 
 namespace Leoka.Elementary.Platform.Core.Utils;
@@ -14,107 +16,56 @@ public static class AutoFac
     /// <summary>
     /// Инициализация контейнера
     /// </summary>
-    /// <param name="containerBuilderHandler">Делегат для дополнительной инициализации контейнера</param>
     public static void Init(ContainerBuilder b)
     {
-        // _builder = new ContainerBuilder();
-        //
-        // var assemblies1 =
-        //     GetAssembliesFromApplicationBaseDirectory(x => 
-        //         x.FullName.StartsWith("Leoka.Elementary.Platform.Services"));
-        //
-        // var assemblies2 =
-        //     GetAssembliesFromApplicationBaseDirectory(x => 
-        //         x.FullName.StartsWith("Leoka.Elementary.Platform.Mailings"));
-        //
-        // var assemblies3 =
-        //     GetAssembliesFromApplicationBaseDirectory(x => 
-        //         x.FullName.StartsWith("Leoka.Elementary.Platform.FTP"));
-        //
-        // var assemblies4 =
-        //     GetAssembliesFromApplicationBaseDirectory(x => 
-        //         x.FullName.StartsWith("Leoka.Elementary.Platform.Base"));
-        //
-        // var assemblies5 =
-        //     GetAssembliesFromApplicationBaseDirectory(x =>
-        //         x.FullName.StartsWith("Leoka.Elementary.Platform.Integrations"));
-        //
-        // var assemblies6 =
-        //     GetAssembliesFromApplicationBaseDirectory(x =>
-        //         x.FullName.StartsWith("Leoka.Elementary.Platform.Commerce"));
-        //
-        // var assemblies7 =
-        //     GetAssembliesFromApplicationBaseDirectory(x =>
-        //         x.FullName.StartsWith("Leoka.Elementary.Platform.Messaging"));
-        //
-        // var assemblies8 =
-        //     GetAssembliesFromApplicationBaseDirectory(x =>
-        //         x.FullName.StartsWith("Leoka.Elementary.Platform.Configurator"));
-        //
-        // _builder.RegisterAssemblyTypes(assemblies1).AsImplementedInterfaces();
-        // _builder.RegisterAssemblyTypes(assemblies2).AsImplementedInterfaces();
-        // _builder.RegisterAssemblyTypes(assemblies3).AsImplementedInterfaces();
-        // _builder.RegisterAssemblyTypes(assemblies4).AsImplementedInterfaces();
-        // _builder.RegisterAssemblyTypes(assemblies5).AsImplementedInterfaces();
-        // _builder.RegisterAssemblyTypes(assemblies6).AsImplementedInterfaces();
-        // _builder.RegisterAssemblyTypes(assemblies7).AsImplementedInterfaces();
-        // _builder.RegisterAssemblyTypes(assemblies8).AsImplementedInterfaces();
-        //
-        // var assemblies = assemblies1
-        //     .Union(assemblies2)
-        //     .Union(assemblies3)
-        //     .Union(assemblies4)
-        //     .Union(assemblies5)
-        //     .Union(assemblies6)
-        //     .Union(assemblies7)
-        //     .Union(assemblies8);
-        //
-        // _typeModules = (from assembly in assemblies
-        //     from type in assembly.GetTypes()
-        //     where type.IsClass && type.GetCustomAttribute<CommonModuleAttribute>() != null
-        //     select type).ToArray();
-        //
-        // containerBuilderHandler?.Invoke(_builder);
-        //
-        // foreach (var module in _typeModules)
-        // {
-        //     _builder.RegisterModule(Activator.CreateInstance(module) as Module);
-        // }
-        //
-        // _container = _builder.Build();
-        //
-        // return _container;
-        
+        RegisterAllAssemblyTypes(b);
+    }
+
+    private static Assembly[] GetAssembliesFromApplicationBaseDirectory(Func<AssemblyName, bool> condition)
+    {
+        var baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
+        Func<string, bool> isAssembly = file =>
+            string.Equals(Path.GetExtension(file), ".dll", StringComparison.OrdinalIgnoreCase);
+
+        return Directory.GetFiles(baseDirectoryPath)
+            .Where(isAssembly)
+            .Where(f => condition(AssemblyName.GetAssemblyName(f)))
+            .Select(Assembly.LoadFrom)
+            .ToArray();
+    }
+
+    private static void RegisterAllAssemblyTypes(ContainerBuilder b)
+    {
         var assemblies1 =
-            AutoFac.GetAssembliesFromApplicationBaseDirectory(x => 
+            GetAssembliesFromApplicationBaseDirectory(x =>
                 x.FullName.StartsWith("Leoka.Elementary.Platform.Services"));
 
         var assemblies2 =
-            AutoFac.GetAssembliesFromApplicationBaseDirectory(x => 
+            GetAssembliesFromApplicationBaseDirectory(x =>
                 x.FullName.StartsWith("Leoka.Elementary.Platform.Mailings"));
 
         var assemblies3 =
-            AutoFac.GetAssembliesFromApplicationBaseDirectory(x => 
+            GetAssembliesFromApplicationBaseDirectory(x =>
                 x.FullName.StartsWith("Leoka.Elementary.Platform.FTP"));
 
         var assemblies4 =
-            AutoFac.GetAssembliesFromApplicationBaseDirectory(x => 
+            GetAssembliesFromApplicationBaseDirectory(x =>
                 x.FullName.StartsWith("Leoka.Elementary.Platform.Base"));
 
         var assemblies5 =
-            AutoFac.GetAssembliesFromApplicationBaseDirectory(x =>
+            GetAssembliesFromApplicationBaseDirectory(x =>
                 x.FullName.StartsWith("Leoka.Elementary.Platform.Integrations"));
 
         var assemblies6 =
-            AutoFac.GetAssembliesFromApplicationBaseDirectory(x =>
+            GetAssembliesFromApplicationBaseDirectory(x =>
                 x.FullName.StartsWith("Leoka.Elementary.Platform.Commerce"));
 
         var assemblies7 =
-            AutoFac.GetAssembliesFromApplicationBaseDirectory(x =>
+            GetAssembliesFromApplicationBaseDirectory(x =>
                 x.FullName.StartsWith("Leoka.Elementary.Platform.Messaging"));
 
         var assemblies8 =
-            AutoFac.GetAssembliesFromApplicationBaseDirectory(x =>
+            GetAssembliesFromApplicationBaseDirectory(x =>
                 x.FullName.StartsWith("Leoka.Elementary.Platform.Configurator"));
 
         b.RegisterAssemblyTypes(assemblies1).AsImplementedInterfaces();
@@ -140,25 +91,10 @@ public static class AutoFac
             where type.IsClass && type.GetCustomAttribute<CommonModuleAttribute>() != null
             select type).ToArray();
 
-        // containerBuilderHandler?.Invoke(b);
-
         foreach (var module in _typeModules)
         {
             b.RegisterModule(Activator.CreateInstance(module) as Module);
         }
-    }
-
-    public static Assembly[] GetAssembliesFromApplicationBaseDirectory(Func<AssemblyName, bool> condition)
-    {
-        var baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
-        Func<string, bool> isAssembly = file =>
-            string.Equals(Path.GetExtension(file), ".dll", StringComparison.OrdinalIgnoreCase);
-
-        return Directory.GetFiles(baseDirectoryPath)
-            .Where(isAssembly)
-            .Where(f => condition(AssemblyName.GetAssemblyName(f)))
-            .Select(Assembly.LoadFrom)
-            .ToArray();
     }
 
     /// <summary>
@@ -172,8 +108,16 @@ public static class AutoFac
         if (_container == null)
         {
             _builder = new ContainerBuilder();
-            _container = _builder.Build();
         }
+
+        RegisterAllAssemblyTypes(_builder);
+
+        var optionsBuilder = new DbContextOptions<PostgreDbContext>();
+        _builder.RegisterType<PostgreDbContext>()
+            .WithParameter("options", optionsBuilder)
+            .InstancePerLifetimeScope();
+        
+        _container = _builder.Build();
 
         if (!_container.IsRegistered<TService>())
         {
@@ -192,6 +136,13 @@ public static class AutoFac
             _builder = new ContainerBuilder();
             _container = _builder.Build();
         }
+
+        RegisterAllAssemblyTypes(_builder);
+
+        var optionsBuilder = new DbContextOptions<PostgreDbContext>();
+        _builder.RegisterType<PostgreDbContext>()
+            .WithParameter("options", optionsBuilder)
+            .InstancePerLifetimeScope();
 
         return _container.BeginLifetimeScope();
     }

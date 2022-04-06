@@ -22,7 +22,7 @@ public class ServicesModule : Module
         // Репозиторий пользователя.
         builder.RegisterType<UserRepository>().Named<IUserRepository>("UserRepository");
         builder.RegisterType<UserRepository>().As<IUserRepository>();
-        
+
         builder.RegisterType<SignInManager<UserEntity>>().InstancePerLifetimeScope();
         builder.RegisterType<UserManager<UserEntity>>().InstancePerLifetimeScope();
     }

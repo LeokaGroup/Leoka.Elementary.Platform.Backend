@@ -12,7 +12,7 @@ namespace Leoka.Elementary.Platform.Controllers.User;
 /// Контроллер для работы с пользователями.
 /// </summary>
 [ApiController, Route("user")]
-// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class UserController : BaseController
 {
     private readonly IUserService _userService;
@@ -22,12 +22,17 @@ public class UserController : BaseController
         _userService = userService;
     }
 
-    // [AllowAnonymous]
+    /// <summary>
+    /// Метод регистрирует пользователя.
+    /// </summary>
+    /// <param name="createUserInput">Входная модель.</param>
+    /// <returns>Данные пользователя.</returns>
+    [AllowAnonymous]
     [HttpPost]
     [Route("signup")]
     [ProducesResponseType(200)]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403, Type = typeof(string))]        
+    [ProducesResponseType(403, Type = typeof(UserOutput))]        
     [ProducesResponseType(500)]
     public async Task<UserOutput> CreateUserAsync([FromBody] UserInput createUserInput)
     {

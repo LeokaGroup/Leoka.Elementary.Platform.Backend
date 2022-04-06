@@ -6,7 +6,6 @@ using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.Models.Entities.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -80,16 +79,32 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureContainer<ContainerBuilder>(AutoFac.Init);
 
+// Нужно для типа timestamp в Postgres.
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var app = builder.Build();
 
-app.UseDeveloperExceptionPage();
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+
+// else
+// {
+//     app.UseExceptionHandler();
+// }
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseHttpsRedirection();
 app.UseAuthentication();
+app.UseRouting();
 app.UseAuthorization();
 app.UseRouting();
-app.MapControllers();
+// app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Leoka.Elementary.Platform"));
-app.Run();
+await app.RunAsync();

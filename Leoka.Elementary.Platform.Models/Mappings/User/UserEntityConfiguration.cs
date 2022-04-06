@@ -11,10 +11,16 @@ public partial class UserEntityConfiguration : IEntityTypeConfiguration<UserEnti
         entity.ToTable("Users", "dbo");
 
         entity.HasKey(u => u.Id);
-
+        
         entity.Property(e => e.Id)
+            .HasColumnName("UserCode")
+            .HasColumnType("text")
+            .ValueGeneratedNever();
+
+        entity.Property(e => e.UserId)
             .HasColumnName("UserId")
-            .HasColumnType("bigint");
+            .HasColumnType("bigint")
+            .ValueGeneratedNever();;
 
         entity.HasIndex(u => u.Id)
             .HasName("PK_Users_Id")

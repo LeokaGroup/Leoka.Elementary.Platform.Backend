@@ -1,19 +1,21 @@
-﻿namespace Leoka.Elementary.Platform.Models.User.Output;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Leoka.Elementary.Platform.Models.User.Output;
 
 /// <summary>
-/// Класс входной модели пользователя.
+/// Класс выходной модели пользователя.
 /// </summary>
 public class UserOutput
 {
     /// <summary>
     /// Id пользователя.
     /// </summary>
-    public string UserId { get; set; }
+    public long UserId { get; set; }
 
     /// <summary>
     /// Email.
     /// </summary>
-    public string UserEmail { get; set; }
+    public string Email { get; set; }
 
     /// <summary>
     /// Дата регистрации.
@@ -24,6 +26,8 @@ public class UserOutput
     /// Имя.
     /// </summary>
     public string FirstName { get; set; }
+
+    public string UserName { get; set; }
 
     /// <summary>
     /// Фамилия.
@@ -39,4 +43,21 @@ public class UserOutput
     /// Номер телефона.
     /// </summary>
     public string PhoneNumber { get; set; }
+
+    /// <summary>
+    /// Полные ФИО.
+    /// </summary>
+    public string FullName { get; set; }
+
+    public List<IdentityError> Errors = new List<IdentityError>();
+
+    /// <summary>
+    /// Флаг успешна ли регистрация.
+    /// </summary>
+    public bool Successed { get; set; }
+
+    /// <summary>
+    /// Флаг ошибок при регистрации.
+    /// </summary>
+    public bool Failure { get; set; }
 }

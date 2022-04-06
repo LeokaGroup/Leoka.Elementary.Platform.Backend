@@ -18,9 +18,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Services", "Leoka.Elementary.Platform.Services\Leoka.Elementary.Platform.Services.csproj", "{60DF3D61-A90B-4E06-8EDB-66841A899088}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Tests", "Leoka.Elementary.Platform.Tests\Leoka.Elementary.Platform.Tests.csproj", "{5C09DE3A-11AE-4CCA-8F68-A131B58248DC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Commerce", "Leoka.Elementary.Platform.Commerce\Leoka.Elementary.Platform.Commerce.csproj", "{5E394C9B-8B98-487A-82C3-45C02EBD845E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Tests", "Leoka.Elementary.Platform.Tests\Leoka.Elementary.Platform.Tests.csproj", "{8773BAC3-F8A2-438A-B4F6-B814EC83A3A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,13 +64,13 @@ Global
 		{60DF3D61-A90B-4E06-8EDB-66841A899088}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60DF3D61-A90B-4E06-8EDB-66841A899088}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60DF3D61-A90B-4E06-8EDB-66841A899088}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C09DE3A-11AE-4CCA-8F68-A131B58248DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C09DE3A-11AE-4CCA-8F68-A131B58248DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C09DE3A-11AE-4CCA-8F68-A131B58248DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C09DE3A-11AE-4CCA-8F68-A131B58248DC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5E394C9B-8B98-487A-82C3-45C02EBD845E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5E394C9B-8B98-487A-82C3-45C02EBD845E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E394C9B-8B98-487A-82C3-45C02EBD845E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E394C9B-8B98-487A-82C3-45C02EBD845E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8773BAC3-F8A2-438A-B4F6-B814EC83A3A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8773BAC3-F8A2-438A-B4F6-B814EC83A3A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8773BAC3-F8A2-438A-B4F6-B814EC83A3A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8773BAC3-F8A2-438A-B4F6-B814EC83A3A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
