@@ -11,10 +11,9 @@ public interface IUserService
     /// Метод создаст нового пользователя.
     /// </summary>
     /// <param name="name">Имя пользователя.</param>
-    /// <param name="email">Email.</param>
-    /// <param name="phoneNumber">Номер телефона.</param>
+    /// <param name="contactData">Контактные данные пользователя (email или телефон).</param>
     /// <param name="roleSysName">Системное название роли.</param>
     /// <param name="password">Пароль.</param>
     /// <returns>Данные пользователя.</returns>
-    Task<UserOutput> CreateUserAsync(string name, string email, string phoneNumber, string userRole, string password);
+    Task<UserOutput> CreateUserAsync(string name, string contactData, string userRole, string password);
 }

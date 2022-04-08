@@ -36,7 +36,7 @@ public class UserController : BaseController
     [ProducesResponseType(500)]
     public async Task<UserOutput> CreateUserAsync([FromBody] UserInput createUserInput)
     {
-        var result = await _userService.CreateUserAsync(createUserInput.FirstName, createUserInput.UserEmail, createUserInput.PhoneNumber, createUserInput.UserRole, createUserInput.UserPassword);
+        var result = await _userService.CreateUserAsync(createUserInput.FirstName, createUserInput.ContactData, createUserInput.UserRole, createUserInput.UserPassword);
 
         return result;
     }

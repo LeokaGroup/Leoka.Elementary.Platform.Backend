@@ -100,7 +100,8 @@ app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
 app.UseRouting();
-// app.MapControllers();
+app.UseCors("ApiCorsPolicy");
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();

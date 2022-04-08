@@ -49,7 +49,10 @@ public class UserOutput
     /// </summary>
     public string FullName { get; set; }
 
-    public List<IdentityError> Errors = new List<IdentityError>();
+    /// <summary>
+    /// Список ошибок.
+    /// </summary>
+    public List<IdentityError> Errors { get; set; } = new();
 
     /// <summary>
     /// Флаг успешна ли регистрация.

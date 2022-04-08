@@ -1,7 +1,6 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.User;
 using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.Core.Exceptions;
-using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.Models.Entities.User;
 using Leoka.Elementary.Platform.Models.User.Output;
 using Microsoft.AspNetCore.Identity;
@@ -28,12 +27,11 @@ public sealed class UserRepository : IUserRepository
     /// Метод создаст нового пользователя.
     /// </summary>
     /// <param name="name">Имя пользователя.</param>
-    /// <param name="email">Email.</param>
-    /// <param name="phoneNumber">Номер телефона.</param>
+    /// <param name="contactData">Контактные данные пользователя (email или телефон).</param>
     /// <param name="roleSysName">Системное название роли.</param>
     /// <param name="password">Пароль.</param>
     /// <returns>Данные пользователя.</returns>
-    public async Task<UserOutput> CreateUserAsync(string name, string email, string phoneNumber, string roleSysName, string password)
+    public async Task<UserOutput> CreateUserAsync(string name, string contactData, string roleSysName, string password)
     {
         try
         {
@@ -50,22 +48,22 @@ public sealed class UserRepository : IUserRepository
             var addUser = await _userManager.CreateAsync(new UserEntity
             {
                 UserId = Convert.ToInt64(maxUserId),
-                UserName = email,
+                UserName = contactData,
                 FirstName = name,
                 LastName = string.Empty,
                 SecondName = string.Empty,
-                Email = email,
+                Email = contactData.Contains('@') ? contactData : string.Empty,
                 DateRegister = DateTime.UtcNow,
                 LockoutEnabled = false
             }, password);
             
             var result = new UserOutput
             {
-                UserName = email,
+                UserName = contactData,
                 FirstName = name,
                 LastName = string.Empty,
                 SecondName = string.Empty,
-                Email = email
+                Email = contactData.Contains('@') ? contactData : string.Empty
             };
             
             if (addUser.Succeeded)
@@ -86,11 +84,7 @@ public sealed class UserRepository : IUserRepository
             // Соберет список ошибок для вывода фронту. 
             else
             {
-                foreach (var error in addUser.Errors)
-                {
-                    result.Errors.Add(error);
-                }
-
+                result.Errors.AddRange(addUser.Errors);
                 result.Failure = true;
             }
 

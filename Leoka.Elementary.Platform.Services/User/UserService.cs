@@ -20,15 +20,15 @@ public sealed class UserService : IUserService
     /// </summary>
     /// <param name="name">Имя пользователя.</param>
     /// <param name="email">Email.</param>
-    /// <param name="phoneNumber">Номер телефона.</param>
+    /// <param name="contactData">Контактные данные пользователя (email или телефон).</param>
     /// <param name="roleSysName">Системное название роли.</param>
     /// <param name="password">Пароль.</param>
     /// <returns>Данные пользователя.</returns>
-    public async Task<UserOutput> CreateUserAsync(string name, string email, string phoneNumber, string userRole, string password)
+    public async Task<UserOutput> CreateUserAsync(string name, string contactData, string userRole, string password)
     {
         try
         {
-            var result = await _userRepository.CreateUserAsync(name, email, phoneNumber, userRole, password);
+            var result = await _userRepository.CreateUserAsync(name, contactData, userRole, password);
 
             return result;
         }
