@@ -108,16 +108,16 @@ public static class AutoFac
         if (_container == null)
         {
             _builder = new ContainerBuilder();
-        }
+            
+            RegisterAllAssemblyTypes(_builder);
 
-        RegisterAllAssemblyTypes(_builder);
-
-        var optionsBuilder = new DbContextOptions<PostgreDbContext>();
-        _builder.RegisterType<PostgreDbContext>()
-            .WithParameter("options", optionsBuilder)
-            .InstancePerLifetimeScope();
+            var optionsBuilder = new DbContextOptions<PostgreDbContext>();
+            _builder.RegisterType<PostgreDbContext>()
+                .WithParameter("options", optionsBuilder)
+                .InstancePerLifetimeScope();
         
-        _container = _builder.Build();
+            _container = _builder.Build();
+        }
 
         if (!_container.IsRegistered<TService>())
         {

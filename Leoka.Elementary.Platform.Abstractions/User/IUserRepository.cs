@@ -23,4 +23,12 @@ public interface IUserRepository
     /// <param name="sysName">Системное имя роли.</param>
     /// <returns>Id роли.</returns>
     Task<int> GetRoleIdBySysNameAsync(string sysName);
+    
+    /// <summary>
+    /// Метод авторизует пользователя.
+    /// </summary>
+    /// <param name="userLogin">Email или номер телефона.</param>
+    /// <param name="userPassword">Пароль.</param>
+    /// <returns>Данные пользователя.</returns>
+    Task<ClaimOutput> SignInAsync(string userLogin, string userPassword);
 }

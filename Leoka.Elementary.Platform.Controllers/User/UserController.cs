@@ -40,4 +40,24 @@ public class UserController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод авторизует пользователя.
+    /// </summary>
+    /// <param name="userLogin">Email или номер телефона.</param>
+    /// <param name="userPassword">Пароль.</param>
+    /// <returns>Данные пользователя.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("signin")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403, Type = typeof(UserOutput))]
+    [ProducesResponseType(500)]
+    public async Task<ClaimOutput> SignInAsync([FromQuery] string userLogin, string userPassword)
+    {
+        var result = await _userService.SignInAsync(userLogin, userPassword);
+
+        return result;
+    }
 }

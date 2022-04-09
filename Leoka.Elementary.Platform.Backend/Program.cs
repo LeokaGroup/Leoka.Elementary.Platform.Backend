@@ -3,9 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Leoka.Elementary.Platform.Backend.Core.Data;
 using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.Core.Utils;
-using Leoka.Elementary.Platform.Models.Entities.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -26,9 +24,6 @@ builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", b =>
 
 // builder.Services.AddDbContext<PostgreDbContext>(options =>
 //     options.UseNpgsql(configuration.GetConnectionString("NpgConfigurationConnection")));
-//
-// builder.Services.AddDbContext<IdentityDbContext>(options =>
-//     options.UseNpgsql(configuration.GetConnectionString("NpgTestSqlConnection")));
 
 #endregion
 
@@ -37,21 +32,7 @@ builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", b =>
 builder.Services.AddDbContext<PostgreDbContext>(options =>
     options.UseNpgsql(configuration.GetConnectionString("NpgTestSqlConnection")));
 
-builder.Services.AddDbContext<IdentityDbContext>(options =>
-    options.UseNpgsql(configuration.GetConnectionString("NpgTestSqlConnection")));
-
 #endregion
-
-builder.Services.AddIdentity<UserEntity, IdentityRole>(opts =>
-    {
-        opts.Password.RequiredLength = 5;
-        opts.Password.RequireNonAlphanumeric = false;
-        opts.Password.RequireLowercase = false;
-        opts.Password.RequireUppercase = false;
-        opts.Password.RequireDigit = false;
-    })
-    .AddEntityFrameworkStores<IdentityDbContext>()
-    .AddDefaultTokenProviders();
 
 builder.Services.AddSwaggerGen(c =>
 {

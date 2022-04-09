@@ -28,7 +28,7 @@ public class BaseServiceTest
         optionsBuilder.UseNpgsql(PostgreConfigString);
         PostgreDbContext = new PostgreDbContext(optionsBuilder.Options);
 
-        UserRepository = new UserRepository(PostgreDbContext, null);
+        UserRepository = new UserRepository(PostgreDbContext);
         UserService = new UserService(UserRepository);
     }
 }

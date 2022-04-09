@@ -1,4 +1,6 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.User;
+using Leoka.Elementary.Platform.Base.Abstraction;
+using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.Models.User.Output;
 
 namespace Leoka.Elementary.Platform.Services.User;
@@ -28,7 +30,27 @@ public sealed class UserService : IUserService
     {
         try
         {
-            var result = await _userRepository.CreateUserAsync(name, contactData, userRole, password);
+            // Хэширует пароль.
+            var commonService = AutoFac.Resolve<ICommonService>();
+            var hashPassword = await commonService.HashPasswordAsync(password);
+            var result = await _userRepository.CreateUserAsync(name, contactData, userRole, hashPassword);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<ClaimOutput> SignInAsync(string userLogin, string userPassword)
+    {
+        try
+        {
+            var result = await _userRepository.SignInAsync(userLogin, userPassword);
 
             return result;
         }

@@ -1,10 +1,15 @@
-﻿using Leoka.Elementary.Platform.Abstractions.User;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Leoka.Elementary.Platform.Abstractions.User;
+using Leoka.Elementary.Platform.Backend.Core.Data;
+using Leoka.Elementary.Platform.Base.Abstraction;
 using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.Core.Exceptions;
+using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.Models.Entities.User;
 using Leoka.Elementary.Platform.Models.User.Output;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Leoka.Elementary.Platform.Services.User;
 
@@ -14,13 +19,10 @@ namespace Leoka.Elementary.Platform.Services.User;
 public sealed class UserRepository : IUserRepository
 {
     private readonly PostgreDbContext _postgreDbContext;
-    private readonly UserManager<UserEntity> _userManager;
-    
-    public UserRepository(PostgreDbContext postgreDbContext,
-        UserManager<UserEntity> userManager)
+
+    public UserRepository(PostgreDbContext postgreDbContext)
     {
         _postgreDbContext = postgreDbContext;
-        _userManager = userManager;
     }
 
     /// <summary>
@@ -31,62 +33,43 @@ public sealed class UserRepository : IUserRepository
     /// <param name="roleSysName">Системное название роли.</param>
     /// <param name="password">Пароль.</param>
     /// <returns>Данные пользователя.</returns>
-    public async Task<UserOutput> CreateUserAsync(string name, string contactData, string roleSysName, string password)
+    public async Task<UserOutput> CreateUserAsync(string name, string contactData, string roleSysName, string passwordHash)
     {
         try
         {
-            var maxUserId = await _postgreDbContext.Users
-                .Select(u => u.UserId)
-                .DefaultIfEmpty()
-                .MaxAsync();
-            
-            if (maxUserId <= 0)
+            var addUser = new UserEntity
             {
-                maxUserId = 1;
-            }
-
-            var addUser = await _userManager.CreateAsync(new UserEntity
-            {
-                UserId = Convert.ToInt64(maxUserId),
+                UserCode = Guid.NewGuid().ToString(),
                 UserName = contactData,
                 FirstName = name,
                 LastName = string.Empty,
                 SecondName = string.Empty,
                 Email = contactData.Contains('@') ? contactData : string.Empty,
                 DateRegister = DateTime.UtcNow,
-                LockoutEnabled = false
-            }, password);
-            
+                PasswordHash = passwordHash
+            };
+            await _postgreDbContext.Users.AddAsync(addUser);
+            await _postgreDbContext.SaveChangesAsync();
+
             var result = new UserOutput
             {
                 UserName = contactData,
                 FirstName = name,
                 LastName = string.Empty,
                 SecondName = string.Empty,
-                Email = contactData.Contains('@') ? contactData : string.Empty
+                Email = contactData.Contains('@') ? contactData : string.Empty,
+                DateRegister = DateTime.Now,
+                Successed = true
             };
-            
-            if (addUser.Succeeded)
-            {
-                result.DateRegister = DateTime.Now;
-                result.Successed = true;
-                
-                // Назначит роль пользователю.
-                var roleId = await GetRoleIdBySysNameAsync(roleSysName);
 
-                await _postgreDbContext.UserRoles.AddAsync(new UserRoleEntity
-                {
-                    RoleId = roleId
-                });
-                await _postgreDbContext.SaveChangesAsync();
-            }
+            // Назначит роль пользователю.
+            var roleId = await GetRoleIdBySysNameAsync(roleSysName);
 
-            // Соберет список ошибок для вывода фронту. 
-            else
+            await _postgreDbContext.UserRoles.AddAsync(new UserRoleEntity
             {
-                result.Errors.AddRange(addUser.Errors);
-                result.Failure = true;
-            }
+                RoleId = roleId
+            });
+            await _postgreDbContext.SaveChangesAsync();
 
             return result;
         }
@@ -131,5 +114,98 @@ public sealed class UserRepository : IUserRepository
             Console.WriteLine(e);
             throw;
         }
+    }
+
+    public async Task<ClaimOutput> SignInAsync(string userLogin, string userPassword)
+    {
+        try
+        {
+            // Ищет пользователя по email или номеру телефона.
+            var fineUser = _postgreDbContext.Users.AsQueryable();
+            
+            if (userLogin.Contains('@'))
+            {
+                fineUser = fineUser.Where(u => u.Email.Equals(userLogin));
+            }
+
+            else
+            {
+                fineUser = fineUser.Where(u => u.PhoneNumber.Equals(userLogin));
+            }
+
+            var checkUser = await fineUser.FirstOrDefaultAsync();
+            
+            if (checkUser == null)
+            {
+                throw new ErrorUserAuthorizeException(userLogin);
+            }
+            
+            var commonService = AutoFac.Resolve<ICommonService>();
+            var checkPassword = await commonService.VerifyHashedPassword(checkUser.PasswordHash, userPassword);
+
+            // Если пароль неверен.
+            if (!checkPassword)
+            {
+                throw new ErrorUserPasswordException();
+            }
+            
+            var claim = GetIdentityClaim(userLogin);
+            
+            // Генерация токен юзеру.
+            var token = GenerateToken(claim).Result;
+
+            var result = new ClaimOutput
+            {
+                User = userLogin,
+                Token = token,
+                IsSuccess = true
+            };
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    /// <summary>
+    /// Метод выдаст токен пользователю, если он прошел авторизацию.
+    /// </summary>
+    /// <param name="email">Email.</param>
+    /// <returns>Токен пользователя.</returns>
+    private ClaimsIdentity GetIdentityClaim(string email)
+    {
+        var claims = new List<Claim> {
+            new Claim(ClaimsIdentity.DefaultNameClaimType, email)
+            //new Claim(JwtRegisteredClaimNames.UniqueName, username)
+        };
+
+        var claimsIdentity = new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+
+        return claimsIdentity;
+    }
+    
+    /// <summary>
+    /// Метод генерит токен юзеру.
+    /// </summary>
+    /// <param name="claimsIdentity">Объект полномочий.</param>
+    /// <returns>Строку токена.</returns>
+    private Task<string> GenerateToken(ClaimsIdentity claimsIdentity)
+    {
+        var now = DateTime.UtcNow;
+        var jwt = new JwtSecurityToken(
+            issuer: AuthOptions.ISSUER,
+            audience: AuthOptions.AUDIENCE,
+            notBefore: now,
+            claims: claimsIdentity.Claims,
+            expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+            signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+        var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+        return Task.FromResult(encodedJwt);
     }
 }

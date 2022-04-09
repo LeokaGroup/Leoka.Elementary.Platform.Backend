@@ -23,7 +23,7 @@ public class ServicesModule : Module
         builder.RegisterType<UserRepository>().Named<IUserRepository>("UserRepository");
         builder.RegisterType<UserRepository>().As<IUserRepository>();
 
-        builder.RegisterType<SignInManager<UserEntity>>().InstancePerLifetimeScope();
-        builder.RegisterType<UserManager<UserEntity>>().InstancePerLifetimeScope();
+        // builder.RegisterType<SignInManager<UserEntity>>().InstancePerLifetimeScope();
+        // builder.RegisterType<UserManager<UserEntity>>().InstancePerLifetimeScope();
     }
 }

@@ -16,4 +16,12 @@ public interface IUserService
     /// <param name="password">Пароль.</param>
     /// <returns>Данные пользователя.</returns>
     Task<UserOutput> CreateUserAsync(string name, string contactData, string userRole, string password);
+
+    /// <summary>
+    /// Метод авторизует пользователя.
+    /// </summary>
+    /// <param name="userLogin">Email или номер телефона.</param>
+    /// <param name="userPassword">Пароль.</param>
+    /// <returns>Данные пользователя.</returns>
+    Task<ClaimOutput> SignInAsync(string userLogin, string userPassword);
 }

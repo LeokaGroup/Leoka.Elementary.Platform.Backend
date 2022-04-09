@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 
 namespace Leoka.Elementary.Platform.Models.Entities.User;
 
@@ -8,12 +7,13 @@ namespace Leoka.Elementary.Platform.Models.Entities.User;
 /// Класс сопоставляется с таблицей пользователей.
 /// </summary>
 [Table("Users", Schema = "dbo")]
-public class UserEntity : IdentityUser
+public class UserEntity 
 {
     /// <summary>
     /// PK.
     /// </summary>
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("UserId", TypeName = "bigint)")]
     public long UserId { get; set; }
 
@@ -61,4 +61,44 @@ public class UserEntity : IdentityUser
     /// </summary>
     [Column("ConfirmEmailCode", TypeName = "varchar(200)")]
     public string ConfirmEmailCode { get; set; }
+
+    /// <summary>
+    /// PK.
+    /// </summary>
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    [Column("UserCode", TypeName = "text")]
+    public string UserCode { get; set; }
+
+    /// <summary>
+    /// Логин пользователя.
+    /// </summary>
+    [Column("UserName", TypeName = "varchar(150)")]
+    public string UserName { get; set; }
+    
+    /// <summary>
+    /// Email пользователя.
+    /// </summary>
+    [Column("Email", TypeName = "varchar(150)")]
+    public string Email { get; set; }
+
+    [Column("EmailConfirmed", TypeName = "bool")]
+    public bool EmailConfirmed { get; set; }
+
+    [Column("PasswordHash", TypeName = "text")]
+    public string PasswordHash { get; set; }
+
+    [Column("PhoneNumber", TypeName = "varchar(150)")]
+    public string PhoneNumber { get; set; }
+
+    [Column("PhoneNumberConfirmed", TypeName = "bool")]
+    public bool PhoneNumberConfirmed { get; set; }
+
+    [Column("LockoutEnabled", TypeName = "bool")]
+    public bool LockoutEnabled { get; set; }
+
+    [Column("LockoutEnd", TypeName = "timestamp")]
+    public DateTime LockoutEnd { get; set; }
+
+    [Column("TwoFactorEnabled", TypeName = "bool")]
+    public bool TwoFactorEnabled { get; set; }
 }
