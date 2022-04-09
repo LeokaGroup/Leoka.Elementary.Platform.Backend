@@ -67,6 +67,10 @@ public static class AutoFac
         var assemblies8 =
             GetAssembliesFromApplicationBaseDirectory(x =>
                 x.FullName.StartsWith("Leoka.Elementary.Platform.Configurator"));
+        
+        var assemblies9 =
+            GetAssembliesFromApplicationBaseDirectory(x =>
+                x.FullName.StartsWith("Leoka.Elementary.Platform.Access"));
 
         b.RegisterAssemblyTypes(assemblies1).AsImplementedInterfaces();
         b.RegisterAssemblyTypes(assemblies2).AsImplementedInterfaces();
@@ -76,6 +80,7 @@ public static class AutoFac
         b.RegisterAssemblyTypes(assemblies6).AsImplementedInterfaces();
         b.RegisterAssemblyTypes(assemblies7).AsImplementedInterfaces();
         b.RegisterAssemblyTypes(assemblies8).AsImplementedInterfaces();
+        b.RegisterAssemblyTypes(assemblies9).AsImplementedInterfaces();
 
         var assemblies = assemblies1
             .Union(assemblies2)

@@ -30,9 +30,9 @@ public class UserController : BaseController
     [AllowAnonymous]
     [HttpPost]
     [Route("signup")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(200, Type = typeof(UserOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403, Type = typeof(UserOutput))]        
+    [ProducesResponseType(403)]        
     [ProducesResponseType(500)]
     public async Task<UserOutput> CreateUserAsync([FromBody] UserInput createUserInput)
     {
@@ -50,9 +50,9 @@ public class UserController : BaseController
     [AllowAnonymous]
     [HttpGet]
     [Route("signin")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(200, Type = typeof(UserOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403, Type = typeof(UserOutput))]
+    [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     public async Task<ClaimOutput> SignInAsync([FromQuery] string userLogin, string userPassword)
     {
