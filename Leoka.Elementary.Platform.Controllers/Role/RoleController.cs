@@ -1,6 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Access.Abstraction;
 using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Models.Role.Output;
+using Leoka.Elementary.Platform.Models.User.Output;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,5 +34,19 @@ public class RoleController : BaseController
         var result = await _roleService.GetRolesAsync();
 
         return result;
+    }
+    
+    /// <summary>
+    /// Метод обновит токен.
+    /// </summary>
+    /// <returns>Новый токен.</returns>
+    [AllowAnonymous]
+    [HttpGet, Route("token")]
+    [ProducesResponseType(200, Type = typeof(ClaimOutput))]
+    public async Task<IActionResult> GenerateTokenAsync()
+    {
+        var result = await _roleService.GenerateTokenAsync();
+
+        return Ok(result);
     }
 }
