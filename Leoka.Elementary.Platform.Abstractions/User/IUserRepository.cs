@@ -45,4 +45,11 @@ public interface IUserRepository
     /// <param name="id">UserId или UserCode пользователя.</param>
     /// <param name="passwordHash">Пароль пользователя.</param>
     Task UpdateUserPasswordAsync(string id, string passwordHash);
+    
+    /// <summary>
+    /// Метод отправит пользователя на страницу успешного подтверждения почты.
+    /// </summary>
+    /// <param name="code">Код подтверждения (guid).</param>
+    /// <returns>Редиректит на страницу успеха.</returns>
+    Task<bool> ConfirmEmailAccountCode(string code);
 }

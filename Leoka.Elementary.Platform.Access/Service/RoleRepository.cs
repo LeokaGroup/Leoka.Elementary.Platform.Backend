@@ -25,7 +25,9 @@ public class RoleRepository : IRoleRepository
     {
         try
         {
+            // Получит роли, кроме партнера и администратора.
             var result = await _postgreDbContext.Roles
+                .Where(r => !new[] { -1, 0 }.Contains(r.RoleId))
                 .Select(r => new RoleOutput
                 {
                     RoleSysName = r.RoleSysName,

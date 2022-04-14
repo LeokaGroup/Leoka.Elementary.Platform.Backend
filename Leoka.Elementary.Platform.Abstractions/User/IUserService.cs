@@ -24,4 +24,11 @@ public interface IUserService
     /// <param name="userPassword">Пароль.</param>
     /// <returns>Данные пользователя.</returns>
     Task<ClaimOutput> SignInAsync(string userLogin, string userPassword);
+
+    /// <summary>
+    /// Метод отправит пользователя на страницу успешного подтверждения почты.
+    /// </summary>
+    /// <param name="code">Код подтверждения (guid).</param>
+    /// <returns>Редиректит на страницу успеха.</returns>
+    Task<bool> ConfirmEmailAccountCode(string code);
 }

@@ -68,4 +68,9 @@ public class UserOutput
     /// Код пользователя.
     /// </summary>
     public string UserCode { get; set; }
+
+    /// <summary>
+    /// Код подтверждения почты.
+    /// </summary>
+    public string ConfirmEmailCode { get; set; }
 }

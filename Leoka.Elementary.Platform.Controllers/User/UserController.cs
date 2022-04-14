@@ -60,4 +60,19 @@ public class UserController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод отправит пользователя на страницу успешного подтверждения почты.
+    /// </summary>
+    /// <returns>Редиректит на страницу успеха.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("confirm-email")]
+    public async Task<RedirectResult> ConfirmEmailAccountCode([FromQuery] string code)
+    {
+        var isConfirm = await _userService.ConfirmEmailAccountCode(code);
+
+        // TODO: заменить на получение ссылок из БД.
+        return RedirectPermanent(isConfirm ? "https://leoka-elementary.site/user/success-confirm" : "https://leoka-elementary.site/user/fail-confirm");
+    }
 }

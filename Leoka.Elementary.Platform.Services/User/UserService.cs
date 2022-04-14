@@ -56,7 +56,7 @@ public sealed class UserService : IUserService
             await _userRepository.UpdateUserPasswordAsync(result.UserId.ToString(), hashPassword);
             
             // Отправит пароль пользователю на email и заодно для подтверждения почты. 
-            await _mailingsService.SendConfirmEmailAsync(result.Email, result.UserName, password);
+            await _mailingsService.SendConfirmEmailAsync(result.Email, result.UserName, password, result.ConfirmEmailCode);
 
             return result;
         }
@@ -85,7 +85,7 @@ public sealed class UserService : IUserService
             throw;
         }
     }
-    
+
     private async Task<string> GenerateUserPasswordAsync()
     {
         var result = string.Empty;
@@ -104,5 +104,32 @@ public sealed class UserService : IUserService
         }
 
         return await Task.FromResult(result);
+    }
+    
+    /// <summary>
+    /// Метод отправит пользователя на страницу успешного подтверждения почты.
+    /// </summary>
+    /// <param name="code">Код подтверждения (guid).</param>
+    /// <returns>Редиректит на страницу успеха.</returns>
+    public async Task<bool> ConfirmEmailAccountCode(string code)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(code))
+            {
+                return false;
+            }
+
+            var isConfirm = await _userRepository.ConfirmEmailAccountCode(code);
+
+            return isConfirm;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

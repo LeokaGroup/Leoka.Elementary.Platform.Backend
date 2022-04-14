@@ -37,6 +37,24 @@ public sealed class UserRepository : IUserRepository
     {
         try
         {
+            // Проверит существование пользователя по Email.
+            var checkUserByEmail = await _postgreDbContext.Users.Where(u => u.UserName.Equals(userEmail)).AnyAsync();
+
+            if (checkUserByEmail)
+            {
+                // TODO: пишем такое в логи.
+                throw new DublicateUserException();
+            }
+            
+            // Проверит существование пользователя по номеру телефона.
+            var checkUserByPhoneNumber = await _postgreDbContext.Users.Where(u => u.PhoneNumber.Equals(userPhoneNumber)).AnyAsync();
+            
+            if (checkUserByPhoneNumber)
+            {
+                // TODO: пишем такое в логи.
+                throw new DublicateUserException();
+            }
+            
             var now = DateTime.UtcNow;
             var addUser = new UserEntity
             {
@@ -47,7 +65,8 @@ public sealed class UserRepository : IUserRepository
                 SecondName = string.Empty,
                 Email = userEmail,
                 PhoneNumber = userPhoneNumber,
-                DateRegister = now
+                DateRegister = now,
+                ConfirmEmailCode = Guid.NewGuid().ToString()
             };
             await _postgreDbContext.Users.AddAsync(addUser);
             await _postgreDbContext.SaveChangesAsync();
@@ -61,7 +80,8 @@ public sealed class UserRepository : IUserRepository
                 Email = userEmail,
                 PhoneNumber = userPhoneNumber,
                 DateRegister = now,
-                Successed = true
+                Successed = true,
+                ConfirmEmailCode = addUser.ConfirmEmailCode
             };
 
             // Назначит роль пользователю.
@@ -123,19 +143,19 @@ public sealed class UserRepository : IUserRepository
         try
         {
             // Ищет пользователя по email или номеру телефона.
-            var fineUser = _postgreDbContext.Users.AsQueryable();
+            var findUser = _postgreDbContext.Users.AsQueryable();
             
             if (userLogin.Contains('@'))
             {
-                fineUser = fineUser.Where(u => u.Email.Equals(userLogin));
+                findUser = findUser.Where(u => u.Email.Equals(userLogin));
             }
 
             else
             {
-                fineUser = fineUser.Where(u => u.PhoneNumber.Equals(userLogin));
+                findUser = findUser.Where(u => u.PhoneNumber.Equals(userLogin));
             }
 
-            var checkUser = await fineUser.FirstOrDefaultAsync();
+            var checkUser = await findUser.FirstOrDefaultAsync();
             
             if (checkUser == null)
             {
@@ -286,6 +306,36 @@ public sealed class UserRepository : IUserRepository
                 user.PasswordHash = passwordHash;
                 await _postgreDbContext.SaveChangesAsync();
             }
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод отправит пользователя на страницу успешного подтверждения почты.
+    /// </summary>
+    /// <param name="code">Код подтверждения (guid).</param>
+    /// <returns>Редиректит на страницу успеха.</returns>
+    public async Task<bool> ConfirmEmailAccountCode(string code)
+    {
+        try
+        {
+            var user = await _postgreDbContext.Users.Where(u => u.ConfirmEmailCode.Equals(code)).FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            user.EmailConfirmed = true;
+            await _postgreDbContext.SaveChangesAsync();
+
+            return true;
         }
         
         // TODO: добавить логирование ошибок.
