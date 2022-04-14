@@ -1,5 +1,6 @@
 ﻿using Leoka.Elementary.Platform.Access.Service;
 using Leoka.Elementary.Platform.Core.Data;
+using Leoka.Elementary.Platform.Mailings.Services;
 using Leoka.Elementary.Platform.Services.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,21 +19,23 @@ public class BaseServiceTest
     protected UserRepository UserRepository;
     protected RoleRepository RoleRepository;
     protected RoleService RoleService;
+    protected MailingsService MailingsService;
     
     public BaseServiceTest()
     {
         // Настройка тестовых строк подключения.
         var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
         AppConfiguration = builder.Build();
-        PostgreConfigString = AppConfiguration["ConnectionStrings:NpgTestSqlConnection"];
+        PostgreConfigString = AppConfiguration["ConnectionStrings:NpgTestSqlConnection"] ?? string.Empty;
         
         // Настройка тестовых контекстов.
         var optionsBuilder = new DbContextOptionsBuilder<PostgreDbContext>();
-        optionsBuilder.UseNpgsql(PostgreConfigString);
+        optionsBuilder.UseNpgsql(PostgreConfigString ?? string.Empty);
         PostgreDbContext = new PostgreDbContext(optionsBuilder.Options);
-        
+        MailingsService = new MailingsService(null);
         UserRepository = new UserRepository(PostgreDbContext);
-        UserService = new UserService(UserRepository);
+        
+        UserService = new UserService(UserRepository, MailingsService);
         RoleRepository = new RoleRepository(PostgreDbContext);
         RoleService = new RoleService(RoleRepository);
     }

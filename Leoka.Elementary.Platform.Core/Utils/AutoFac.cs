@@ -62,12 +62,12 @@ public static class AutoFac
 
         var assemblies7 =
             GetAssembliesFromApplicationBaseDirectory(x =>
-                x.FullName.StartsWith("Leoka.Elementary.Platform.Messaging"));
+                x.FullName.StartsWith("Leoka.Elementary.Platform.Messagings"));
 
         var assemblies8 =
             GetAssembliesFromApplicationBaseDirectory(x =>
                 x.FullName.StartsWith("Leoka.Elementary.Platform.Configurator"));
-        
+
         var assemblies9 =
             GetAssembliesFromApplicationBaseDirectory(x =>
                 x.FullName.StartsWith("Leoka.Elementary.Platform.Access"));
@@ -113,14 +113,14 @@ public static class AutoFac
         if (_container == null)
         {
             _builder = new ContainerBuilder();
-            
+
             RegisterAllAssemblyTypes(_builder);
 
             var optionsBuilder = new DbContextOptions<PostgreDbContext>();
             _builder.RegisterType<PostgreDbContext>()
                 .WithParameter("options", optionsBuilder)
                 .InstancePerLifetimeScope();
-        
+
             _container = _builder.Build();
         }
 

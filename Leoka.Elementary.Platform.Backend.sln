@@ -24,6 +24,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Access", "Leoka.Elementary.Platform.Access\Leoka.Elementary.Platform.Access.csproj", "{0CC956CD-17C2-4712-9FDC-7A8353131167}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Mailings", "Leoka.Elementary.Platform.Mailings\Leoka.Elementary.Platform.Mailings.csproj", "{50553E7D-2C52-4B92-8A5C-F0EDAB744C16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.FTP", "Leoka.Elementary.Platform.FTP\Leoka.Elementary.Platform.FTP.csproj", "{DD3D432A-E403-424C-A900-637C3AC69587}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Messagings", "Leoka.Elementary.Platform.Messagings\Leoka.Elementary.Platform.Messagings.csproj", "{3FAF0F24-6453-45C3-86B4-81834A3809DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,5 +84,17 @@ Global
 		{0CC956CD-17C2-4712-9FDC-7A8353131167}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CC956CD-17C2-4712-9FDC-7A8353131167}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CC956CD-17C2-4712-9FDC-7A8353131167}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50553E7D-2C52-4B92-8A5C-F0EDAB744C16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50553E7D-2C52-4B92-8A5C-F0EDAB744C16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50553E7D-2C52-4B92-8A5C-F0EDAB744C16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50553E7D-2C52-4B92-8A5C-F0EDAB744C16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD3D432A-E403-424C-A900-637C3AC69587}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD3D432A-E403-424C-A900-637C3AC69587}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD3D432A-E403-424C-A900-637C3AC69587}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD3D432A-E403-424C-A900-637C3AC69587}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FAF0F24-6453-45C3-86B4-81834A3809DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FAF0F24-6453-45C3-86B4-81834A3809DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FAF0F24-6453-45C3-86B4-81834A3809DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FAF0F24-6453-45C3-86B4-81834A3809DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

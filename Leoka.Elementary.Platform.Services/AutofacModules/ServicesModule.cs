@@ -1,9 +1,7 @@
 ﻿using Autofac;
 using Leoka.Elementary.Platform.Abstractions.User;
 using Leoka.Elementary.Platform.Core.Attributes;
-using Leoka.Elementary.Platform.Models.Entities.User;
 using Leoka.Elementary.Platform.Services.User;
-using Microsoft.AspNetCore.Identity;
 
 namespace Leoka.Elementary.Platform.Services.AutofacModules;
 
@@ -22,8 +20,5 @@ public class ServicesModule : Module
         // Репозиторий пользователя.
         builder.RegisterType<UserRepository>().Named<IUserRepository>("UserRepository");
         builder.RegisterType<UserRepository>().As<IUserRepository>();
-
-        // builder.RegisterType<SignInManager<UserEntity>>().InstancePerLifetimeScope();
-        // builder.RegisterType<UserManager<UserEntity>>().InstancePerLifetimeScope();
     }
 }

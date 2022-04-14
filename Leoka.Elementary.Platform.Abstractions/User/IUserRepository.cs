@@ -11,11 +11,11 @@ public interface IUserRepository
     /// Метод создаст нового пользователя.
     /// </summary>
     /// <param name="name">Имя пользователя.</param>
-    /// <param name="contactData">Контактные данные пользователя (email или телефон).</param>
+    /// <param name="userEmail">Email пользователя.</param>
     /// <param name="roleSysName">Системное название роли.</param>
-    /// <param name="password">Пароль.</param>
+    /// <param name="userPhoneNumber">Номер телефона.</param>
     /// <returns>Данные пользователя.</returns>
-    Task<UserOutput> CreateUserAsync(string name, string contactData, string roleSysName, string password);
+    Task<UserOutput> CreateUserAsync(string name, string userEmail, string userRole, string userPhoneNumber);
 
     /// <summary>
     /// Метод получит Id оли по ее системному имени.
@@ -31,4 +31,18 @@ public interface IUserRepository
     /// <param name="userPassword">Пароль.</param>
     /// <returns>Данные пользователя.</returns>
     Task<ClaimOutput> SignInAsync(string userLogin, string userPassword);
+
+    /// <summary>
+    /// Метод найдет пользователя по его email.
+    /// </summary>
+    /// <param name="userEmail">Email пользователя.</param>
+    /// <returns>Данные пользователя.</returns>
+    Task<UserOutput> GetUserByEmailAsync(string userEmail);
+
+    /// <summary>
+    /// Метод обновит пароль поьзователя по его UserId или UserCode.
+    /// </summary>
+    /// <param name="id">UserId или UserCode пользователя.</param>
+    /// <param name="passwordHash">Пароль пользователя.</param>
+    Task UpdateUserPasswordAsync(string id, string passwordHash);
 }

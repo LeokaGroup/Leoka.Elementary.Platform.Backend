@@ -29,41 +29,43 @@ public sealed class UserRepository : IUserRepository
     /// Метод создаст нового пользователя.
     /// </summary>
     /// <param name="name">Имя пользователя.</param>
-    /// <param name="contactData">Контактные данные пользователя (email или телефон).</param>
+    /// <param name="userEmail">Email пользователя.</param>
     /// <param name="roleSysName">Системное название роли.</param>
-    /// <param name="password">Пароль.</param>
+    /// <param name="userPhoneNumber">Номер телефона.</param>
     /// <returns>Данные пользователя.</returns>
-    public async Task<UserOutput> CreateUserAsync(string name, string contactData, string roleSysName, string passwordHash)
+    public async Task<UserOutput> CreateUserAsync(string name, string userEmail, string userRole, string userPhoneNumber)
     {
         try
         {
+            var now = DateTime.UtcNow;
             var addUser = new UserEntity
             {
                 UserCode = Guid.NewGuid().ToString(),
-                UserName = contactData,
+                UserName = userEmail,
                 FirstName = name,
                 LastName = string.Empty,
                 SecondName = string.Empty,
-                Email = contactData.Contains('@') ? contactData : string.Empty,
-                DateRegister = DateTime.UtcNow,
-                PasswordHash = passwordHash
+                Email = userEmail,
+                PhoneNumber = userPhoneNumber,
+                DateRegister = now
             };
             await _postgreDbContext.Users.AddAsync(addUser);
             await _postgreDbContext.SaveChangesAsync();
 
             var result = new UserOutput
             {
-                UserName = contactData,
+                UserName = userEmail,
                 FirstName = name,
                 LastName = string.Empty,
                 SecondName = string.Empty,
-                Email = contactData.Contains('@') ? contactData : string.Empty,
-                DateRegister = DateTime.Now,
+                Email = userEmail,
+                PhoneNumber = userPhoneNumber,
+                DateRegister = now,
                 Successed = true
             };
 
             // Назначит роль пользователю.
-            var roleId = await GetRoleIdBySysNameAsync(roleSysName);
+            var roleId = await GetRoleIdBySysNameAsync(userRole);
 
             await _postgreDbContext.UserRoles.AddAsync(new UserRoleEntity
             {
@@ -171,7 +173,7 @@ public sealed class UserRepository : IUserRepository
             throw;
         }
     }
-    
+
     /// <summary>
     /// Метод выдаст токен пользователю, если он прошел авторизацию.
     /// </summary>
@@ -196,16 +198,101 @@ public sealed class UserRepository : IUserRepository
     /// <returns>Строку токена.</returns>
     private Task<string> GenerateToken(ClaimsIdentity claimsIdentity)
     {
-        var now = DateTime.UtcNow;
-        var jwt = new JwtSecurityToken(
-            issuer: AuthOptions.ISSUER,
-            audience: AuthOptions.AUDIENCE,
-            notBefore: now,
-            claims: claimsIdentity.Claims,
-            expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-            signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-        var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+        try
+        {
+            var now = DateTime.UtcNow;
+            var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.ISSUER,
+                audience: AuthOptions.AUDIENCE,
+                notBefore: now,
+                claims: claimsIdentity.Claims,
+                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
-        return Task.FromResult(encodedJwt);
+            return Task.FromResult(encodedJwt);
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    /// <summary>
+    /// Метод найдет пользователя по его email.
+    /// </summary>
+    /// <param name="userEmail">Email пользователя.</param>
+    /// <returns>Данные пользователя.</returns>
+    public async Task<UserOutput> GetUserByEmailAsync(string userEmail)
+    {
+        try
+        {
+            var result = await _postgreDbContext.Users
+                .Where(u => u.Email.Equals(userEmail))
+                .Select(u => new UserOutput
+                {
+                    DateRegister = u.DateRegister,
+                    Email = u.Email,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    SecondName = u.SecondName,
+                    PhoneNumber = u.PhoneNumber,
+                    UserName = u.UserName,
+                    UserId = u.UserId,
+                    UserCode = u.UserCode
+                })
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит пароль поьзователя по его UserId или UserCode.
+    /// </summary>
+    /// <param name="id">UserId или UserCode пользователя.</param>
+    /// <param name="passwordHash">Пароль пользователя.</param>
+    public async Task UpdateUserPasswordAsync(string id, string passwordHash)
+    {
+        try
+        {
+            var isParseNumber = long.TryParse(id, out _);
+            UserEntity user = null;
+            
+            // Если передали UserId.
+            if (isParseNumber)
+            {
+                user = await _postgreDbContext.Users.FirstOrDefaultAsync(u => u.UserId == Convert.ToInt64(id));
+            }
+
+            // Если передали UserCode.
+            else
+            {
+                user = await _postgreDbContext.Users.FirstOrDefaultAsync(u => u.UserCode.Equals(id));
+            }
+            
+            if (user is not null)
+            {
+                user.PasswordHash = passwordHash;
+                await _postgreDbContext.SaveChangesAsync();
+            }
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

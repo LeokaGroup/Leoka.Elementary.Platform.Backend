@@ -63,4 +63,9 @@ public class UserOutput
     /// Флаг ошибок при регистрации.
     /// </summary>
     public bool Failure { get; set; }
+
+    /// <summary>
+    /// Код пользователя.
+    /// </summary>
+    public string UserCode { get; set; }
 }

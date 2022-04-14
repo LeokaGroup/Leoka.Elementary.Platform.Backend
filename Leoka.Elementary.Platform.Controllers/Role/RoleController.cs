@@ -40,7 +40,6 @@ public class RoleController : BaseController
     /// Метод обновит токен.
     /// </summary>
     /// <returns>Новый токен.</returns>
-    [AllowAnonymous]
     [HttpGet, Route("token")]
     [ProducesResponseType(200, Type = typeof(ClaimOutput))]
     public async Task<IActionResult> GenerateTokenAsync()

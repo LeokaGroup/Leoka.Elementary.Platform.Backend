@@ -30,14 +30,11 @@ builder.Services.AddCors(options => options.AddPolicy("ApiCorsPolicy", b =>
 #region Для теста.
 
 builder.Services.AddDbContext<PostgreDbContext>(options =>
-    options.UseNpgsql(configuration.GetConnectionString("NpgTestSqlConnection")));
+    options.UseNpgsql(configuration.GetConnectionString("NpgTestSqlConnection") ?? string.Empty));
 
 #endregion
 
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Leoka.Elementary.Platform", Version = "v1" });
-});
+builder.Services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Leoka.Elementary.Platform" }); });
 
 builder.WebHost.UseKestrel().UseContentRoot(Directory.GetCurrentDirectory()).UseUrls("http://*:9991");
 
@@ -57,7 +54,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+builder.Host
+    .UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureContainer<ContainerBuilder>(AutoFac.Init);
 
 // Нужно для типа timestamp в Postgres.
@@ -83,10 +81,7 @@ app.UseAuthorization();
 app.UseRouting();
 app.UseCors("ApiCorsPolicy");
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-});
+app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Leoka.Elementary.Platform"));
 await app.RunAsync();

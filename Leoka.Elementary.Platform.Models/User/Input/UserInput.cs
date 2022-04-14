@@ -21,9 +21,14 @@ public class UserInput
     public string SecondName { get; set; }
 
     /// <summary>
-    /// Контактные данные пользователя (email или телефон).
+    /// Email пользователя.
     /// </summary>
-    public string ContactData { get; set; }
+    public string UserEmail { get; set; }
+
+    /// <summary>
+    /// Номер телефона.
+    /// </summary>
+    public string UserPhoneNumber { get; set; }
 
     /// <summary>
     /// Пароль.

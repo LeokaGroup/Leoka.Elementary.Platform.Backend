@@ -11,11 +11,11 @@ public interface IUserService
     /// Метод создаст нового пользователя.
     /// </summary>
     /// <param name="name">Имя пользователя.</param>
-    /// <param name="contactData">Контактные данные пользователя (email или телефон).</param>
+    /// <param name="userEmail">Email пользователя.</param>
     /// <param name="roleSysName">Системное название роли.</param>
-    /// <param name="password">Пароль.</param>
+    /// <param name="userPhoneNumber">Номер телефона.</param>
     /// <returns>Данные пользователя.</returns>
-    Task<UserOutput> CreateUserAsync(string name, string contactData, string userRole, string password);
+    Task<UserOutput> CreateUserAsync(string name, string userEmail, string userRole, string userPhoneNumber);
 
     /// <summary>
     /// Метод авторизует пользователя.
