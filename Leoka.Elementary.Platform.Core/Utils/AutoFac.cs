@@ -21,7 +21,7 @@ public static class AutoFac
         RegisterAllAssemblyTypes(b);
     }
 
-    private static Assembly[] GetAssembliesFromApplicationBaseDirectory(Func<AssemblyName, bool> condition)
+    public static Assembly[] GetAssembliesFromApplicationBaseDirectory(Func<AssemblyName, bool> condition)
     {
         var baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
         Func<string, bool> isAssembly = file =>
