@@ -23,7 +23,7 @@ public class FooterEntity
     /// <summary>
     /// Номер столбца.
     /// </summary>
-    public string FooterColumnNumber { get; set; }
+    public int FooterColumnNumber { get; set; }
 
     /// <summary>
     /// Название пункта.
@@ -73,5 +73,5 @@ public class FooterEntity
     /// <summary>
     /// Номер позиции.
     /// </summary>
-    public string FooterItemPosition { get; set; }
+    public int FooterItemPosition { get; set; }
 }

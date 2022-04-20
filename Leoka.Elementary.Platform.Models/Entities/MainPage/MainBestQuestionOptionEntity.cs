@@ -5,6 +5,11 @@
 /// </summary>
 public class MainBestQuestionOptionEntity
 {
+    public MainBestQuestionOptionEntity()
+    {
+        MainBestQuestionAcceptAnswers = new HashSet<MainBestQuestionAcceptAnswerEntity>();
+    }
+
     /// <summary>
     /// PK.
     /// </summary>
@@ -21,4 +26,6 @@ public class MainBestQuestionOptionEntity
     public string VariantText { get; set; }
 
     public MainBestQuestionEntity MainBestQuestion { get; set; }
+    
+    public HashSet<MainBestQuestionAcceptAnswerEntity> MainBestQuestionAcceptAnswers { get; set; }
 }
