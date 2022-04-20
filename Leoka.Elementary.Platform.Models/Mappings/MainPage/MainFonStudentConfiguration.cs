@@ -8,7 +8,7 @@ public partial class MainFonStudentConfiguration : IEntityTypeConfiguration<Main
 {
     public void Configure(EntityTypeBuilder<MainFonStudentEntity> entity)
     {
-        entity.ToTable("MainBestQuestionOptions", "dbo");
+        entity.ToTable("MainFonStudent", "dbo");
 
         entity.HasKey(e => e.FonId);
         

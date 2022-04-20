@@ -1,9 +1,7 @@
-﻿using System.Reflection;
-using Leoka.Elementary.Platform.Core.Extensions;
+﻿using Leoka.Elementary.Platform.Core.Extensions;
 using Leoka.Elementary.Platform.Models.Entities.Common;
 using Leoka.Elementary.Platform.Models.Entities.MainPage;
 using Leoka.Elementary.Platform.Models.Entities.User;
-using Leoka.Elementary.Platform.Models.Mappings.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace Leoka.Elementary.Platform.Core.Data;
@@ -17,19 +15,6 @@ public class PostgreDbContext : DbContext
         _options = options;
     }
     
-    private static Assembly[] GetAssembliesFromApplicationBaseDirectory(Func<AssemblyName, bool> condition)
-    {
-        var baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
-        Func<string, bool> isAssembly = file =>
-            string.Equals(Path.GetExtension(file), ".dll", StringComparison.OrdinalIgnoreCase);
-
-        return Directory.GetFiles(baseDirectoryPath)
-            .Where(isAssembly)
-            .Where(f => condition(AssemblyName.GetAssemblyName(f)))
-            .Select(Assembly.LoadFrom)
-            .ToArray();
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // base.OnModelCreating(modelBuilder);
@@ -90,4 +75,34 @@ public class PostgreDbContext : DbContext
     /// Таблица dbo.MainFonStudent.
     /// </summary>
     public DbSet<MainFonStudentEntity> MainFonStudent { get; set; }
+
+    /// <summary>
+    /// Таблица dbo.MentorWork.
+    /// </summary>
+    public DbSet<MentorWorkEntity> MentorWork { get; set; }
+
+    /// <summary>
+    /// Таблица dbo.SmartClassStudent.
+    /// </summary>
+    public DbSet<SmartClassStudentEntity> SmartClassStudent { get; set; }
+
+    /// <summary>
+    /// Таблица dbo.SmartClassStudentItems.
+    /// </summary>
+    public DbSet<SmartClassStudentItemEntity> SmartClassStudentItems { get; set; }
+
+    /// <summary>
+    /// Таблица dbo.WhereBegin.
+    /// </summary>
+    public DbSet<WhereBeginEntity> WhereBegin { get; set; }
+
+    /// <summary>
+    /// Таблица dbo.WhereBeginItems.
+    /// </summary>
+    public DbSet<WhereBeginItemEntity> WhereBeginItems { get; set; }
+
+    /// <summary>
+    /// Таблица dbo.WriteReception.
+    /// </summary>
+    public DbSet<WriteReceptionEntity> WriteReception { get; set; }
 }
