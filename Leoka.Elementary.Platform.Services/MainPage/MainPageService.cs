@@ -62,7 +62,7 @@ public class MainPageService : IMainPageService
     /// Метод получит данные для фона студента.
     /// </summary>
     /// <returns>Данные для фона студента.</returns>
-    public async Task<IEnumerable<MainFonStudentOutput>> GetMainFonStudentAsync()
+    public async Task<MainFonStudentOutput> GetMainFonStudentAsync()
     {
         try
         {

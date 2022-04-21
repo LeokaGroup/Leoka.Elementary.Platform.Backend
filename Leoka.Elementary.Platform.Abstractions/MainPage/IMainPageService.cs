@@ -24,5 +24,5 @@ public interface IMainPageService
     /// Метод получит данные для фона студента.
     /// </summary>
     /// <returns>Данные для фона студента.</returns>
-    Task<IEnumerable<MainFonStudentOutput>> GetMainFonStudentAsync();
+    Task<MainFonStudentOutput> GetMainFonStudentAsync();
 }

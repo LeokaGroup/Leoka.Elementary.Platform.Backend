@@ -23,5 +23,5 @@ public class MainFonStudentOutput
     /// <summary>
     /// Список элементов для подзаголовка фона.
     /// </summary>
-    public List<MainFonStudentItemsOutput> MainFonStudentItems = new();
+    public List<MainFonStudentItemsOutput> MainFonStudentItems { get; set; } = new();
 }

@@ -12,7 +12,7 @@ namespace Leoka.Elementary.Platform.Services.MainPage;
 public class MainPageRepository : IMainPageRepository
 {
     private readonly PostgreDbContext _dbContext;
-    
+
     public MainPageRepository(PostgreDbContext dbContext)
     {
         _dbContext = dbContext;
@@ -38,7 +38,7 @@ public class MainPageRepository : IMainPageRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -76,7 +76,7 @@ public class MainPageRepository : IMainPageRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -89,7 +89,7 @@ public class MainPageRepository : IMainPageRepository
     /// Метод получит данные для фона студента.
     /// </summary>
     /// <returns>Данные для фона студента.</returns>
-    public async Task<IEnumerable<MainFonStudentOutput>> GetMainFonStudentAsync()
+    public async Task<MainFonStudentOutput> GetMainFonStudentAsync()
     {
         try
         {
@@ -101,20 +101,20 @@ public class MainPageRepository : IMainPageRepository
                         FonTitle = m1.FonTitle,
                         FonSubTitle = m1.FonSubTitle,
                         FonSubTitleId = m1.FonSubTitleId,
-                        MainFonStudentItems = new List<MainFonStudentItemsOutput>
-                        {
-                            new()
-                            {
-                                FonSubTitleId = m2.FonSubTitleId,
-                                FonSubTitleText = m2.FonSubTitleText
-                            }
-                        }
+                        MainFonStudentItems = new List<MainFonStudentItemsOutput>(_dbContext.MainFonStudentItems
+                                .Where(i => i.FonSubTitleId == 1)
+                                .Select(i => new MainFonStudentItemsOutput
+                                {
+                                    FonSubTitleId = i.FonSubTitleId,
+                                    FonSubTitleText = i.FonSubTitleText
+                                }))
+                            .ToList()
                     })
-                .ToListAsync();
+                .FirstOrDefaultAsync();
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
