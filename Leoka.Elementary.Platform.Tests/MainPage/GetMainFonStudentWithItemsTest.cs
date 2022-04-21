@@ -12,6 +12,6 @@ public class GetMainFonStudentWithItemsTest : BaseServiceTest
     {
         var result = await MainPageService.GetMainFonStudentAsync();
 
-        Assert.IsTrue(result.Any());
+        Assert.IsNotNull(result);
     }
 }
