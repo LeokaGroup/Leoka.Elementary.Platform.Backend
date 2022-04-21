@@ -5,5 +5,20 @@
 /// </summary>
 public class MainFonStudentItemEntity
 {
-    // public TYPE Type { get; set; }
+    /// <summary>
+    /// PK.
+    /// </summary>
+    public int ItemId { get; set; }
+
+    /// <summary>
+    /// Id подзаголовка фона студента.
+    /// </summary>
+    public int FonSubTitleId { get; set; }
+
+    /// <summary>
+    /// Подзаголовок.
+    /// </summary>
+    public string FonSubTitleText { get; set; }
+
+    public MainFonStudentEntity MainFonStudent { get; set; }
 }

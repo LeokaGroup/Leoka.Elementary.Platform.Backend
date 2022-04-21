@@ -1,6 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.MainPage;
 using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Models.Common.Output;
+using Leoka.Elementary.Platform.Models.MainPage.Output;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,6 +53,24 @@ public class MainPageController : BaseController
     public async Task<IEnumerable<FooterOutput>> GetFooterItemsAsync()
     {
         var result = await _mainPageService.GetFooterItemsAsync();
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод получит данные для фона студента.
+    /// </summary>
+    /// <returns>Данные для фона студента.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [ProducesResponseType(200, Type = typeof(MainFonStudentOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<IEnumerable<MainFonStudentOutput>> GetMainFonStudentAsync()
+    {
+        var result = await _mainPageService.GetMainFonStudentAsync();
 
         return result;
     }

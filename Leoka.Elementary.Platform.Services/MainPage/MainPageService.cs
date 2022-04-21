@@ -1,5 +1,6 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.MainPage;
 using Leoka.Elementary.Platform.Models.Common.Output;
+using Leoka.Elementary.Platform.Models.MainPage.Output;
 
 namespace Leoka.Elementary.Platform.Services.MainPage;
 
@@ -45,6 +46,27 @@ public class MainPageService : IMainPageService
         try
         {
             var result = await _mainPageRepository.GetFooterItemsAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит данные для фона студента.
+    /// </summary>
+    /// <returns>Данные для фона студента.</returns>
+    public async Task<IEnumerable<MainFonStudentOutput>> GetMainFonStudentAsync()
+    {
+        try
+        {
+            var result = await _mainPageRepository.GetMainFonStudentAsync();
 
             return result;
         }

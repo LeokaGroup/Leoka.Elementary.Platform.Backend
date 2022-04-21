@@ -5,6 +5,11 @@
 /// </summary>
 public class MainFonStudentEntity
 {
+    public MainFonStudentEntity()
+    {
+        MainFonStudentItems = new HashSet<MainFonStudentItemEntity>();
+    }
+
     /// <summary>
     /// PK.
     /// </summary>
@@ -24,4 +29,6 @@ public class MainFonStudentEntity
     /// Id подзаголовка.
     /// </summary>
     public int FonSubTitleId { get; set; }
+    
+    public HashSet<MainFonStudentItemEntity> MainFonStudentItems { get; set; }
 }

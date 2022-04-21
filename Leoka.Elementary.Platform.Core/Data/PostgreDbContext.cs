@@ -105,4 +105,9 @@ public class PostgreDbContext : DbContext
     /// Таблица dbo.WriteReception.
     /// </summary>
     public DbSet<WriteReceptionEntity> WriteReception { get; set; }
+
+    /// <summary>
+    /// Таблица dbo.MainFonStudentItem.
+    /// </summary>
+    public DbSet<MainFonStudentItemEntity> MainFonStudentItems { get; set; }
 }

@@ -1,4 +1,5 @@
 ﻿using Leoka.Elementary.Platform.Models.Common.Output;
+using Leoka.Elementary.Platform.Models.MainPage.Output;
 
 namespace Leoka.Elementary.Platform.Abstractions.MainPage;
 
@@ -18,4 +19,10 @@ public interface IMainPageService
     /// </summary>
     /// <returns>Список полей футера.</returns>
     Task<IEnumerable<FooterOutput>> GetFooterItemsAsync();
+
+    /// <summary>
+    /// Метод получит данные для фона студента.
+    /// </summary>
+    /// <returns>Данные для фона студента.</returns>
+    Task<IEnumerable<MainFonStudentOutput>> GetMainFonStudentAsync();
 }

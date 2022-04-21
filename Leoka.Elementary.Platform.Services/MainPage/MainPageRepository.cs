@@ -1,6 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.MainPage;
 using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.Models.Common.Output;
+using Leoka.Elementary.Platform.Models.MainPage.Output;
 using Microsoft.EntityFrameworkCore;
 
 namespace Leoka.Elementary.Platform.Services.MainPage;
@@ -71,6 +72,44 @@ public class MainPageRepository : IMainPageRepository
                     FooterWhatsAppUrl = f.FooterWhatsAppUrl,
                     FooterWhatsAppActionSysName = f.FooterWhatsAppActionSysName
                 })
+                .ToListAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит данные для фона студента.
+    /// </summary>
+    /// <returns>Данные для фона студента.</returns>
+    public async Task<IEnumerable<MainFonStudentOutput>> GetMainFonStudentAsync()
+    {
+        try
+        {
+            var result = await (from m1 in _dbContext.MainFonStudent
+                    from m2 in _dbContext.MainFonStudentItems
+                    where m1.FonSubTitleId == 1
+                    select new MainFonStudentOutput
+                    {
+                        FonTitle = m1.FonTitle,
+                        FonSubTitle = m1.FonSubTitle,
+                        FonSubTitleId = m1.FonSubTitleId,
+                        MainFonStudentItems = new List<MainFonStudentItemsOutput>
+                        {
+                            new()
+                            {
+                                FonSubTitleId = m2.FonSubTitleId,
+                                FonSubTitleText = m2.FonSubTitleText
+                            }
+                        }
+                    })
                 .ToListAsync();
 
             return result;

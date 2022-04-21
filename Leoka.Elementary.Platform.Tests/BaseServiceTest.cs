@@ -1,6 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Access.Service;
 using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.Mailings.Services;
+using Leoka.Elementary.Platform.Services.MainPage;
 using Leoka.Elementary.Platform.Services.User;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +21,8 @@ public class BaseServiceTest
     protected RoleRepository RoleRepository;
     protected RoleService RoleService;
     protected MailingsService MailingsService;
+    protected MainPageService MainPageService;
+    protected MainPageRepository MainPageRepository;
     
     public BaseServiceTest()
     {
@@ -38,5 +41,7 @@ public class BaseServiceTest
         UserService = new UserService(UserRepository, MailingsService);
         RoleRepository = new RoleRepository(PostgreDbContext);
         RoleService = new RoleService(RoleRepository);
+        MainPageRepository = new MainPageRepository(PostgreDbContext);
+        MainPageService = new MainPageService(MainPageRepository);
     }
 }
