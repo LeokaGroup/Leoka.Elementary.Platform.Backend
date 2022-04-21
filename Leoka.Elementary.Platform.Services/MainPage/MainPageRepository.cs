@@ -93,23 +93,22 @@ public class MainPageRepository : IMainPageRepository
     {
         try
         {
-            var result = await (from m1 in _dbContext.MainFonStudent
-                    from m2 in _dbContext.MainFonStudentItems
-                    where m1.FonSubTitleId == 1
-                    select new MainFonStudentOutput
-                    {
-                        FonTitle = m1.FonTitle,
-                        FonSubTitle = m1.FonSubTitle,
-                        FonSubTitleId = m1.FonSubTitleId,
-                        MainFonStudentItems = new List<MainFonStudentItemsOutput>(_dbContext.MainFonStudentItems
-                                .Where(i => i.FonSubTitleId == 1)
-                                .Select(i => new MainFonStudentItemsOutput
-                                {
-                                    FonSubTitleId = i.FonSubTitleId,
-                                    FonSubTitleText = i.FonSubTitleText
-                                }))
-                            .ToList()
-                    })
+            var result = await _dbContext.MainFonStudent
+                .Where(f => f.FonSubTitleId == 1)
+                .Select(f => new MainFonStudentOutput
+                {
+                    FonTitle = f.FonTitle,
+                    FonSubTitle = f.FonSubTitle,
+                    FonSubTitleId = f.FonSubTitleId,
+                    MainFonStudentItems = new List<MainFonStudentItemsOutput>(_dbContext.MainFonStudentItems
+                            .Where(i => i.FonSubTitleId == 1)
+                            .Select(i => new MainFonStudentItemsOutput
+                            {
+                                FonSubTitleId = i.FonSubTitleId,
+                                FonSubTitleText = i.FonSubTitleText
+                            }))
+                        .ToList()
+                })
                 .FirstOrDefaultAsync();
 
             return result;
