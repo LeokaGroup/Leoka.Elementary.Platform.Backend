@@ -34,6 +34,7 @@ public class MainPageRepository : IMainPageRepository
                     HeaderItemPosition = h.HeaderItemPosition,
                     HeaderItemUrl = h.HeaderItemUrl
                 })
+                .OrderBy(o => o.HeaderItemPosition)
                 .ToListAsync();
 
             return result;
