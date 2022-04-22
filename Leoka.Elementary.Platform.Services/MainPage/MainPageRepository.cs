@@ -122,4 +122,31 @@ public class MainPageRepository : IMainPageRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные записи на урок.
+    /// </summary>
+    /// <returns>Данные записи на урок.</returns>
+    public async Task<ReceptionOutput> GetReceptionAsync()
+    {
+        try
+        {
+            var result = await _dbContext.WriteReception
+                .Select(r => new ReceptionOutput
+                {
+                    WriteReceptionText = r.WriteReceptionText,
+                    WriteReceptionButtonText = r.WriteReceptionButtonText
+                })
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

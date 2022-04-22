@@ -78,4 +78,25 @@ public class MainPageService : IMainPageService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные записи на урок.
+    /// </summary>
+    /// <returns>Данные записи на урок.</returns>
+    public async Task<ReceptionOutput> GetReceptionAsync()
+    {
+        try
+        {
+            var result = await _mainPageRepository.GetReceptionAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

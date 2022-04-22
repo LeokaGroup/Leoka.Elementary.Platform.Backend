@@ -25,4 +25,10 @@ public interface IMainPageService
     /// </summary>
     /// <returns>Данные для фона студента.</returns>
     Task<MainFonStudentOutput> GetMainFonStudentAsync();
+
+    /// <summary>
+    /// Метод получит данные записи на урок.
+    /// </summary>
+    /// <returns>Данные записи на урок.</returns>
+    Task<ReceptionOutput> GetReceptionAsync();
 }

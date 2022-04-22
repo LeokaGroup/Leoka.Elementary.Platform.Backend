@@ -75,4 +75,23 @@ public class MainPageController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод получит данные записи на урок.
+    /// </summary>
+    /// <returns>Данные записи на урок.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("reception")]
+    [ProducesResponseType(200, Type = typeof(ReceptionOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<ReceptionOutput> GetReceptionAsync()
+    {
+        var result = await _mainPageService.GetReceptionAsync();
+
+        return result;
+    }
 }
