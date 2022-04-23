@@ -94,4 +94,23 @@ public class MainPageController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод получит данные блока с чего начать.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("begin")]
+    [ProducesResponseType(200, Type = typeof(BeginOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<BeginOutput> GetBeginItemsAsync()
+    {
+        var result = await _mainPageService.GetBeginItemsAsync();
+
+        return result;
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using Leoka.Elementary.Platform.Models.Common.Output;
+using Leoka.Elementary.Platform.Models.Entities.MainPage;
 using Leoka.Elementary.Platform.Models.MainPage.Output;
 
 namespace Leoka.Elementary.Platform.Abstractions.MainPage;
@@ -31,4 +32,10 @@ public interface IMainPageRepository
     /// </summary>
     /// <returns>Данные записи на урок.</returns>
     Task<ReceptionOutput> GetReceptionAsync();
+    
+    /// <summary>
+    /// Метод получит данные блока с чего начать.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    Task<WhereBeginEntity> GetBeginItemsAsync();
 }

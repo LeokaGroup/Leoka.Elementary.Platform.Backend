@@ -1,4 +1,5 @@
-﻿using Leoka.Elementary.Platform.Abstractions.MainPage;
+﻿using AutoMapper;
+using Leoka.Elementary.Platform.Abstractions.MainPage;
 using Leoka.Elementary.Platform.Models.Common.Output;
 using Leoka.Elementary.Platform.Models.MainPage.Output;
 
@@ -10,10 +11,13 @@ namespace Leoka.Elementary.Platform.Services.MainPage;
 public class MainPageService : IMainPageService
 {
     private readonly IMainPageRepository _mainPageRepository;
+    private readonly IMapper _mapper; 
     
-    public MainPageService(IMainPageRepository mainPageRepository)
+    public MainPageService(IMainPageRepository mainPageRepository,
+        IMapper mapper)
     {
         _mainPageRepository = mainPageRepository;
+        _mapper = mapper;
     }
 
     /// <summary>
@@ -88,6 +92,30 @@ public class MainPageService : IMainPageService
         try
         {
             var result = await _mainPageRepository.GetReceptionAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит данные записи на урок.
+    /// </summary>
+    /// <returns>Данные записи на урок.</returns>
+    public async Task<BeginOutput> GetBeginItemsAsync()
+    {
+        try
+        {
+            var items = await _mainPageRepository.GetBeginItemsAsync();
+            
+            // Мапит к типу BeginOutput.
+            var result = _mapper.Map<BeginOutput>(items);
 
             return result;
         }

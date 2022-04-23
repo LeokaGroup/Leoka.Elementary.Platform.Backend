@@ -27,5 +27,5 @@ public class WhereBeginItemEntity
 
     public int BeginItemId { get; set; }
 
-    public WhereBeginEntity WhereBegin { get; set; }
+    public virtual WhereBeginEntity WhereBegin { get; set; }
 }

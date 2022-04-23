@@ -42,6 +42,6 @@ public class BaseServiceTest
         RoleRepository = new RoleRepository(PostgreDbContext);
         RoleService = new RoleService(RoleRepository);
         MainPageRepository = new MainPageRepository(PostgreDbContext);
-        MainPageService = new MainPageService(MainPageRepository);
+        MainPageService = new MainPageService(MainPageRepository, null);
     }
 }

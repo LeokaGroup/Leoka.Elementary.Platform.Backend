@@ -1,7 +1,9 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using Leoka.Elementary.Platform.Backend.Core.Data;
 using Leoka.Elementary.Platform.Core.Data;
+using Leoka.Elementary.Platform.Core.Mapper;
 using Leoka.Elementary.Platform.Core.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +62,12 @@ builder.Host
 
 // Нужно для типа timestamp в Postgres.
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+// var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
+//
+// var mapper = mapperConfig.CreateMapper();
+// builder.Services.AddSingleton(mapper);
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

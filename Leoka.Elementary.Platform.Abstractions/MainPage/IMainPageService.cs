@@ -31,4 +31,10 @@ public interface IMainPageService
     /// </summary>
     /// <returns>Данные записи на урок.</returns>
     Task<ReceptionOutput> GetReceptionAsync();
+
+    /// <summary>
+    /// Метод получит данные блока с чего начать.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    Task<BeginOutput> GetBeginItemsAsync();
 }

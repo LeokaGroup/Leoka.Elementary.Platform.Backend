@@ -30,5 +30,5 @@ public class WhereBeginEntity
     /// </summary>
     public int BeginItemId { get; set; }
     
-    public HashSet<WhereBeginItemEntity> WhereBeginItems { get; set; }
+    public virtual ICollection<WhereBeginItemEntity> WhereBeginItems { get; set; }
 }

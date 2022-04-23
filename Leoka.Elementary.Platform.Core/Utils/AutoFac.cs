@@ -120,7 +120,7 @@ public static class AutoFac
             _builder.RegisterType<PostgreDbContext>()
                 .WithParameter("options", optionsBuilder)
                 .InstancePerLifetimeScope();
-
+            
             _container = _builder.Build();
         }
 

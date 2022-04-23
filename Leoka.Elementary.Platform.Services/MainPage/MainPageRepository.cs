@@ -1,6 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.MainPage;
 using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.Models.Common.Output;
+using Leoka.Elementary.Platform.Models.Entities.MainPage;
 using Leoka.Elementary.Platform.Models.MainPage.Output;
 using Microsoft.EntityFrameworkCore;
 
@@ -136,6 +137,35 @@ public class MainPageRepository : IMainPageRepository
                 {
                     WriteReceptionText = r.WriteReceptionText,
                     WriteReceptionButtonText = r.WriteReceptionButtonText
+                })
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит данные блока с чего начать.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    public async Task<WhereBeginEntity> GetBeginItemsAsync()
+    {
+        try
+        {
+            var result = await _dbContext.WhereBegin
+                .Include(w => w.WhereBeginItems)
+                .Select(w => new WhereBeginEntity
+                {
+                    WhereBeginTitle = w.WhereBeginTitle,
+                    WhereBeginSubTitle = w.WhereBeginSubTitle,
+                    WhereBeginItems = w.WhereBeginItems
                 })
                 .FirstOrDefaultAsync();
 
