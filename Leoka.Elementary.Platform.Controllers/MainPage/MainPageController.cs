@@ -113,4 +113,23 @@ public class MainPageController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод получит данные для блока умного класса.
+    /// </summary>
+    /// <returns>Данные для блока.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("smart-class")]
+    [ProducesResponseType(200, Type = typeof(SmartClassStudentOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<SmartClassStudentOutput> GetSmartClassAsync()
+    {
+        var result = await _mainPageService.GetSmartClassAsync();
+
+        return result;
+    }
 }

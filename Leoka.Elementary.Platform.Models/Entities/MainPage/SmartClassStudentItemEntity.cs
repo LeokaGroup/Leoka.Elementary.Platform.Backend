@@ -22,5 +22,5 @@ public class SmartClassStudentItemEntity
     /// </summary>
     public string SmartItemSubTitle { get; set; }
 
-    public SmartClassStudentEntity SmartClassStudent { get; set; }
+    public virtual SmartClassStudentEntity SmartClassStudent { get; set; }
 }

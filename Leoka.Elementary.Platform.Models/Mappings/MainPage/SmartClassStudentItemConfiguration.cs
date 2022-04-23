@@ -36,7 +36,7 @@ public partial class SmartClassStudentItemConfiguration : IEntityTypeConfigurati
         entity.HasOne(p => p.SmartClassStudent)
             .WithMany(b => b.SmartClassStudentItems)
             .HasForeignKey(p => p.SmartClassItemId)
-            .HasConstraintName("MainBestQuestionOptions_QuestionId_fkey");
+            .HasConstraintName("SmartClassStudentItems_SmartClassItemId_fkey");
         
         OnConfigurePartial(entity);
     }

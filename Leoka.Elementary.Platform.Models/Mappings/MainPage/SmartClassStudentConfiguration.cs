@@ -41,7 +41,7 @@ public partial class SmartClassStudentConfiguration : IEntityTypeConfiguration<S
         entity.HasIndex(u => u.SmartClassItemId)
             .HasName("Uniq_SmartClassStudent_SmartClassItemId")
             .IsUnique();
-
+        
         OnConfigurePartial(entity);
     }
 

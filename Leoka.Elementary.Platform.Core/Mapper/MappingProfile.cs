@@ -13,5 +13,7 @@ public class MappingProfile : Profile
     {
         CreateMap<WhereBeginEntity, BeginOutput>();
         CreateMap<WhereBeginItemEntity, BeginItemsOutput>();
+        CreateMap<SmartClassStudentEntity, SmartClassStudentOutput>();
+        CreateMap<SmartClassStudentItemEntity, SmartClassStudentItemsOutput>();
     }
 }

@@ -142,7 +142,7 @@ public class MainPageRepository : IMainPageRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -171,7 +171,41 @@ public class MainPageRepository : IMainPageRepository
 
             return result;
         }
-        
+
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит данные для блока умного класса.
+    /// </summary>
+    /// <returns>Данные для блока.</returns>
+    public async Task<SmartClassStudentOutput> GetSmartClassAsync()
+    {
+        try
+        {
+            var result = await (from s in _dbContext.SmartClassStudent
+                    select new SmartClassStudentOutput
+                    {
+                        SmartClassTitle = s.SmartClassTitle,
+                        SmartClassSubTitle = s.SmartClassSubTitle,
+                        SmartClassStudentItems = new List<SmartClassStudentItemsOutput>(_dbContext.SmartClassStudentItems
+                                .Select(res => new SmartClassStudentItemsOutput
+                                {
+                                    SmartItemTitle = res.SmartItemTitle,
+                                    SmartItemSubTitle = res.SmartItemSubTitle
+                                }))
+                            .ToList()
+                    })
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {

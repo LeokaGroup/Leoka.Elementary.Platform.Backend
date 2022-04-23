@@ -35,5 +35,5 @@ public class SmartClassStudentEntity
     /// </summary>
     public int SmartClassItemId { get; set; }
 
-    public HashSet<SmartClassStudentItemEntity> SmartClassStudentItems { get; set; }
+    public virtual ICollection<SmartClassStudentItemEntity> SmartClassStudentItems { get; set; }
 }

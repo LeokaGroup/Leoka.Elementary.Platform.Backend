@@ -37,4 +37,10 @@ public interface IMainPageService
     /// </summary>
     /// <returns>Данные блока.</returns>
     Task<BeginOutput> GetBeginItemsAsync();
+    
+    /// <summary>
+    /// Метод получит данные для блока умного класса.
+    /// </summary>
+    /// <returns>Данные для блока.</returns>
+    Task<SmartClassStudentOutput> GetSmartClassAsync();
 }

@@ -127,4 +127,25 @@ public class MainPageService : IMainPageService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные для блока умного класса.
+    /// </summary>
+    /// <returns>Данные для блока.</returns>
+    public async Task<SmartClassStudentOutput> GetSmartClassAsync()
+    {
+        try
+        {
+            var result = await _mainPageRepository.GetSmartClassAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

@@ -38,4 +38,10 @@ public interface IMainPageRepository
     /// </summary>
     /// <returns>Данные блока.</returns>
     Task<WhereBeginEntity> GetBeginItemsAsync();
+
+    /// <summary>
+    /// Метод получит данные для блока умного класса.
+    /// </summary>
+    /// <returns>Данные для блока.</returns>
+    Task<SmartClassStudentOutput> GetSmartClassAsync();
 }
