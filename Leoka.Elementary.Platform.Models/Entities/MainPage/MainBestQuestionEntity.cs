@@ -19,7 +19,7 @@ public class MainBestQuestionEntity
 
     public string MainBestOptionQuestionText { get; set; }
 
-    public HashSet<MainBestQuestionOptionEntity> MainBestOptions { get; set; }
+    public ICollection<MainBestQuestionOptionEntity> MainBestOptions { get; set; }
 
     public MainBestOptionEntity MainBestOption { get; set; }
 }

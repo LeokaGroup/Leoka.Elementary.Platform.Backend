@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
 using Autofac;
+using AutoMapper;
 using Leoka.Elementary.Platform.Core.Attributes;
 using Leoka.Elementary.Platform.Core.Data;
+using Leoka.Elementary.Platform.Core.Mapper;
 using Microsoft.EntityFrameworkCore;
 using Module = Autofac.Module;
 
@@ -90,6 +92,17 @@ public static class AutoFac
             .Union(assemblies6)
             .Union(assemblies7)
             .Union(assemblies8);
+        
+        b.RegisterType<MappingProfile>().As<Profile>();
+        b.Register(c => new MapperConfiguration(cfg =>
+        {
+            foreach (var profile in c.Resolve<IEnumerable<Profile>>())
+            {
+                cfg.AddProfile(profile);
+            }
+        })).AsSelf().SingleInstance();
+
+        b.Register(c => c.Resolve<MapperConfiguration>().CreateMapper(c.Resolve)).As<IMapper>().InstancePerLifetimeScope();
 
         _typeModules = (from assembly in assemblies
             from type in assembly.GetTypes()

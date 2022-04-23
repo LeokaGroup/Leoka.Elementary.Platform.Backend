@@ -213,4 +213,34 @@ public class MainPageRepository : IMainPageRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные для блока вопросов.
+    /// </summary>
+    /// <returns>Список вопросов с вариантами ответов.</returns>
+    public async Task<IEnumerable<MainBestQuestionEntity>> GetBestVariantAsync()
+    {
+        try
+        {
+            var result = await _dbContext.MainBestQuestions
+                .Include(b => b.MainBestOptions)
+                .Select(b => new MainBestQuestionEntity
+                {
+                    MainBestOptionBlockId = b.MainBestOptionBlockId,
+                    QuestionId = b.QuestionId,
+                    MainBestOptionQuestionText = b.MainBestOptionQuestionText,
+                    MainBestOptions = b.MainBestOptions
+                })
+                .ToListAsync();
+                
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

@@ -43,4 +43,10 @@ public interface IMainPageService
     /// </summary>
     /// <returns>Данные для блока.</returns>
     Task<SmartClassStudentOutput> GetSmartClassAsync();
+
+    /// <summary>
+    /// Метод получит данные для блока вопросов.
+    /// </summary>
+    /// <returns>Список вопросов с вариантами ответов.</returns>
+    Task<IEnumerable<BestVariantOutput>> GetBestVariantAsync();
 }

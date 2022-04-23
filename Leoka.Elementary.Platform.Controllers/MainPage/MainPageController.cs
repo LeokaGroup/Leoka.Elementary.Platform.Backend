@@ -132,4 +132,23 @@ public class MainPageController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод получит данные для блока вопросов.
+    /// </summary>
+    /// <returns>Список вопросов с вариантами ответов.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("best")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<BestVariantOutput>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<IEnumerable<BestVariantOutput>> GetBestVariantAsync()
+    {
+        var result = await _mainPageService.GetBestVariantAsync();
+
+        return result;
+    } 
 }

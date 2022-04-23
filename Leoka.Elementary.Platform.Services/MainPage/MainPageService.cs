@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Leoka.Elementary.Platform.Abstractions.MainPage;
+using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.Models.Common.Output;
 using Leoka.Elementary.Platform.Models.MainPage.Output;
 
@@ -13,11 +14,10 @@ public class MainPageService : IMainPageService
     private readonly IMainPageRepository _mainPageRepository;
     private readonly IMapper _mapper; 
     
-    public MainPageService(IMainPageRepository mainPageRepository,
-        IMapper mapper)
+    public MainPageService(IMainPageRepository mainPageRepository)
     {
         _mainPageRepository = mainPageRepository;
-        _mapper = mapper;
+        _mapper = AutoFac.Resolve<IMapper>();;
     }
 
     /// <summary>
@@ -137,6 +137,29 @@ public class MainPageService : IMainPageService
         try
         {
             var result = await _mainPageRepository.GetSmartClassAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит данные для блока вопросов.
+    /// </summary>
+    /// <returns>Список вопросов с вариантами ответов.</returns>
+    public async Task<IEnumerable<BestVariantOutput>> GetBestVariantAsync()
+    {
+        try
+        {
+            var items = await _mainPageRepository.GetBestVariantAsync();
+
+            var result = _mapper.Map<List<BestVariantOutput>>(items);
 
             return result;
         }

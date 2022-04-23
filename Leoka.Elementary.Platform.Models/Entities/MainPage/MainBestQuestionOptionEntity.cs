@@ -27,5 +27,5 @@ public class MainBestQuestionOptionEntity
 
     public MainBestQuestionEntity MainBestQuestion { get; set; }
     
-    public HashSet<MainBestQuestionAcceptAnswerEntity> MainBestQuestionAcceptAnswers { get; set; }
+    public ICollection<MainBestQuestionAcceptAnswerEntity> MainBestQuestionAcceptAnswers { get; set; }
 }
