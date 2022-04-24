@@ -170,4 +170,23 @@ public class MainPageController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод получит данные для блока о нашей платформе.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("about")]
+    [ProducesResponseType(200, Type = typeof(AboutOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<AboutOutput> GetAboutAsync()
+    {
+        var result = await _mainPageService.GetAboutAsync();
+
+        return result;
+    }
 }

@@ -272,4 +272,35 @@ public class MainPageRepository : IMainPageRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные для блока о нашей платформе.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    public async Task<AboutOutput> GetAboutAsync()
+    {
+        try
+        {
+            var result = await _dbContext.AboutPlatforms
+                .Select(a => new AboutOutput
+                {
+                    AboutTitle = a.AboutTitle,
+                    AboutSubTitle = a.AboutSubTitle,
+                    AboutMentorTitle = a.AboutMentorTitle,
+                    AboutMentorSubTitle = a.AboutMentorSubTitle,
+                    AboutStudentTitle = a.AboutStudentTitle,
+                    AboutStudentSubTitle = a.AboutStudentSubTitle
+                })
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

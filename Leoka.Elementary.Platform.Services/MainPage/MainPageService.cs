@@ -194,4 +194,25 @@ public class MainPageService : IMainPageService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные для блока о нашей платформе.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    public async Task<AboutOutput> GetAboutAsync()
+    {
+        try
+        {
+            var result = await _mainPageRepository.GetAboutAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

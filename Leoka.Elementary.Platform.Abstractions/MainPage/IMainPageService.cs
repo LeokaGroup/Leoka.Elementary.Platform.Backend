@@ -55,4 +55,10 @@ public interface IMainPageService
     /// </summary>
     /// <returns>Данные для заголовков блока списка вопросов.</returns>
     Task<OptionOutput> GetTitleOptionAsync();
+    
+    /// <summary>
+    /// Метод получит данные для блока о нашей платформе.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    Task<AboutOutput> GetAboutAsync();
 }
