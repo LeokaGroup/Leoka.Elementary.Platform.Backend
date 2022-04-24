@@ -16,13 +16,18 @@ public static class AutoFac
     private static IEnumerable<Type> _typeModules;
 
     /// <summary>
-    /// Инициализация контейнера
+    /// Метод инициализирует контейнер начальными регистрациями.
     /// </summary>
     public static void Init(ContainerBuilder b)
     {
         RegisterAllAssemblyTypes(b);
     }
 
+    /// <summary>
+    /// Метод получит все сборки для сканирования.
+    /// </summary>
+    /// <param name="condition">Условие сканирования, например конкретная сборка.</param>
+    /// <returns>Массив сборок.</returns>
     public static Assembly[] GetAssembliesFromApplicationBaseDirectory(Func<AssemblyName, bool> condition)
     {
         var baseDirectoryPath = AppDomain.CurrentDomain.BaseDirectory;
@@ -36,6 +41,10 @@ public static class AutoFac
             .ToArray();
     }
 
+    /// <summary>
+    /// Метод сканирует все сборки и регистрирует все модули, которые найдет в них.
+    /// </summary>
+    /// <param name="builder">Билдер контейнера, который наполнять регистрациями.</param>
     private static void RegisterAllAssemblyTypes(ContainerBuilder b)
     {
         var assemblies1 =
@@ -92,17 +101,8 @@ public static class AutoFac
             .Union(assemblies6)
             .Union(assemblies7)
             .Union(assemblies8);
-        
-        b.RegisterType<MappingProfile>().As<Profile>();
-        b.Register(c => new MapperConfiguration(cfg =>
-        {
-            foreach (var profile in c.Resolve<IEnumerable<Profile>>())
-            {
-                cfg.AddProfile(profile);
-            }
-        })).AsSelf().SingleInstance();
 
-        b.Register(c => c.Resolve<MapperConfiguration>().CreateMapper(c.Resolve)).As<IMapper>().InstancePerLifetimeScope();
+        RegisterMapper(b);
 
         _typeModules = (from assembly in assemblies
             from type in assembly.GetTypes()
@@ -128,18 +128,10 @@ public static class AutoFac
             _builder = new ContainerBuilder();
 
             RegisterAllAssemblyTypes(_builder);
-
-            var optionsBuilder = new DbContextOptions<PostgreDbContext>();
-            _builder.RegisterType<PostgreDbContext>()
-                .WithParameter("options", optionsBuilder)
-                .InstancePerLifetimeScope();
+            RegisterDbContext(_builder);
+            RegisterMapper(_builder);
             
             _container = _builder.Build();
-        }
-
-        if (!_container.IsRegistered<TService>())
-        {
-            return null;
         }
 
         var service = _container.Resolve<TService>();
@@ -156,11 +148,8 @@ public static class AutoFac
         }
 
         RegisterAllAssemblyTypes(_builder);
-
-        var optionsBuilder = new DbContextOptions<PostgreDbContext>();
-        _builder.RegisterType<PostgreDbContext>()
-            .WithParameter("options", optionsBuilder)
-            .InstancePerLifetimeScope();
+        RegisterDbContext(_builder);
+        RegisterMapper(_builder);
 
         return _container.BeginLifetimeScope();
     }
@@ -183,5 +172,31 @@ public static class AutoFac
         var service = _container.ResolveNamed<TService>(serviceName);
 
         return service;
+    }
+
+    /// <summary>
+    /// Метод регистрирует контекст БД.
+    /// </summary>
+    /// <param name="builder">Билдер контейнера, который наполнять регистрациями.</param>
+    private static void RegisterDbContext(ContainerBuilder builder)
+    {
+        var optionsBuilder = new DbContextOptions<PostgreDbContext>();
+        builder.RegisterType<PostgreDbContext>()
+            .WithParameter("options", optionsBuilder)
+            .InstancePerLifetimeScope();
+    }
+
+    private static void RegisterMapper(ContainerBuilder builder)
+    {
+        builder.RegisterType<MappingProfile>().As<Profile>();
+        builder.Register(c => new MapperConfiguration(cfg =>
+        {
+            foreach (var profile in c.Resolve<IEnumerable<Profile>>())
+            {
+                cfg.AddProfile(profile);
+            }
+        })).AsSelf().SingleInstance();
+
+        builder.Register(c => c.Resolve<MapperConfiguration>().CreateMapper(c.Resolve)).As<IMapper>().InstancePerLifetimeScope();
     }
 }

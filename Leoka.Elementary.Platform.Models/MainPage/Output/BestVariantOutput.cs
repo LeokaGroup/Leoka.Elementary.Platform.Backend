@@ -7,6 +7,8 @@ public class BestVariantOutput
     public int MainBestOptionBlockId { get; set; }
 
     public string MainBestOptionQuestionText { get; set; }
+    
+    public string ButtonActionText { get; set; }
 
     public List<BestVariantItemsOutput> MainBestOptions { get; set; }
 }

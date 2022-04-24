@@ -12,12 +12,10 @@ namespace Leoka.Elementary.Platform.Services.MainPage;
 public class MainPageService : IMainPageService
 {
     private readonly IMainPageRepository _mainPageRepository;
-    private readonly IMapper _mapper; 
     
     public MainPageService(IMainPageRepository mainPageRepository)
     {
         _mainPageRepository = mainPageRepository;
-        _mapper = AutoFac.Resolve<IMapper>();;
     }
 
     /// <summary>
@@ -115,7 +113,8 @@ public class MainPageService : IMainPageService
             var items = await _mainPageRepository.GetBeginItemsAsync();
             
             // Мапит к типу BeginOutput.
-            var result = _mapper.Map<BeginOutput>(items);
+            var mapper = AutoFac.Resolve<IMapper>();
+            var result = mapper.Map<BeginOutput>(items);
 
             return result;
         }
@@ -159,7 +158,8 @@ public class MainPageService : IMainPageService
         {
             var items = await _mainPageRepository.GetBestVariantAsync();
 
-            var result = _mapper.Map<List<BestVariantOutput>>(items);
+            var mapper = AutoFac.Resolve<IMapper>();
+            var result = mapper.Map<List<BestVariantOutput>>(items);
 
             return result;
         }

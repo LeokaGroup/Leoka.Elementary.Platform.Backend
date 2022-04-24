@@ -229,7 +229,8 @@ public class MainPageRepository : IMainPageRepository
                     MainBestOptionBlockId = b.MainBestOptionBlockId,
                     QuestionId = b.QuestionId,
                     MainBestOptionQuestionText = b.MainBestOptionQuestionText,
-                    MainBestOptions = b.MainBestOptions
+                    MainBestOptions = b.MainBestOptions,
+                    ButtonActionText = b.ButtonActionText
                 })
                 .ToListAsync();
                 
