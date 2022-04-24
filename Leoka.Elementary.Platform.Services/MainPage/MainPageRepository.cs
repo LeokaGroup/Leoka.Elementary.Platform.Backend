@@ -193,6 +193,7 @@ public class MainPageRepository : IMainPageRepository
                     {
                         SmartClassTitle = s.SmartClassTitle,
                         SmartClassSubTitle = s.SmartClassSubTitle,
+                        SmartClassUrlPreview = s.SmartClassUrlPreview,
                         SmartClassStudentItems = new List<SmartClassStudentItemsOutput>(_dbContext.SmartClassStudentItems
                                 .Select(res => new SmartClassStudentItemsOutput
                                 {
