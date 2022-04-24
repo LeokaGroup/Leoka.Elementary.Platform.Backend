@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Leoka.Elementary.Platform.Abstractions.MainPage;
-using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.Models.Common.Output;
 using Leoka.Elementary.Platform.Models.MainPage.Output;
 
@@ -161,6 +160,29 @@ public class MainPageService : IMainPageService
             var items = await _mainPageRepository.GetBestQuestionsAsync();
 
             var result = _mapper.Map<List<BestQuestionOutput>>(items);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит данные для заголовков блока списка вопросов.
+    /// </summary>
+    /// <returns>Данные для заголовков блока списка вопросов.</returns>
+    public async Task<OptionOutput> GetTitleOptionAsync()
+    {
+        try
+        {
+            var items = await _mainPageRepository.GetTitleOptionAsync();
+
+            var result = _mapper.Map<OptionOutput>(items);
 
             return result;
         }

@@ -49,4 +49,10 @@ public interface IMainPageService
     /// </summary>
     /// <returns>Список вопросов с вариантами ответов.</returns>
     Task<IEnumerable<BestQuestionOutput>> GetBestQuestionsAsync();
+    
+    /// <summary>
+    /// Метод получит данные для заголовков блока списка вопросов.
+    /// </summary>
+    /// <returns>Данные для заголовков блока списка вопросов.</returns>
+    Task<OptionOutput> GetTitleOptionAsync();
 }

@@ -19,5 +19,6 @@ public class MappingProfile : Profile
         
         CreateMap<MainBestQuestionEntity, BestQuestionOutput>();
         CreateMap<MainBestQuestionOptionEntity, BestQuestionVariantItemsOutput>();
+        CreateMap<MainBestOptionEntity, OptionOutput>();
     }
 }

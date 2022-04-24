@@ -150,5 +150,24 @@ public class MainPageController : BaseController
         var result = await _mainPageService.GetBestQuestionsAsync();
 
         return result;
-    } 
+    }
+
+    /// <summary>
+    /// Метод получит данные для заголовков блока списка вопросов.
+    /// </summary>
+    /// <returns>Данные для заголовков блока списка вопросов.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("options")]
+    [ProducesResponseType(200, Type = typeof(OptionOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<OptionOutput> GetTitleOptionAsync()
+    {
+        var result = await _mainPageService.GetTitleOptionAsync();
+
+        return result;
+    }
 }

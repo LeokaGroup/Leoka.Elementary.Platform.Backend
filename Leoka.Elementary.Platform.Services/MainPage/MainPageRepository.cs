@@ -244,4 +244,32 @@ public class MainPageRepository : IMainPageRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные для заголовков блока списка вопросов.
+    /// </summary>
+    /// <returns>Данные для заголовков блока списка вопросов.</returns>
+    public async Task<MainBestOptionEntity> GetTitleOptionAsync()
+    {
+        try
+        {
+            var result = await _dbContext.MainBestOptions
+                .Select(b => new MainBestOptionEntity
+                {
+                    BestOptionTitle = b.BestOptionTitle,
+                    BestOptionSubTitle = b.BestOptionSubTitle,
+                    BestOptionButtonText = b.BestOptionButtonText
+                })
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
