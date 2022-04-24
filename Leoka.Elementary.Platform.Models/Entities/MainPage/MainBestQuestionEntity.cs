@@ -19,8 +19,6 @@ public class MainBestQuestionEntity
 
     public string MainBestOptionQuestionText { get; set; }
 
-    public string ButtonActionText { get; set; }
-
     public ICollection<MainBestQuestionOptionEntity> MainBestOptions { get; set; }
 
     public MainBestOptionEntity MainBestOption { get; set; }

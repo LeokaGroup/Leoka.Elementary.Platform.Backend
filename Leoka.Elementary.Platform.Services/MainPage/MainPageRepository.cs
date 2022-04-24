@@ -218,7 +218,7 @@ public class MainPageRepository : IMainPageRepository
     /// Метод получит данные для блока вопросов.
     /// </summary>
     /// <returns>Список вопросов с вариантами ответов.</returns>
-    public async Task<IEnumerable<MainBestQuestionEntity>> GetBestVariantAsync()
+    public async Task<IEnumerable<MainBestQuestionEntity>> GetBestQuestionsAsync()
     {
         try
         {
@@ -229,8 +229,7 @@ public class MainPageRepository : IMainPageRepository
                     MainBestOptionBlockId = b.MainBestOptionBlockId,
                     QuestionId = b.QuestionId,
                     MainBestOptionQuestionText = b.MainBestOptionQuestionText,
-                    MainBestOptions = b.MainBestOptions,
-                    ButtonActionText = b.ButtonActionText
+                    MainBestOptions = b.MainBestOptions
                 })
                 .ToListAsync();
                 

@@ -17,7 +17,7 @@ public class MappingProfile : Profile
         CreateMap<SmartClassStudentEntity, SmartClassStudentOutput>();
         CreateMap<SmartClassStudentItemEntity, SmartClassStudentItemsOutput>();
         
-        CreateMap<MainBestQuestionEntity, BestVariantOutput>();
-        CreateMap<MainBestQuestionOptionEntity, BestVariantItemsOutput>();
+        CreateMap<MainBestQuestionEntity, BestQuestionOutput>();
+        CreateMap<MainBestQuestionOptionEntity, BestQuestionVariantItemsOutput>();
     }
 }

@@ -49,5 +49,5 @@ public interface IMainPageRepository
     /// Метод получит данные для блока вопросов.
     /// </summary>
     /// <returns>Список вопросов с вариантами ответов.</returns>
-    Task<IEnumerable<MainBestQuestionEntity>> GetBestVariantAsync();
+    Task<IEnumerable<MainBestQuestionEntity>> GetBestQuestionsAsync();
 }

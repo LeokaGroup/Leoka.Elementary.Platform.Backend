@@ -12,10 +12,13 @@ namespace Leoka.Elementary.Platform.Services.MainPage;
 public class MainPageService : IMainPageService
 {
     private readonly IMainPageRepository _mainPageRepository;
+    private readonly IMapper _mapper;
     
-    public MainPageService(IMainPageRepository mainPageRepository)
+    public MainPageService(IMainPageRepository mainPageRepository,
+        IMapper mapper)
     {
         _mainPageRepository = mainPageRepository;
+        _mapper = mapper;
     }
 
     /// <summary>
@@ -113,8 +116,7 @@ public class MainPageService : IMainPageService
             var items = await _mainPageRepository.GetBeginItemsAsync();
             
             // Мапит к типу BeginOutput.
-            var mapper = AutoFac.Resolve<IMapper>();
-            var result = mapper.Map<BeginOutput>(items);
+            var result = _mapper.Map<BeginOutput>(items);
 
             return result;
         }
@@ -152,14 +154,13 @@ public class MainPageService : IMainPageService
     /// Метод получит данные для блока вопросов.
     /// </summary>
     /// <returns>Список вопросов с вариантами ответов.</returns>
-    public async Task<IEnumerable<BestVariantOutput>> GetBestVariantAsync()
+    public async Task<IEnumerable<BestQuestionOutput>> GetBestQuestionsAsync()
     {
         try
         {
-            var items = await _mainPageRepository.GetBestVariantAsync();
+            var items = await _mainPageRepository.GetBestQuestionsAsync();
 
-            var mapper = AutoFac.Resolve<IMapper>();
-            var result = mapper.Map<List<BestVariantOutput>>(items);
+            var result = _mapper.Map<List<BestQuestionOutput>>(items);
 
             return result;
         }

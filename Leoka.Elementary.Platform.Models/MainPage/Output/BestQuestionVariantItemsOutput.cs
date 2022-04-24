@@ -1,6 +1,9 @@
 ﻿namespace Leoka.Elementary.Platform.Models.MainPage.Output;
 
-public class BestVariantItemsOutput
+/// <summary>
+/// Класс выходной модели со списком вариантов для вопросов.
+/// </summary>
+public class BestQuestionVariantItemsOutput
 {
     /// <summary>
     /// PK.
@@ -13,7 +16,7 @@ public class BestVariantItemsOutput
     public int QuestionId { get; set; }
 
     /// <summary>
-    /// Текст вопроса.
+    /// Текст варианта вопроса.
     /// </summary>
     public string VariantText { get; set; }
 }

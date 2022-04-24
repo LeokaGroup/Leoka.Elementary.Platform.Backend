@@ -9,7 +9,7 @@ public class GetBestVariantTest : BaseServiceTest
     [Test]
     public async Task GetBestVariantAsyncTest()
     {
-        var result = await MainPageService.GetBestVariantAsync();
+        var result = await MainPageService.GetBestQuestionsAsync();
 
         Assert.IsNotNull(result);
     } 

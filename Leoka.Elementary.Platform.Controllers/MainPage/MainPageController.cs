@@ -139,15 +139,15 @@ public class MainPageController : BaseController
     /// <returns>Список вопросов с вариантами ответов.</returns>
     [AllowAnonymous]
     [HttpGet]
-    [Route("best")]
-    [ProducesResponseType(200, Type = typeof(IEnumerable<BestVariantOutput>))]
+    [Route("questions")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<BestQuestionOutput>))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<IEnumerable<BestVariantOutput>> GetBestVariantAsync()
+    public async Task<IEnumerable<BestQuestionOutput>> GetBestQuestionsAsync()
     {
-        var result = await _mainPageService.GetBestVariantAsync();
+        var result = await _mainPageService.GetBestQuestionsAsync();
 
         return result;
     } 
