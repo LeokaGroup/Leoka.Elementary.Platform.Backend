@@ -1,6 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.MainPage;
 using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Models.Common.Output;
+using Leoka.Elementary.Platform.Models.MainPage.Input;
 using Leoka.Elementary.Platform.Models.MainPage.Output;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -209,6 +210,11 @@ public class MainPageController : BaseController
         return result;
     }
 
+    /// <summary>
+    /// Метод создаст новую заявку.
+    /// </summary>
+    /// <param name="requestInput">Входная модель.</param>
+    /// <returns>Данные заявки.</returns>
     [AllowAnonymous]
     [HttpPost]
     [Route("request")]
@@ -217,8 +223,27 @@ public class MainPageController : BaseController
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<RequestOutput> CreateRequestAsync()
+    public async Task<RequestOutput> CreateRequestAsync([FromBody] RequestInput requestInput)
     {
         throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Метод получит данные блока преподавателя.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("mentor")]
+    [ProducesResponseType(200, Type = typeof(MentorOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<MentorOutput> GetMentorAsync()
+    {
+        var result = await _mainPageService.GetMentorAsync();
+
+        return result;
     }
 }

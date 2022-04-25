@@ -336,4 +336,33 @@ public class MainPageRepository : IMainPageRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные блока преподавателя.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    public async Task<MentorOutput> GetMentorAsync()
+    {
+        try
+        {
+            var result = await _dbContext.MentorWork
+                .Select(m => new MentorOutput
+                {
+                    MentorWorkButtonText = m.MentorWorkButtonText,
+                    MentorWorkTitle = m.MentorWorkTitle,
+                    MentorWorkSubTitle = m.MentorWorkSubTitle,
+                    MentorWorkUrl = m.MentorWorkUrl
+                })
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

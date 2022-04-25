@@ -67,4 +67,10 @@ public interface IMainPageService
     /// </summary>
     /// <returns>Данные блока.</returns>
     Task<RequestOutput> GetRequestAsync();
+    
+    /// <summary>
+    /// Метод получит данные блока преподавателя.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    Task<MentorOutput> GetMentorAsync();
 }

@@ -236,4 +236,25 @@ public class MainPageService : IMainPageService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные блока преподавателя.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    public async Task<MentorOutput> GetMentorAsync()
+    {
+        try
+        {
+            var result = await _mainPageRepository.GetMentorAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
