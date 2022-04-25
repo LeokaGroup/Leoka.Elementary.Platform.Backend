@@ -189,4 +189,36 @@ public class MainPageController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод получит данные для блока создания заявки.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("request")]
+    [ProducesResponseType(200, Type = typeof(RequestOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<RequestOutput> GetRequestAsync()
+    {
+        var result = await _mainPageService.GetRequestAsync();
+
+        return result;
+    }
+
+    [AllowAnonymous]
+    [HttpPost]
+    [Route("request")]
+    [ProducesResponseType(200, Type = typeof(RequestOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<RequestOutput> CreateRequestAsync()
+    {
+        throw new NotImplementedException();
+    }
 }

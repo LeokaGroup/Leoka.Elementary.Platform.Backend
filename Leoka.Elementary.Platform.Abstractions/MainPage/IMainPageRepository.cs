@@ -62,4 +62,10 @@ public interface IMainPageRepository
     /// </summary>
     /// <returns>Данные блока.</returns>
     Task<AboutOutput> GetAboutAsync();
+    
+    /// <summary>
+    /// Метод получит данные для блока создания заявки.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    Task<RequestOutput> GetRequestAsync();
 }

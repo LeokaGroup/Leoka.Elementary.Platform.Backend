@@ -215,4 +215,25 @@ public class MainPageService : IMainPageService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные для блока создания заявки.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    public async Task<RequestOutput> GetRequestAsync()
+    {
+        try
+        {
+            var result = await _mainPageRepository.GetRequestAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

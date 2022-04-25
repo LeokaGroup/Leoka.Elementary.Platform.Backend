@@ -1,6 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Core.Extensions;
 using Leoka.Elementary.Platform.Models.Entities.Common;
 using Leoka.Elementary.Platform.Models.Entities.MainPage;
+using Leoka.Elementary.Platform.Models.Entities.Request;
 using Leoka.Elementary.Platform.Models.Entities.User;
 using Microsoft.EntityFrameworkCore;
 
@@ -110,4 +111,9 @@ public class PostgreDbContext : DbContext
     /// Таблица dbo.MainFonStudentItem.
     /// </summary>
     public DbSet<MainFonStudentItemEntity> MainFonStudentItems { get; set; }
+
+    /// <summary>
+    /// Таблица dbo.Requests.
+    /// </summary>
+    public DbSet<RequestEntity> Requests { get; set; }
 }

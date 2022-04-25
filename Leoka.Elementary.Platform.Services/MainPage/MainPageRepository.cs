@@ -303,4 +303,37 @@ public class MainPageRepository : IMainPageRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные для блока создания заявки.
+    /// </summary>
+    /// <returns>Данные блока.</returns>
+    public async Task<RequestOutput> GetRequestAsync()
+    {
+        try
+        {
+            var result = await _dbContext.Requests
+                .Select(r => new RequestOutput
+                {
+                    RequestFirstName = r.RequestFirstName,
+                    RequestLastName = r.RequestLastName,
+                    RequestPhoneNumber = r.RequestPhoneNumber,
+                    RequestTitle = r.RequestTitle,
+                    RequestSubTitle = r.RequestSubTitle,
+                    RequestButtonText = r.RequestButtonText,
+                    RequestEmail = r.RequestEmail,
+                    RequestMessage = r.RequestMessage
+                })
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
