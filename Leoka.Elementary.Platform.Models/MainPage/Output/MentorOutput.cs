@@ -24,4 +24,9 @@ public class MentorOutput
     /// Url события кнопки.
     /// </summary>
     public string MentorWorkUrl { get; set; }
+    
+    /// <summary>
+    /// Изображение преподавателя.
+    /// </summary>
+    public string UrlIconMentor { get; set; }
 }

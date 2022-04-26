@@ -289,7 +289,9 @@ public class MainPageRepository : IMainPageRepository
                     AboutMentorTitle = a.AboutMentorTitle,
                     AboutMentorSubTitle = a.AboutMentorSubTitle,
                     AboutStudentTitle = a.AboutStudentTitle,
-                    AboutStudentSubTitle = a.AboutStudentSubTitle
+                    AboutStudentSubTitle = a.AboutStudentSubTitle,
+                    UrlIconMentor = a.UrlIconMentor,
+                    UrlIconStudent = a.UrlIconStudent
                 })
                 .FirstOrDefaultAsync();
 
@@ -351,7 +353,8 @@ public class MainPageRepository : IMainPageRepository
                     MentorWorkButtonText = m.MentorWorkButtonText,
                     MentorWorkTitle = m.MentorWorkTitle,
                     MentorWorkSubTitle = m.MentorWorkSubTitle,
-                    MentorWorkUrl = m.MentorWorkUrl
+                    MentorWorkUrl = m.MentorWorkUrl,
+                    UrlIconMentor = m.UrlIconMentor
                 })
                 .FirstOrDefaultAsync();
 

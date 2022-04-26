@@ -53,6 +53,14 @@ public partial class AboutPlatformConfiguration : IEntityTypeConfiguration<About
             .HasMaxLength(400)
             .IsRequired();
 
+        entity.Property(e => e.UrlIconStudent)
+            .HasColumnName("UrlIconStudent")
+            .HasColumnType("text");
+        
+        entity.Property(e => e.UrlIconMentor)
+            .HasColumnName("UrlIconMentor")
+            .HasColumnType("text");
+
         entity.HasIndex(u => u.AboutId)
             .HasName("AboutPlatform_pkey")
             .IsUnique();

@@ -39,4 +39,14 @@ public class AboutPlatformEntity
     /// Подзаголовок блока преподавателя.
     /// </summary>
     public string AboutMentorSubTitle { get; set; }
+
+    /// <summary>
+    /// Изображение преподавателей.
+    /// </summary>
+    public string UrlIconMentor { get; set; }
+
+    /// <summary>
+    /// Изображение студента.
+    /// </summary>
+    public string UrlIconStudent { get; set; }
 }

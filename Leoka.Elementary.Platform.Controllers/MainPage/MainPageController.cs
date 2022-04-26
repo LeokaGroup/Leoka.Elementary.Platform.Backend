@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Leoka.Elementary.Platform.Controllers.MainPage;
 
 /// <summary>
-/// Контроллер для работы с пользователями.
+/// Контроллер главной страницы.
 /// </summary>
 [ApiController, Route("main")]
 public class MainPageController : BaseController

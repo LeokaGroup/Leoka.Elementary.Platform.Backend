@@ -39,6 +39,10 @@ public partial class MentorWorkConfiguration : IEntityTypeConfiguration<MentorWo
             .HasColumnName("MentorWorkUrl")
             .HasColumnType("text")
             .IsRequired();
+        
+        entity.Property(e => e.UrlIconMentor)
+            .HasColumnName("UrlIconMentor")
+            .HasColumnType("text");
 
         entity.HasIndex(u => u.MentorWorkUrl)
             .HasName("MainFonStudent_pkey")
