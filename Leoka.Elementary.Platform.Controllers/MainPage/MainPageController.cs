@@ -46,6 +46,7 @@ public class MainPageController : BaseController
     /// <returns>Список элементов футера.</returns>
     [AllowAnonymous]
     [HttpGet]
+    [Route("footer")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<FooterOutput>))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]

@@ -20,14 +20,12 @@ public partial class FooterConfiguration : IEntityTypeConfiguration<FooterEntity
         entity.Property(e => e.FirstFooterTitle)
             .HasColumnName("FirstFooterTitle")
             .HasColumnType("varchar(100)")
-            .HasMaxLength(100)
-            .IsRequired();
+            .HasMaxLength(100);
 
         entity.Property(e => e.LastFooterTitle)
             .HasColumnName("LastFooterTitle")
             .HasColumnType("varchar(100)")
-            .HasMaxLength(100)
-            .IsRequired();
+            .HasMaxLength(100);
         ;
         entity.Property(e => e.FooterColumnNumber)
             .HasColumnName("FooterColumnNumber")
