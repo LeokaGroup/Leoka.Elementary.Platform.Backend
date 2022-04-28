@@ -52,4 +52,11 @@ public interface IUserRepository
     /// <param name="code">Код подтверждения (guid).</param>
     /// <returns>Редиректит на страницу успеха.</returns>
     Task<bool> ConfirmEmailAccountCode(string code);
+
+    /// <summary>
+    /// Метод найдет Id пользователя по его коду.
+    /// </summary>
+    /// <param name="userCode">Код пользователя.</param>
+    /// <returns>Id пользователя.</returns>
+    Task<long> GetUserIdByUserCodeAsync(string userCode);
 }

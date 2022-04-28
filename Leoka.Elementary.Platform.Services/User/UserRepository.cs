@@ -70,6 +70,8 @@ public sealed class UserRepository : IUserRepository
             };
             await _postgreDbContext.Users.AddAsync(addUser);
             await _postgreDbContext.SaveChangesAsync();
+            
+            var userId = await GetUserIdByUserCodeAsync(addUser.UserCode);
 
             var result = new UserOutput
             {
@@ -81,7 +83,8 @@ public sealed class UserRepository : IUserRepository
                 PhoneNumber = userPhoneNumber,
                 DateRegister = now,
                 Successed = true,
-                ConfirmEmailCode = addUser.ConfirmEmailCode
+                ConfirmEmailCode = addUser.ConfirmEmailCode,
+                UserId = userId >= 0 ? userId : 0
             };
 
             // Назначит роль пользователю.
@@ -92,6 +95,8 @@ public sealed class UserRepository : IUserRepository
                 RoleId = roleId
             });
             await _postgreDbContext.SaveChangesAsync();
+
+            
 
             return result;
         }
@@ -336,6 +341,36 @@ public sealed class UserRepository : IUserRepository
             await _postgreDbContext.SaveChangesAsync();
 
             return true;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод найдет Id пользователя по его коду.
+    /// </summary>
+    /// <param name="userCode">Код пользователя.</param>
+    /// <returns>Id пользователя.</returns>
+    public async Task<long> GetUserIdByUserCodeAsync(string userCode)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(userCode))
+            {
+                throw new NotFoundUserCodeException(userCode);
+            }
+
+            var result = await _postgreDbContext.Users
+                .Where(u => u.UserCode.Equals(userCode))
+                .Select(u => u.UserId)
+                .FirstOrDefaultAsync();
+
+            return result;
         }
         
         // TODO: добавить логирование ошибок.
