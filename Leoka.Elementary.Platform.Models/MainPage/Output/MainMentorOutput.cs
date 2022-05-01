@@ -14,4 +14,9 @@ public class MainMentorOutput
     /// Подзаголовок.
     /// </summary>
     public string FonSubTitle { get; set; }
+
+    /// <summary>
+    /// Список элементов.
+    /// </summary>
+    public List<MainMentorItemOutput> MainMentorItems { get; set; }
 }

@@ -378,13 +378,22 @@ public class MainPageRepository : IMainPageRepository
         try
         {
             var result = await _dbContext.MainFonMentor
-                .Select(m => new MainMentorOutput
+                .Select(mf => new MainMentorOutput
                 {
-                    FonTitle = m.FonTitle,
-                    FonSubTitle = m.FonSubTitle
+                    FonTitle = mf.FonTitle,
+                    FonSubTitle = mf.FonSubTitle,
+                    MainMentorItems = _dbContext.MainFonMentorItems
+                        .Select(mi => new MainMentorItemOutput
+                        {
+                            FonSubTitleTextFirst = mi.FonSubTitleTextFirst,
+                            FonSubTitleTextSecond = mi.FonSubTitleTextSecond,
+                            FonSubSecondNumber = mi.FonSubSecondNumber
+                        })
+                        .OrderBy(o => o.FonSubSecondNumber)
+                        .ToList()
                 })
                 .FirstOrDefaultAsync();
-
+                
             return result;
         }
         

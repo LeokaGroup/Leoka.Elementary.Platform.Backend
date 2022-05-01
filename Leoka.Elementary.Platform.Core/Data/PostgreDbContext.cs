@@ -121,4 +121,9 @@ public class PostgreDbContext : DbContext
     /// Таблица dbo.MainFonMentor.
     /// </summary>
     public DbSet<MainFonMentorEntity> MainFonMentor { get; set; }
+
+    /// <summary>
+    /// Таблица dbo.MainFonMentorItems.
+    /// </summary>
+    public DbSet<MainFonMentorItemEntity> MainFonMentorItems { get; set; }
 }

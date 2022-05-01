@@ -11,7 +11,6 @@ public partial class MainFonStudentItemConfiguration : IEntityTypeConfiguration<
         entity.ToTable("MainFonStudentItems", "dbo");
 
         entity.HasKey(e => e.ItemId);
-        entity.HasKey(e => e.ItemId);
         
         entity.Property(e => e.ItemId)
             .HasColumnName("ItemId")
