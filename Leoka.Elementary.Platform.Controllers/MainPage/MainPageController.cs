@@ -235,7 +235,7 @@ public class MainPageController : BaseController
     /// <returns>Данные блока.</returns>
     [AllowAnonymous]
     [HttpGet]
-    [Route("mentor")]
+    [Route("for-mentor")]
     [ProducesResponseType(200, Type = typeof(MentorOutput))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
@@ -244,6 +244,25 @@ public class MainPageController : BaseController
     public async Task<MentorOutput> GetMentorAsync()
     {
         var result = await _mainPageService.GetMentorAsync();
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод получит данные для блока преподавателя на главной странице преподавателя.
+    /// </summary>
+    /// <returns>Данные блока преподавателя.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("mentor")]
+    [ProducesResponseType(200, Type = typeof(MainMentorOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<MainMentorOutput> GetMainMentorAsync()
+    {
+        var result = await _mainPageService.GetMainMentorAsync();
 
         return result;
     }

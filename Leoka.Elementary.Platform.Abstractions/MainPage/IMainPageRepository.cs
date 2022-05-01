@@ -74,4 +74,10 @@ public interface IMainPageRepository
     /// </summary>
     /// <returns>Данные блока.</returns>
     Task<MentorOutput> GetMentorAsync();
+
+    /// <summary>
+    /// Метод получит данные для блока преподавателя на главной странице преподавателя.
+    /// </summary>
+    /// <returns>Данные блока преподавателя.</returns>
+    Task<MainMentorOutput> GetMainMentorAsync();
 }

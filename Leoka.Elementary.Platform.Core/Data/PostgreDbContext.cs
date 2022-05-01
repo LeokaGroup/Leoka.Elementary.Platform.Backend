@@ -116,4 +116,9 @@ public class PostgreDbContext : DbContext
     /// Таблица dbo.Requests.
     /// </summary>
     public DbSet<RequestEntity> Requests { get; set; }
+
+    /// <summary>
+    /// Таблица dbo.MainFonMentor.
+    /// </summary>
+    public DbSet<MainFonMentorEntity> MainFonMentor { get; set; }
 }

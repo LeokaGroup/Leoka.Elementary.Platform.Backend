@@ -368,4 +368,31 @@ public class MainPageRepository : IMainPageRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные для блока преподавателя на главной странице преподавателя.
+    /// </summary>
+    /// <returns>Данные блока преподавателя.</returns>
+    public async Task<MainMentorOutput> GetMainMentorAsync()
+    {
+        try
+        {
+            var result = await _dbContext.MainFonMentor
+                .Select(m => new MainMentorOutput
+                {
+                    FonTitle = m.FonTitle,
+                    FonSubTitle = m.FonSubTitle
+                })
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
