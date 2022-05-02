@@ -136,6 +136,7 @@ public class MainPageRepository : IMainPageRepository
         try
         {
             var result = await _dbContext.WriteReception
+                .Where(r => r.TypeRole == typeRole)
                 .Select(r => new ReceptionOutput
                 {
                     WriteReceptionText = r.WriteReceptionText,
