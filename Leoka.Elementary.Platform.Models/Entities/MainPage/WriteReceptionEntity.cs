@@ -19,4 +19,9 @@ public class WriteReceptionEntity
     /// Текст кнопки.
     /// </summary>
     public string WriteReceptionButtonText { get; set; }
+
+    /// <summary>
+    /// Тип роли.
+    /// </summary>
+    public int TypeRole { get; set; }
 }

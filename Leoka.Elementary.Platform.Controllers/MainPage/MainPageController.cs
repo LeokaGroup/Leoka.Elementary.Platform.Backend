@@ -90,9 +90,9 @@ public class MainPageController : BaseController
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<ReceptionOutput> GetReceptionAsync()
+    public async Task<ReceptionOutput> GetReceptionAsync([FromQuery] int typeRole = 1)
     {
-        var result = await _mainPageService.GetReceptionAsync();
+        var result = await _mainPageService.GetReceptionAsync(typeRole);
 
         return result;
     }

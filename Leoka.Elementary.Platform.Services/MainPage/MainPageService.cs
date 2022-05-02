@@ -87,11 +87,11 @@ public class MainPageService : IMainPageService
     /// Метод получит данные записи на урок.
     /// </summary>
     /// <returns>Данные записи на урок.</returns>
-    public async Task<ReceptionOutput> GetReceptionAsync()
+    public async Task<ReceptionOutput> GetReceptionAsync(int typeRole)
     {
         try
         {
-            var result = await _mainPageRepository.GetReceptionAsync();
+            var result = await _mainPageRepository.GetReceptionAsync(typeRole);
 
             return result;
         }

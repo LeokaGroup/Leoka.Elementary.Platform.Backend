@@ -31,7 +31,7 @@ public interface IMainPageRepository
     /// Метод получит данные записи на урок.
     /// </summary>
     /// <returns>Данные записи на урок.</returns>
-    Task<ReceptionOutput> GetReceptionAsync();
+    Task<ReceptionOutput> GetReceptionAsync(int typeRole);
     
     /// <summary>
     /// Метод получит данные блока с чего начать.

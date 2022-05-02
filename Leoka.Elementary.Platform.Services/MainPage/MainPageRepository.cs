@@ -125,14 +125,15 @@ public class MainPageRepository : IMainPageRepository
     }
 
     /// <summary>
-    /// Метод получит данные записи на урок.
+    /// Метод получит данные записи на урок для страницы студента.
     /// </summary>
     /// <returns>Данные записи на урок.</returns>
-    public async Task<ReceptionOutput> GetReceptionAsync()
+    public async Task<ReceptionOutput> GetReceptionAsync(int typeRole)
     {
         try
         {
             var result = await _dbContext.WriteReception
+                .Where(r => r.TypeRole == typeRole)
                 .Select(r => new ReceptionOutput
                 {
                     WriteReceptionText = r.WriteReceptionText,
