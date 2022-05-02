@@ -1,4 +1,5 @@
-﻿using Leoka.Elementary.Platform.Abstractions.MainPage;
+﻿using System.ComponentModel.DataAnnotations;
+using Leoka.Elementary.Platform.Abstractions.MainPage;
 using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Models.Common.Output;
 using Leoka.Elementary.Platform.Models.MainPage.Input;
@@ -80,6 +81,9 @@ public class MainPageController : BaseController
 
     /// <summary>
     /// Метод получит данные записи на урок.
+    /// <param name="typeRole">Тип роли.
+    /// 1 - для главной страницы ученика.
+    /// 2 - для главной страницы преподавателя.</param>
     /// </summary>
     /// <returns>Данные записи на урок.</returns>
     [AllowAnonymous]
@@ -90,7 +94,7 @@ public class MainPageController : BaseController
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<ReceptionOutput> GetReceptionAsync([FromQuery] int typeRole = 1)
+    public async Task<ReceptionOutput> GetReceptionAsync([FromQuery] [Required] int typeRole)
     {
         var result = await _mainPageService.GetReceptionAsync(typeRole);
 
@@ -100,6 +104,7 @@ public class MainPageController : BaseController
     /// <summary>
     /// Метод получит данные блока с чего начать.
     /// </summary>
+    /// <param name="typeRole">Тип роли.</param>
     /// <returns>Данные блока.</returns>
     [AllowAnonymous]
     [HttpGet]
@@ -109,9 +114,9 @@ public class MainPageController : BaseController
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<BeginOutput> GetBeginItemsAsync()
+    public async Task<BeginOutput> GetBeginItemsAsync([FromQuery] [Required] int typeRole)
     {
-        var result = await _mainPageService.GetBeginItemsAsync();
+        var result = await _mainPageService.GetBeginItemsAsync(typeRole);
 
         return result;
     }

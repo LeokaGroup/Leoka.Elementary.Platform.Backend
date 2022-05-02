@@ -28,6 +28,9 @@ public interface IMainPageService
 
     /// <summary>
     /// Метод получит данные записи на урок.
+    /// <param name="typeRole">Тип роли.
+    /// 1 - для главной страницы ученика.
+    /// 2 - для главной страницы преподавателя.</param>
     /// </summary>
     /// <returns>Данные записи на урок.</returns>
     Task<ReceptionOutput> GetReceptionAsync(int typeRole);
@@ -35,8 +38,9 @@ public interface IMainPageService
     /// <summary>
     /// Метод получит данные блока с чего начать.
     /// </summary>
+    /// <param name="typeRole">Тип роли.</param>
     /// <returns>Данные блока.</returns>
-    Task<BeginOutput> GetBeginItemsAsync();
+    Task<BeginOutput> GetBeginItemsAsync(int typeRole);
     
     /// <summary>
     /// Метод получит данные для блока умного класса.

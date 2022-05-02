@@ -26,6 +26,11 @@ public class WhereBeginItemEntity
     public string BeginSubTitle { get; set; }
 
     public int BeginItemId { get; set; }
+    
+    /// <summary>
+    /// Тип роли.
+    /// </summary>
+    public int TypeRole { get; set; }
 
     public virtual WhereBeginEntity WhereBegin { get; set; }
 }

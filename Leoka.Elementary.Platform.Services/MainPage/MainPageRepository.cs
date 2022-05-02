@@ -125,7 +125,10 @@ public class MainPageRepository : IMainPageRepository
     }
 
     /// <summary>
-    /// Метод получит данные записи на урок для страницы студента.
+    /// Метод получит данные записи на урок.
+    /// <param name="typeRole">Тип роли.
+    /// 1 - для главной страницы ученика.
+    /// 2 - для главной страницы преподавателя.</param>
     /// </summary>
     /// <returns>Данные записи на урок.</returns>
     public async Task<ReceptionOutput> GetReceptionAsync(int typeRole)
@@ -133,7 +136,6 @@ public class MainPageRepository : IMainPageRepository
         try
         {
             var result = await _dbContext.WriteReception
-                .Where(r => r.TypeRole == typeRole)
                 .Select(r => new ReceptionOutput
                 {
                     WriteReceptionText = r.WriteReceptionText,
@@ -155,18 +157,26 @@ public class MainPageRepository : IMainPageRepository
     /// <summary>
     /// Метод получит данные блока с чего начать.
     /// </summary>
+    /// <param name="typeRole">Тип роли.</param>
     /// <returns>Данные блока.</returns>
-    public async Task<WhereBeginEntity> GetBeginItemsAsync()
+    public async Task<BeginOutput> GetBeginItemsAsync(int typeRole)
     {
         try
         {
             var result = await _dbContext.WhereBegin
-                .Include(w => w.WhereBeginItems)
-                .Select(w => new WhereBeginEntity
+                .Select(w => new BeginOutput
                 {
                     WhereBeginTitle = w.WhereBeginTitle,
                     WhereBeginSubTitle = w.WhereBeginSubTitle,
-                    WhereBeginItems = w.WhereBeginItems
+                    WhereBeginItems = _dbContext.WhereBeginItems
+                        .Where(i => i.TypeRole == typeRole)
+                        .Select(i => new BeginItemsOutput
+                        {
+                            BeginUrlIcon = i.BeginUrlIcon,
+                            BeginTitle = i.BeginTitle,
+                            BeginSubTitle = i.BeginSubTitle
+                        })
+                        .ToList()
                 })
                 .FirstOrDefaultAsync();
 

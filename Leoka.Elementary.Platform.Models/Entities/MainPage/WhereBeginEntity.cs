@@ -29,6 +29,11 @@ public class WhereBeginEntity
     /// Id блока.
     /// </summary>
     public int BeginItemId { get; set; }
+
+    /// <summary>
+    /// Тип роли.
+    /// </summary>
+    public int TypeRole { get; set; }
     
     public virtual ICollection<WhereBeginItemEntity> WhereBeginItems { get; set; }
 }

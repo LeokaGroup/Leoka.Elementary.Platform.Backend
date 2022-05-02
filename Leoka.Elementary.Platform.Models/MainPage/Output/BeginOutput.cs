@@ -18,5 +18,5 @@ public class BeginOutput
     /// <summary>
     /// Список элементов блока.
     /// </summary>
-    public ICollection<BeginItemsOutput> WhereBeginItems { get; set; }
+    public List<BeginItemsOutput> WhereBeginItems { get; set; }
 }

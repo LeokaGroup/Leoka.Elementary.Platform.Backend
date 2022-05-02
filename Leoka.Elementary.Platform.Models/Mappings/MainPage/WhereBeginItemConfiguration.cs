@@ -34,6 +34,11 @@ public partial class WhereBeginItemConfiguration : IEntityTypeConfiguration<Wher
             .HasMaxLength(150)
             .IsRequired();
         
+        entity.Property(e => e.TypeRole)
+            .HasColumnName("TypeRole")
+            .HasColumnType("int4")
+            .IsRequired();
+        
         entity.HasIndex(u => u.ItemId)
             .HasName("WhereBeginItems_pkey")
             .IsUnique();

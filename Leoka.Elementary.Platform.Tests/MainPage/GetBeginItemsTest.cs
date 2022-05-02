@@ -7,9 +7,17 @@ namespace Leoka.Elementary.Platform.Tests.MainPage;
 public class GetBeginItemsTest : BaseServiceTest
 {
     [Test]
-    public async Task GetBeginItemsAsyncTest()
+    public async Task GetStudentBeginItemsAsyncTest()
     {
-        var result = await MainPageService.GetBeginItemsAsync();
+        var result = await MainPageService.GetBeginItemsAsync(1);
+        
+        Assert.IsNotNull(result);
+    }
+    
+    [Test]
+    public async Task GetMentorBeginItemsAsyncTest()
+    {
+        var result = await MainPageService.GetBeginItemsAsync(2);
         
         Assert.IsNotNull(result);
     }

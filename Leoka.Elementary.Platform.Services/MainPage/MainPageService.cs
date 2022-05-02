@@ -85,6 +85,9 @@ public class MainPageService : IMainPageService
 
     /// <summary>
     /// Метод получит данные записи на урок.
+    /// <param name="typeRole">Тип роли.
+    /// 1 - для главной страницы ученика.
+    /// 2 - для главной страницы преподавателя.</param>
     /// </summary>
     /// <returns>Данные записи на урок.</returns>
     public async Task<ReceptionOutput> GetReceptionAsync(int typeRole)
@@ -105,17 +108,15 @@ public class MainPageService : IMainPageService
     }
 
     /// <summary>
-    /// Метод получит данные записи на урок.
+    /// Метод получит данные блока с чего начать.
     /// </summary>
-    /// <returns>Данные записи на урок.</returns>
-    public async Task<BeginOutput> GetBeginItemsAsync()
+    /// <param name="typeRole">Тип роли.</param>
+    /// <returns>Данные блока.</returns>
+    public async Task<BeginOutput> GetBeginItemsAsync(int typeRole)
     {
         try
         {
-            var items = await _mainPageRepository.GetBeginItemsAsync();
-            
-            // Мапит к типу BeginOutput.
-            var result = _mapper.Map<BeginOutput>(items);
+            var result = await _mainPageRepository.GetBeginItemsAsync(typeRole);
 
             return result;
         }
