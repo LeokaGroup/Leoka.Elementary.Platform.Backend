@@ -132,12 +132,13 @@ public class MainPageService : IMainPageService
     /// <summary>
     /// Метод получит данные для блока умного класса.
     /// </summary>
+    /// <param name="typeRole">Тип роли.</param>
     /// <returns>Данные для блока.</returns>
-    public async Task<SmartClassStudentOutput> GetSmartClassAsync()
+    public async Task<SmartClassStudentOutput> GetSmartClassAsync(int typeRole)
     {
         try
         {
-            var result = await _mainPageRepository.GetSmartClassAsync();
+            var result = await _mainPageRepository.GetSmartClassAsync(typeRole);
 
             return result;
         }

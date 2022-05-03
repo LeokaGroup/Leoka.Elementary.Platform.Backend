@@ -29,6 +29,11 @@ public partial class SmartClassStudentItemConfiguration : IEntityTypeConfigurati
             .HasMaxLength(400)
             .IsRequired();
         
+        entity.Property(e => e.TypeRole)
+            .HasColumnName("TypeRole")
+            .HasColumnType("int4")
+            .IsRequired();
+        
         entity.HasIndex(u => u.ItemId)
             .HasName("SmartClassStudentItems_pkey")
             .IsUnique();

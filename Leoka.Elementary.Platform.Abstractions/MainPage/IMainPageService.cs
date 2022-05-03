@@ -45,8 +45,9 @@ public interface IMainPageService
     /// <summary>
     /// Метод получит данные для блока умного класса.
     /// </summary>
+    /// <param name="typeRole">Тип роли.</param>
     /// <returns>Данные для блока.</returns>
-    Task<SmartClassStudentOutput> GetSmartClassAsync();
+    Task<SmartClassStudentOutput> GetSmartClassAsync(int typeRole);
 
     /// <summary>
     /// Метод получит данные для блока вопросов.

@@ -7,9 +7,17 @@ namespace Leoka.Elementary.Platform.Tests.MainPage;
 public class GetSmartClassTest : BaseServiceTest
 {
     [Test]
-    public async Task GetSmartClassAsyncTest()
+    public async Task GetStudentSmartClassAsyncTest()
     {
-        var result = await MainPageService.GetSmartClassAsync();
+        var result = await MainPageService.GetSmartClassAsync(1);
+        
+        Assert.IsNotNull(result);
+    }
+    
+    [Test]
+    public async Task GetMentorSmartClassAsyncTest()
+    {
+        var result = await MainPageService.GetSmartClassAsync(2);
         
         Assert.IsNotNull(result);
     }

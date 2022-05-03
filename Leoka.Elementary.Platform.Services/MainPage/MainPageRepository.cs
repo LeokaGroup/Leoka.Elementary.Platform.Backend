@@ -195,8 +195,9 @@ public class MainPageRepository : IMainPageRepository
     /// <summary>
     /// Метод получит данные для блока умного класса.
     /// </summary>
+    /// <param name="typeRole">Тип роли.</param>
     /// <returns>Данные для блока.</returns>
-    public async Task<SmartClassStudentOutput> GetSmartClassAsync()
+    public async Task<SmartClassStudentOutput> GetSmartClassAsync(int typeRole)
     {
         try
         {
@@ -207,10 +208,11 @@ public class MainPageRepository : IMainPageRepository
                         SmartClassSubTitle = s.SmartClassSubTitle,
                         SmartClassUrlPreview = s.SmartClassUrlPreview,
                         SmartClassStudentItems = new List<SmartClassStudentItemsOutput>(_dbContext.SmartClassStudentItems
-                                .Select(res => new SmartClassStudentItemsOutput
+                                .Where(sc => sc.TypeRole == typeRole)
+                                .Select(sc => new SmartClassStudentItemsOutput
                                 {
-                                    SmartItemTitle = res.SmartItemTitle,
-                                    SmartItemSubTitle = res.SmartItemSubTitle
+                                    SmartItemTitle = sc.SmartItemTitle,
+                                    SmartItemSubTitle = sc.SmartItemSubTitle
                                 }))
                             .ToList()
                     })

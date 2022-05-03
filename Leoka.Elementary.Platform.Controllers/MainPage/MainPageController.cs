@@ -124,6 +124,7 @@ public class MainPageController : BaseController
     /// <summary>
     /// Метод получит данные для блока умного класса.
     /// </summary>
+    /// <param name="typeRole">Тип роли.</param>
     /// <returns>Данные для блока.</returns>
     [AllowAnonymous]
     [HttpGet]
@@ -133,9 +134,9 @@ public class MainPageController : BaseController
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<SmartClassStudentOutput> GetSmartClassAsync()
+    public async Task<SmartClassStudentOutput> GetSmartClassAsync([FromQuery] [Required] int typeRole)
     {
-        var result = await _mainPageService.GetSmartClassAsync();
+        var result = await _mainPageService.GetSmartClassAsync(typeRole);
 
         return result;
     }

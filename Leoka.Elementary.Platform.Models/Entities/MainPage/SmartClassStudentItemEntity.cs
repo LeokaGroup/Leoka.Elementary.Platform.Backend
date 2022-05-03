@@ -22,5 +22,10 @@ public class SmartClassStudentItemEntity
     /// </summary>
     public string SmartItemSubTitle { get; set; }
 
+    /// <summary>
+    /// Тип роли.
+    /// </summary>
+    public int TypeRole { get; set; }
+
     public virtual SmartClassStudentEntity SmartClassStudent { get; set; }
 }
