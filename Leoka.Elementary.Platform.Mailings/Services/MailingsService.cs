@@ -41,7 +41,7 @@ public sealed class MailingsService : IMailingsService
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {//TODO: заменить ссылку на получение из БД.
                 Text =
-                    $"Для завершения регистрации перейдите по ссылке <a href='http://localhost:9991/user/confirm-email?code={confirmEmailCode}'>Подтвердить аккаунт</a> </br>" +
+                    $"Для завершения регистрации перейдите по ссылке <a href='https://leoka-elementary.site/user/confirm-email?code={confirmEmailCode}'>Подтвердить аккаунт</a> </br>" +
                     "</br>" +
                     "<strong>Данные для входа.</strong> </br>" +
                     "Ваш логин: " + userAccount + "</br>" +
