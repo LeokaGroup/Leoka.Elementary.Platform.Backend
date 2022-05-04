@@ -31,9 +31,9 @@ public class MainPageController : BaseController
     [Route("header")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<HeaderOutput>))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]        
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<IEnumerable<HeaderOutput>> GetHeaderItemsAsync()
     {
         var result = await _mainPageService.GetHeaderItemsAsync();
@@ -50,9 +50,9 @@ public class MainPageController : BaseController
     [Route("footer")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<FooterOutput>))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<IEnumerable<FooterOutput>> GetFooterItemsAsync()
     {
         var result = await _mainPageService.GetFooterItemsAsync();
@@ -69,9 +69,9 @@ public class MainPageController : BaseController
     [Route("fon")]
     [ProducesResponseType(200, Type = typeof(MainFonStudentOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<MainFonStudentOutput> GetMainFonStudentAsync()
     {
         var result = await _mainPageService.GetMainFonStudentAsync();
@@ -91,9 +91,9 @@ public class MainPageController : BaseController
     [Route("reception")]
     [ProducesResponseType(200, Type = typeof(ReceptionOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<ReceptionOutput> GetReceptionAsync([FromQuery] [Required] int typeRole)
     {
         var result = await _mainPageService.GetReceptionAsync(typeRole);
@@ -111,9 +111,9 @@ public class MainPageController : BaseController
     [Route("begin")]
     [ProducesResponseType(200, Type = typeof(BeginOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<BeginOutput> GetBeginItemsAsync([FromQuery] [Required] int typeRole)
     {
         var result = await _mainPageService.GetBeginItemsAsync(typeRole);
@@ -131,9 +131,9 @@ public class MainPageController : BaseController
     [Route("smart-class")]
     [ProducesResponseType(200, Type = typeof(SmartClassStudentOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<SmartClassStudentOutput> GetSmartClassAsync([FromQuery] [Required] int typeRole)
     {
         var result = await _mainPageService.GetSmartClassAsync(typeRole);
@@ -150,9 +150,9 @@ public class MainPageController : BaseController
     [Route("questions")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<BestQuestionOutput>))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<IEnumerable<BestQuestionOutput>> GetBestQuestionsAsync()
     {
         var result = await _mainPageService.GetBestQuestionsAsync();
@@ -169,9 +169,9 @@ public class MainPageController : BaseController
     [Route("options")]
     [ProducesResponseType(200, Type = typeof(OptionOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<OptionOutput> GetTitleOptionAsync()
     {
         var result = await _mainPageService.GetTitleOptionAsync();
@@ -188,9 +188,9 @@ public class MainPageController : BaseController
     [Route("about")]
     [ProducesResponseType(200, Type = typeof(AboutOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<AboutOutput> GetAboutAsync()
     {
         var result = await _mainPageService.GetAboutAsync();
@@ -207,9 +207,9 @@ public class MainPageController : BaseController
     [Route("request")]
     [ProducesResponseType(200, Type = typeof(RequestOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<RequestOutput> GetRequestAsync()
     {
         var result = await _mainPageService.GetRequestAsync();
@@ -227,9 +227,9 @@ public class MainPageController : BaseController
     [Route("request")]
     [ProducesResponseType(200, Type = typeof(RequestOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<RequestOutput> CreateRequestAsync([FromBody] RequestInput requestInput)
     {
         throw new NotImplementedException();
@@ -244,9 +244,9 @@ public class MainPageController : BaseController
     [Route("for-mentor")]
     [ProducesResponseType(200, Type = typeof(MentorOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<MentorOutput> GetMentorAsync()
     {
         var result = await _mainPageService.GetMentorAsync();
@@ -263,9 +263,9 @@ public class MainPageController : BaseController
     [Route("mentor")]
     [ProducesResponseType(200, Type = typeof(MainMentorOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
+    [ProducesResponseType(403, Type = typeof(string))]        
     [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
+    [ProducesResponseType(404, Type = typeof(string))]
     public async Task<MainMentorOutput> GetMainMentorAsync()
     {
         var result = await _mainPageService.GetMainMentorAsync();

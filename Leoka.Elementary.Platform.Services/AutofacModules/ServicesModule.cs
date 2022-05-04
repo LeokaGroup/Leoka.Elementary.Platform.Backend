@@ -1,8 +1,10 @@
 ﻿using Autofac;
 using Leoka.Elementary.Platform.Abstractions.MainPage;
+using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Abstractions.User;
 using Leoka.Elementary.Platform.Core.Attributes;
 using Leoka.Elementary.Platform.Services.MainPage;
+using Leoka.Elementary.Platform.Services.Profile;
 using Leoka.Elementary.Platform.Services.User;
 
 namespace Leoka.Elementary.Platform.Services.AutofacModules;
@@ -30,5 +32,13 @@ public class ServicesModule : Module
         // Репозиторий главной страницы.
         builder.RegisterType<MainPageRepository>().Named<IMainPageRepository>("MainPageRepository");
         builder.RegisterType<MainPageRepository>().As<IMainPageRepository>();
+        
+        // Сервис профиля пользователя.
+        builder.RegisterType<ProfileService>().Named<IProfileService>("ProfileService");
+        builder.RegisterType<ProfileService>().As<IProfileService>();
+        
+        // Репозиторий профиля пользователя.
+        builder.RegisterType<ProfileRepository>().Named<IProfileRepository>("ProfileRepository");
+        builder.RegisterType<ProfileRepository>().As<IProfileRepository>();
     }
 }
