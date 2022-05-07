@@ -10,11 +10,11 @@ namespace Leoka.Elementary.Platform.Access.Service;
 /// </summary>
 public class RoleRepository : IRoleRepository
 {
-    private readonly PostgreDbContext _postgreDbContext;
+    private readonly PostgreDbContext _dbContext;
     
-    public RoleRepository(PostgreDbContext postgreDbContext)
+    public RoleRepository(PostgreDbContext dbContext)
     {
-        _postgreDbContext = postgreDbContext;
+        _dbContext = dbContext;
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public class RoleRepository : IRoleRepository
         try
         {
             // Получит роли, кроме партнера и администратора.
-            var result = await _postgreDbContext.Roles
+            var result = await _dbContext.Roles
                 .Where(r => !new[] { -1, 0 }.Contains(r.RoleId))
                 .Select(r => new RoleOutput
                 {
@@ -36,6 +36,31 @@ public class RoleRepository : IRoleRepository
                 .ToListAsync();
 
             return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит роль пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Id роли.</returns>
+    public async Task<int> GetUserRoleAsync(long userId)
+    {
+        try
+        {
+            var roleId = await _dbContext.UserRoles
+                .Where(r => r.UserRoleId == userId)
+                .Select(r => r.RoleId)
+                .FirstOrDefaultAsync();
+
+            return roleId;
         }
         
         // TODO: добавить логирование ошибок.

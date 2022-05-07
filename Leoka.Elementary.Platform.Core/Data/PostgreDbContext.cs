@@ -132,4 +132,9 @@ public class PostgreDbContext : DbContext
     /// Таблица Profile.ProfileInfos.
     /// </summary>
     public DbSet<ProfileInfoEntity> ProfileInfos { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.ProfileMenuItems.
+    /// </summary>
+    public DbSet<ProfileMenuItemEntity> ProfileMenuItems { get; set; }
 }

@@ -12,4 +12,11 @@ public interface IProfileRepository
     /// </summary>
     /// <returns>Данные о профиле.</returns>
     Task<ProfileInfoOutput> GetProfileInfoAsync();
+
+    /// <summary>
+    /// Метод получит список элементов для меню профиля пользователя.
+    /// </summary>
+    /// <param name="roleId">Id роли.</param>
+    /// <returns>Список элементов меню.</returns>
+    Task<ProfileMenuItemResult> GetProfileMenuItemsAsync(int roleId);
 }

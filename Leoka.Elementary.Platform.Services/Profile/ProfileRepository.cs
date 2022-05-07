@@ -44,4 +44,76 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит список элементов для меню профиля пользователя.
+    /// </summary>
+    /// <param name="roleId">Id роли.</param>
+    /// <returns>Список элементов меню.</returns>
+    public async Task<ProfileMenuItemResult> GetProfileMenuItemsAsync(int roleId)
+    {
+        try
+        {
+            var items = await _dbContext.ProfileMenuItems
+                .Where(i => i.RoleId == roleId && !new[] { -1, 0 }.Contains(roleId))
+                .Select(i => new ProfileMenuItemResult
+                {
+                    ProfileLeftMenuItems = _dbContext.ProfileMenuItems
+                        .Where(a => a.MenuType == 1)
+                        .Select(a => new ProfileMenuItemOutput
+                        {
+                            ProfileItemTitle = a.ProfileItemTitle,
+                            Position = a.Position,
+                            ProfileItemSysName = a.ProfileItemSysName,
+                            ProfileItemUrl = a.ProfileItemUrl,
+                            IsSelectItem = a.IsSelectItem,
+                            IconUrl = a.IconUrl,
+                            MenuType = a.MenuType,
+                            IsVisibleBalance = a.IsVisibleBalance,
+                            IsDropdown = a.IsDropdown
+                        })
+                        .ToList(),
+                    ProfileHeaderMenuItems = _dbContext.ProfileMenuItems
+                        .Where(b => b.MenuType == 2)
+                        .Select(b => new ProfileMenuItemOutput
+                        {
+                            ProfileItemTitle = b.ProfileItemTitle,
+                            Position = b.Position,
+                            ProfileItemSysName = b.ProfileItemSysName,
+                            ProfileItemUrl = b.ProfileItemUrl,
+                            IsSelectItem = b.IsSelectItem,
+                            IconUrl = b.IconUrl,
+                            MenuType = b.MenuType,
+                            IsVisibleBalance = b.IsVisibleBalance,
+                            IsDropdown = b.IsDropdown
+                        })
+                        .ToList(),
+                    ProfileDropdownMenuItems = _dbContext.ProfileMenuItems
+                        .Where(c => c.MenuType == 3)
+                        .Select(c => new ProfileMenuItemOutput
+                        {
+                            ProfileItemTitle = c.ProfileItemTitle,
+                            Position = c.Position,
+                            ProfileItemSysName = c.ProfileItemSysName,
+                            ProfileItemUrl = c.ProfileItemUrl,
+                            IsSelectItem = c.IsSelectItem,
+                            IconUrl = c.IconUrl,
+                            MenuType = c.MenuType,
+                            IsVisibleBalance = c.IsVisibleBalance,
+                            IsDropdown = c.IsDropdown
+                        })
+                        .ToList()
+                })
+                .FirstOrDefaultAsync();
+
+            return items;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

@@ -50,6 +50,6 @@ public class BaseServiceTest
         MainPageService = new MainPageService(MainPageRepository, AutoFac.Resolve<IMapper>());
 
         ProfileRepository = new ProfileRepository(PostgreDbContext);
-        ProfileService = new ProfileService(ProfileRepository);
+        ProfileService = new ProfileService(ProfileRepository, RoleRepository, UserRepository);
     }
 }

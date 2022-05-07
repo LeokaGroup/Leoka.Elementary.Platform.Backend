@@ -29,12 +29,30 @@ public class ProfileController : BaseController
     [Route("info")]
     [ProducesResponseType(200, Type = typeof(ProfileInfoOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403, Type = typeof(string))]
+    [ProducesResponseType(403)]
     [ProducesResponseType(500)]
-    [ProducesResponseType(404, Type = typeof(string))]
+    [ProducesResponseType(404)]
     public async Task<ProfileInfoOutput> GetProfileInfoAsync()
     {
         var result = await _profileService.GetProfileInfoAsync();
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод получит список элементов для меню профиля пользователя.
+    /// </summary>
+    /// <returns>Список элементов меню.</returns>
+    [HttpGet]
+    [Route("menu")]
+    [ProducesResponseType(200, Type = typeof(ProfileMenuItemResult))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<ProfileMenuItemResult> GetProfileMenuItemsAsync()
+    {
+        var result = await _profileService.GetProfileMenuItemsAsync(GetUserName());
 
         return result;
     }
