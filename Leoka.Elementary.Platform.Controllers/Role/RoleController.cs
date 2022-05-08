@@ -49,7 +49,7 @@ public class RoleController : BaseController
     [ProducesResponseType(404)]
     public async Task<IActionResult> GenerateTokenAsync()
     {
-        var result = await _roleService.GenerateTokenAsync();
+        var result = await _roleService.GenerateTokenAsync(GetUserName());
 
         return Ok(result);
     }

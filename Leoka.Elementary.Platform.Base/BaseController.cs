@@ -14,7 +14,7 @@ public class BaseController : ControllerBase
         // Запишет логин в куки и вернет фронту.
         if (!HttpContext.Request.Cookies.ContainsKey("name"))
         {
-            HttpContext.Response.Cookies.Append("user", HttpContext?.User?.Identity?.Name ?? string.Empty);
+            HttpContext.Response.Cookies.Append("user", HttpContext?.User?.Identity?.Name ?? GetLoginFromCookie());
         }
 
         return HttpContext?.User?.Identity?.Name ?? GetLoginFromCookie();

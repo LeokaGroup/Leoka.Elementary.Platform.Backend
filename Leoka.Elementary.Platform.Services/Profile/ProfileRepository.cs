@@ -72,6 +72,7 @@ public sealed class ProfileRepository : IProfileRepository
                             IsVisibleBalance = a.IsVisibleBalance,
                             IsDropdown = a.IsDropdown
                         })
+                        .OrderBy(o => o.Position)
                         .ToList(),
                     ProfileHeaderMenuItems = _dbContext.ProfileMenuItems
                         .Where(b => b.MenuType == 2)
@@ -87,6 +88,7 @@ public sealed class ProfileRepository : IProfileRepository
                             IsVisibleBalance = b.IsVisibleBalance,
                             IsDropdown = b.IsDropdown
                         })
+                        .OrderBy(o => o.Position)
                         .ToList(),
                     ProfileDropdownMenuItems = _dbContext.ProfileMenuItems
                         .Where(c => c.MenuType == 3)
@@ -102,6 +104,7 @@ public sealed class ProfileRepository : IProfileRepository
                             IsVisibleBalance = c.IsVisibleBalance,
                             IsDropdown = c.IsDropdown
                         })
+                        .OrderBy(o => o.Position)
                         .ToList()
                 })
                 .FirstOrDefaultAsync();
