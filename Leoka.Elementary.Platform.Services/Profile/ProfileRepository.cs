@@ -119,4 +119,34 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит список предметов.
+    /// </summary>
+    /// <returns>Список предметов.</returns>
+    public async Task<IEnumerable<ProfileItemOutput>> GetProfileItemsAsync()
+    {
+        try
+        {
+            var result = await _dbContext.ProfileItems
+                .Select(pi => new ProfileItemOutput
+                {
+                    ItemName = pi.ItemName,
+                    ItemSysName = pi.ItemSysName,
+                    ItemNumber = pi.ItemNumber,
+                    Position = pi.Position
+                })
+                .OrderBy(o => o.Position)
+                .ToListAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

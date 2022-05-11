@@ -19,4 +19,10 @@ public interface IProfileService
     /// </summary>
     /// <returns>Список элементов меню.</returns>
     Task<ProfileMenuItemResult> GetProfileMenuItemsAsync(string account);
+
+    /// <summary>
+    /// Метод получит список предметов.
+    /// </summary>
+    /// <returns>Список предметов.</returns>
+    Task<IEnumerable<ProfileItemOutput>> GetProfileItemsAsync();
 }

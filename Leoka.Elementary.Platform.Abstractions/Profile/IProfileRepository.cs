@@ -19,4 +19,10 @@ public interface IProfileRepository
     /// <param name="roleId">Id роли.</param>
     /// <returns>Список элементов меню.</returns>
     Task<ProfileMenuItemResult> GetProfileMenuItemsAsync(int roleId);
+    
+    /// <summary>
+    /// Метод получит список предметов.
+    /// </summary>
+    /// <returns>Список предметов.</returns>
+    Task<IEnumerable<ProfileItemOutput>> GetProfileItemsAsync();
 }

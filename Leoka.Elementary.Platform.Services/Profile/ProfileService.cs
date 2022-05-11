@@ -79,4 +79,25 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит список предметов.
+    /// </summary>
+    /// <returns>Список предметов.</returns>
+    public async Task<IEnumerable<ProfileItemOutput>> GetProfileItemsAsync()
+    {
+        try
+        {
+            var result = await _profileRepository.GetProfileItemsAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

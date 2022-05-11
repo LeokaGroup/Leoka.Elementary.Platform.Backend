@@ -56,4 +56,22 @@ public class ProfileController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод получит список предметов.
+    /// </summary>
+    /// <returns>Список предметов.</returns>
+    [HttpGet]
+    [Route("items")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<ProfileItemOutput>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<IEnumerable<ProfileItemOutput>> GetProfileItemsAsync()
+    {
+        var result = await _profileService.GetProfileItemsAsync();
+
+        return result;
+    }
 }
