@@ -6,12 +6,12 @@ namespace Leoka.Elementary.Platform.Models.Mappings.Profile;
 
 public partial class LessonDurationConfiguration : IEntityTypeConfiguration<LessonDurationEntity>
 {
-     public void Configure(EntityTypeBuilder<LessonDurationEntity> entity)
+    public void Configure(EntityTypeBuilder<LessonDurationEntity> entity)
     {
         entity.ToTable("LessonsDuration", "Profile");
 
         entity.HasKey(e => e.DurationId);
-        
+
         entity.Property(e => e.DurationId)
             .HasColumnName("DurationId")
             .HasColumnType("serial")
@@ -29,7 +29,7 @@ public partial class LessonDurationConfiguration : IEntityTypeConfiguration<Less
             .IsRequired();
 
         entity.HasIndex(u => u.DurationId)
-            .HasName("ProfileMenuItems_pkey")
+            .HasName("LessonsDuration_pkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

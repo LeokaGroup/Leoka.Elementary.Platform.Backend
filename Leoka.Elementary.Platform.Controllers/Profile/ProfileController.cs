@@ -92,4 +92,22 @@ public class ProfileController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод получит список целей подготовки.
+    /// </summary>
+    /// <returns>Список целей подготовки.</returns>
+    [HttpGet]
+    [Route("purposes")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<PurposeTrainingOutput>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync()
+    {
+        var result = await _profileService.GetPurposeTrainingsAsync();
+
+        return result;
+    }
 }

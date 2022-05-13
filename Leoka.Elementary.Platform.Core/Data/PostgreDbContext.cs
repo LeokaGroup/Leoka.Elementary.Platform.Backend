@@ -147,4 +147,9 @@ public class PostgreDbContext : DbContext
     /// Таблица Profile.LessonsDuration.
     /// </summary>
     public DbSet<LessonDurationEntity> LessonsDuration { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.PurposeTrainings.
+    /// </summary>
+    public DbSet<PurposeTrainingEntity> PurposeTrainings { get; set; }
 }

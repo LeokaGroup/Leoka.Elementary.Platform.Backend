@@ -178,4 +178,32 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит список целей подготовки.
+    /// </summary>
+    /// <returns>Список целей подготовки.</returns>
+    public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync()
+    {
+        try
+        {
+            var result = await _dbContext.PurposeTrainings
+                .Select(p => new PurposeTrainingOutput
+                {
+                    PurposeId = p.PurposeId,
+                    PurposeSysName = p.PurposeSysName,
+                    PurposeName = p.PurposeName
+                })
+                .ToListAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

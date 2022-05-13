@@ -121,4 +121,25 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит список целей подготовки.
+    /// </summary>
+    /// <returns>Список целей подготовки.</returns>
+    public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync()
+    {
+        try
+        {
+            var result = await _profileRepository.GetPurposeTrainingsAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

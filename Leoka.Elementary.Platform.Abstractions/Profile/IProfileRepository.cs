@@ -31,4 +31,10 @@ public interface IProfileRepository
     /// </summary>
     /// <returns>Список для выпадающего списка длительностей уроков.</returns>
     Task<IEnumerable<LessonDurationOutput>> GetLessonsDurationAsync();
+    
+    /// <summary>
+    /// Метод получит список целей подготовки.
+    /// </summary>
+    /// <returns>Список целей подготовки.</returns>
+    Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync();
 }
