@@ -25,4 +25,10 @@ public interface IProfileService
     /// </summary>
     /// <returns>Список предметов.</returns>
     Task<IEnumerable<ProfileItemOutput>> GetProfileItemsAsync();
+
+    /// <summary>
+    /// Метод получит список для выпадающего списка длительностей уроков.
+    /// </summary>
+    /// <returns>Список для выпадающего списка длительностей уроков.</returns>
+    Task<IEnumerable<LessonDurationOutput>> GetLessonsDurationAsync();
 }

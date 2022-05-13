@@ -149,4 +149,33 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит список для выпадающего списка длительностей уроков.
+    /// </summary>
+    /// <returns>Список для выпадающего списка длительностей уроков.</returns>
+    public async Task<IEnumerable<LessonDurationOutput>> GetLessonsDurationAsync()
+    {
+        try
+        {
+            var result = await _dbContext.LessonsDuration
+                .Select(l => new LessonDurationOutput
+                {
+                    DurationId = l.DurationId,
+                    Time = l.Time,
+                    Unit = l.Unit
+                })
+                .OrderBy(o => o.Time)
+                .ToListAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

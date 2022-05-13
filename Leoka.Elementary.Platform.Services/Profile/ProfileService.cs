@@ -100,4 +100,25 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит список для выпадающего списка длительностей уроков.
+    /// </summary>
+    /// <returns>Список для выпадающего списка длительностей уроков.</returns>
+    public async Task<IEnumerable<LessonDurationOutput>> GetLessonsDurationAsync()
+    {
+        try
+        {
+            var result = await _profileRepository.GetLessonsDurationAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

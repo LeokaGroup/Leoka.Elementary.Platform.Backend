@@ -58,7 +58,7 @@ public class ProfileController : BaseController
     }
 
     /// <summary>
-    /// Метод получит список предметов.
+    /// Метод получит список предметов для выпадающего списка.
     /// </summary>
     /// <returns>Список предметов.</returns>
     [HttpGet]
@@ -71,6 +71,24 @@ public class ProfileController : BaseController
     public async Task<IEnumerable<ProfileItemOutput>> GetProfileItemsAsync()
     {
         var result = await _profileService.GetProfileItemsAsync();
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод получит список для выпадающего списка длительностей уроков.
+    /// </summary>
+    /// <returns>Список для выпадающего списка длительностей уроков.</returns>
+    [HttpGet]
+    [Route("durations")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<LessonDurationOutput>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<IEnumerable<LessonDurationOutput>> GetLessonsDurationAsync()
+    {
+        var result = await _profileService.GetLessonsDurationAsync();
 
         return result;
     }
