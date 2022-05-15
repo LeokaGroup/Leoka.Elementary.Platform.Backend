@@ -1,6 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Core.Extensions;
 using Leoka.Elementary.Platform.Models.Entities.Common;
 using Leoka.Elementary.Platform.Models.Entities.MainPage;
+using Leoka.Elementary.Platform.Models.Entities.Profile;
 using Leoka.Elementary.Platform.Models.Entities.Request;
 using Leoka.Elementary.Platform.Models.Entities.User;
 using Microsoft.EntityFrameworkCore;
@@ -126,4 +127,29 @@ public class PostgreDbContext : DbContext
     /// Таблица dbo.MainFonMentorItems.
     /// </summary>
     public DbSet<MainFonMentorItemEntity> MainFonMentorItems { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.ProfileInfos.
+    /// </summary>
+    public DbSet<ProfileInfoEntity> ProfileInfos { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.ProfileMenuItems.
+    /// </summary>
+    public DbSet<ProfileMenuItemEntity> ProfileMenuItems { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.ProfileItems.
+    /// </summary>
+    public DbSet<ProfileItemEntity> ProfileItems { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.LessonsDuration.
+    /// </summary>
+    public DbSet<LessonDurationEntity> LessonsDuration { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.PurposeTrainings.
+    /// </summary>
+    public DbSet<PurposeTrainingEntity> PurposeTrainings { get; set; }
 }

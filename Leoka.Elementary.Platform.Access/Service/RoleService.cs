@@ -45,7 +45,7 @@ public class RoleService : IRoleService
     /// Метод обновит токен.
     /// </summary>
     /// <returns>Новый токен.</returns>
-    public async Task<ClaimOutput> GenerateTokenAsync()
+    public async Task<ClaimOutput> GenerateTokenAsync(string account)
     {
         try
         {

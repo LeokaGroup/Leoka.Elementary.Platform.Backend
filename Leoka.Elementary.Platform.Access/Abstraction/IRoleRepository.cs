@@ -12,4 +12,11 @@ public interface IRoleRepository
     /// </summary>
     /// <returns>Список ролей.</returns>
     Task<IEnumerable<RoleOutput>> GetRolesAsync();
+
+    /// <summary>
+    /// Метод получит роль пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Id роли.</returns>
+    Task<int> GetUserRoleAsync(long userId);
 }

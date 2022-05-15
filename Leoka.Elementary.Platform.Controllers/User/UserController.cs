@@ -32,8 +32,9 @@ public class UserController : BaseController
     [Route("signup")]
     [ProducesResponseType(200, Type = typeof(UserOutput))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]        
+    [ProducesResponseType(403)]
     [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
     public async Task<UserOutput> CreateUserAsync([FromBody] UserInput createUserInput)
     {
         var result = await _userService.CreateUserAsync(createUserInput.FirstName, createUserInput.UserEmail, createUserInput.UserRole, createUserInput.UserPhoneNumber);
@@ -54,6 +55,7 @@ public class UserController : BaseController
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
     public async Task<ClaimOutput> SignInAsync([FromQuery] string userLogin, string userPassword)
     {
         var result = await _userService.SignInAsync(userLogin, userPassword);

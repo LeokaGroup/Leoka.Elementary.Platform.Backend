@@ -31,7 +31,7 @@ public class MainPageController : BaseController
     [Route("header")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<HeaderOutput>))]
     [ProducesResponseType(400)]
-    [ProducesResponseType(403)]        
+    [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
     public async Task<IEnumerable<HeaderOutput>> GetHeaderItemsAsync()

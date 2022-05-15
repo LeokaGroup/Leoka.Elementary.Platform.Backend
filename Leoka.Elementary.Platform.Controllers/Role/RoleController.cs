@@ -29,6 +29,7 @@ public class RoleController : BaseController
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
     public async Task<IEnumerable<RoleOutput>> GetRolesAsync()
     {
         var result = await _roleService.GetRolesAsync();
@@ -42,9 +43,13 @@ public class RoleController : BaseController
     /// <returns>Новый токен.</returns>
     [HttpGet, Route("token")]
     [ProducesResponseType(200, Type = typeof(ClaimOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
     public async Task<IActionResult> GenerateTokenAsync()
     {
-        var result = await _roleService.GenerateTokenAsync();
+        var result = await _roleService.GenerateTokenAsync(GetUserName());
 
         return Ok(result);
     }

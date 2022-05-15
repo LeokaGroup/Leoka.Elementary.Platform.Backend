@@ -18,5 +18,5 @@ public interface IRoleService
     /// Метод обновит токен.
     /// </summary>
     /// <returns>Новый токен.</returns>
-    Task<ClaimOutput> GenerateTokenAsync();
+    Task<ClaimOutput> GenerateTokenAsync(string account);
 }
