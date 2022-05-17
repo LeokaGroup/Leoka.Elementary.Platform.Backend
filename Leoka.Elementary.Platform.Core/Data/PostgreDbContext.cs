@@ -192,4 +192,9 @@ public class PostgreDbContext : DbContext
     /// Таблица Profile.MentorCertificates.
     /// </summary>
     public DbSet<MentorCertificateEntity> MentorCertificates { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorTimes.
+    /// </summary>
+    public DbSet<MentorTimeEntity> MentorTimes { get; set; }
 }

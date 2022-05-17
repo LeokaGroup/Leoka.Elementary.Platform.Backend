@@ -1,4 +1,6 @@
-﻿using Leoka.Elementary.Platform.Models.Profile.Output;
+﻿using Leoka.Elementary.Platform.Models.Profile.Input;
+using Leoka.Elementary.Platform.Models.Profile.Output;
+using Microsoft.AspNetCore.Http;
 
 namespace Leoka.Elementary.Platform.Abstractions.Profile;
 
@@ -37,4 +39,12 @@ public interface IProfileService
     /// </summary>
     /// <returns>Список целей подготовки.</returns>
     Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync();
+
+    /// <summary>
+    /// Метод сохранит данные анкеты пользователя.
+    /// </summary>
+    /// <param name="mentorProfileInfoInput">Входная модель.</param>
+    /// <param name="account">Аккаунт пользователя.</param>
+    /// <returns>Выходная модель с изменениями.</returns>
+    Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput, IFormCollection mentorCertificates, string account);
 }

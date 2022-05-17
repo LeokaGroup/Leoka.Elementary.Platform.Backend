@@ -1,8 +1,10 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Base;
+using Leoka.Elementary.Platform.Models.Profile.Input;
 using Leoka.Elementary.Platform.Models.Profile.Output;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Leoka.Elementary.Platform.Controllers.Profile;
@@ -107,6 +109,25 @@ public class ProfileController : BaseController
     public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync()
     {
         var result = await _profileService.GetPurposeTrainingsAsync();
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод сохранит данные анкеты пользователя.
+    /// </summary>
+    /// <param name="mentorProfileInfoInput">Входная модель.</param>
+    /// <returns>Выходная модель с изменениями.</returns>
+    [HttpPost]
+    [Route("profile-info")]
+    [ProducesResponseType(200, Type = typeof(MentorProfileInfoOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync([FromBody] MentorProfileInfoInput mentorProfileInfoInput, [FromForm] IFormCollection mentorCertificates)
+    {
+        var result = await _profileService.SaveProfileUserInfoAsync(mentorProfileInfoInput, mentorCertificates, GetUserName());
 
         return result;
     }

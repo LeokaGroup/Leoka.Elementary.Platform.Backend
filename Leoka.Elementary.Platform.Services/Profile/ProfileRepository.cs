@@ -1,6 +1,11 @@
-﻿using Leoka.Elementary.Platform.Abstractions.Profile;
+﻿using AutoMapper;
+using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Core.Data;
+using Leoka.Elementary.Platform.Core.Utils;
+using Leoka.Elementary.Platform.Models.Entities.Profile;
+using Leoka.Elementary.Platform.Models.Profile.Input;
 using Leoka.Elementary.Platform.Models.Profile.Output;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Leoka.Elementary.Platform.Services.Profile;
@@ -195,6 +200,120 @@ public sealed class ProfileRepository : IProfileRepository
                     PurposeName = p.PurposeName
                 })
                 .ToListAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод сохранит данные анкеты пользователя.
+    /// </summary>
+    /// <param name="mentorProfileInfoInput">Входная модель.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Выходная модель с изменениями.</returns>
+    public async Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput, IFormCollection mentorCertificates, long userId)
+    {
+        try
+        {
+            // Добавит ФИО и контактные данные.
+            await _dbContext.MentorProfileInfo.AddAsync(new MentorProfileInfoEntity
+            {
+                FirstName = mentorProfileInfoInput.FirstName,
+                LastName = mentorProfileInfoInput.LastName,
+                SecondName = mentorProfileInfoInput.SecondName,
+                IsVisibleAllContact = mentorProfileInfoInput.IsVisibleAllContact,
+                Email = mentorProfileInfoInput.Email,
+                PhoneNumber = mentorProfileInfoInput.PhoneNumber
+            });
+            await _dbContext.SaveChangesAsync();
+
+            var mapper = AutoFac.Resolve<IMapper>();
+
+            // Добавит список предметов.
+            var mentorItems = mapper.Map<List<MentorProfileItemEntity>>(mentorProfileInfoInput.MentorItems);
+
+            foreach (var item in mentorItems)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorProfileItems.AddRangeAsync(mentorItems);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит список цен преподавателя.
+            var mentorPrices = mapper.Map<List<MentorLessonPriceEntity>>(mentorProfileInfoInput.MentorPrices);
+            
+            foreach (var item in mentorPrices)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorLessonPrices.AddRangeAsync(mentorPrices);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит длительности занятий преподавателя.
+            var mentorDurations = mapper.Map<List<MentorLessonDurationEntity>>(mentorProfileInfoInput.MentorDurations);
+            
+            foreach (var item in mentorDurations)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorLessonDurations.AddRangeAsync(mentorDurations);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит время занятий преподавателя.
+            var mentorTimes = mapper.Map<List<MentorTimeEntity>>(mentorProfileInfoInput.MentorTimes);
+            
+            foreach (var item in mentorTimes)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorTimes.AddRangeAsync(mentorTimes);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит цели подготовки.
+            var mentorTrainings = mapper.Map<List<MentorTrainingEntity>>(mentorProfileInfoInput.MentorTrainings);
+            
+            foreach (var item in mentorTrainings)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorTrainings.AddRangeAsync(mentorTrainings);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит опыт преподавателя.
+            var mentorExperience = mapper.Map<List<MentorExperienceEntity>>(mentorProfileInfoInput.MentorExperience);
+            
+            foreach (var item in mentorExperience)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorExperience.AddRangeAsync(mentorExperience);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит образование преподавателя.
+            var mentorEducations = mapper.Map<List<MentorEducationEntity>>(mentorProfileInfoInput.MentorEducations);
+            
+            foreach (var item in mentorEducations)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorEducations.AddRangeAsync(mentorEducations);
+            await _dbContext.SaveChangesAsync();
+
+            var result = mapper.Map<MentorProfileInfoOutput>(mentorProfileInfoInput);
 
             return result;
         }
