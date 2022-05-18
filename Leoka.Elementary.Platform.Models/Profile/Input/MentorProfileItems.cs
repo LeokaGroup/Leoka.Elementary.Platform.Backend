@@ -1,7 +1,7 @@
 ﻿namespace Leoka.Elementary.Platform.Models.Profile.Input;
 
 /// <summary>
-/// Класс описывает список предметов
+/// Класс описывает список предметов.
 /// </summary>
 public class MentorProfileItems
 {

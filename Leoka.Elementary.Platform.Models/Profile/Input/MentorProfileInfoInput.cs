@@ -38,7 +38,7 @@ public class MentorProfileInfoInput
     public bool IsVisibleAllContact { get; set; }
 
     /// <summary>
-    /// Список предметов для сохранения.
+    /// Список предметов.
     /// </summary>
     public List<MentorProfileItems> MentorItems { get; set; } = new();
     
