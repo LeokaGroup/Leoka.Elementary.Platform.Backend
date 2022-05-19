@@ -325,4 +325,33 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит дни недели.
+    /// </summary>
+    /// <returns>Список дней недели.</returns>
+    public async Task<IEnumerable<DayWeekOutput>> GetDaysWeekAsync()
+    {
+        try
+        {
+            var result = await _dbContext.DaysWeek
+                .Select(d => new DayWeekOutput
+                {
+                    DayName = d.DayName,
+                    DaySysName = d.DaySysName,
+                    Position = d.Position
+                })
+                .OrderBy(o => o.Position)
+                .ToListAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

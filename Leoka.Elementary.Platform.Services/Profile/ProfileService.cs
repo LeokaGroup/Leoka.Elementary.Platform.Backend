@@ -247,4 +247,25 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит дни недели.
+    /// </summary>
+    /// <returns>Список дней недели.</returns>
+    public async Task<IEnumerable<DayWeekOutput>> GetDaysWeekAsync()
+    {
+        try
+        {
+            var result = await _profileRepository.GetDaysWeekAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

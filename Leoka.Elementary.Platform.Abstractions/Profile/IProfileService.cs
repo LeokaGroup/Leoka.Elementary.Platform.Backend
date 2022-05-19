@@ -46,5 +46,12 @@ public interface IProfileService
     /// <param name="mentorProfileInfoInput">Входная модель.</param>
     /// <param name="account">Аккаунт пользователя.</param>
     /// <returns>Выходная модель с изменениями.</returns>
-    Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput, IFormCollection mentorCertificates, string account);
+    Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput,
+        IFormCollection mentorCertificates, string account);
+
+    /// <summary>
+    /// Метод получит дни недели.
+    /// </summary>
+    /// <returns>Список дней недели.</returns>
+    Task<IEnumerable<DayWeekOutput>> GetDaysWeekAsync();
 }

@@ -131,4 +131,22 @@ public class ProfileController : BaseController
 
         return result;
     }
+    
+    /// <summary>
+    /// Метод получит дни недели.
+    /// </summary>
+    /// <returns>Список дней недели.</returns>
+    [HttpGet]
+    [Route("days-week")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<DayWeekOutput>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<IEnumerable<DayWeekOutput>> GetDaysWeekAsync()
+    {
+        var result = await _profileService.GetDaysWeekAsync();
+
+        return result;
+    }
 }
