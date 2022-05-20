@@ -233,6 +233,12 @@ public sealed class ProfileService : IProfileService
                 {
                     throw new EmptyCertificatesException();
                 }
+                
+                // Проверит информацию о преподавателе.
+                if (!mentorProfileInfoInput.MentorAboutInfos.Any())
+                {
+                    throw new EmptyAboutInfoException();
+                }
 
                 result = await _profileRepository.SaveProfileUserInfoAsync(mentorProfileInfoInput, mentorCertificates, user.UserId);
             }

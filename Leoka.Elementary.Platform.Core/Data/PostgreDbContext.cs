@@ -202,4 +202,9 @@ public class PostgreDbContext : DbContext
     /// Таблица Profile.DaysWeek.
     /// </summary>
     public DbSet<DayWeekEntity> DaysWeek { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorAboutInfo.
+    /// </summary>
+    public DbSet<MentorAboutInfoEntity> MentorAboutInfos { get; set; }
 }

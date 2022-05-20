@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Leoka.Elementary.Platform.Models.Profile.Input;
+﻿namespace Leoka.Elementary.Platform.Models.Profile.Input;
 
 /// <summary>
 /// Класс входной модели анкеты профиля преподавателя.
@@ -71,4 +69,9 @@ public class MentorProfileInfoInput
     /// Список образований преподавателя.
     /// </summary>
     public List<MentorEducations> MentorEducations { get; set; } = new();
+
+    /// <summary>
+    /// Список информации о преподавателе.
+    /// </summary>
+    public List<MentorAboutInfo> MentorAboutInfos { get; set; } = new();
 }
