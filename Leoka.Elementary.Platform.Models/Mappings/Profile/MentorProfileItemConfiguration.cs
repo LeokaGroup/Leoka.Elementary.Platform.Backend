@@ -14,8 +14,7 @@ public partial class MentorProfileItemConfiguration : IEntityTypeConfiguration<M
         
         entity.Property(e => e.ItemId)
             .HasColumnName("ItemId")
-            .HasColumnType("bigserial")
-            .ValueGeneratedNever();
+            .HasColumnType("bigserial");
         
         entity.Property(e => e.ItemName)
             .HasColumnName("ItemName")

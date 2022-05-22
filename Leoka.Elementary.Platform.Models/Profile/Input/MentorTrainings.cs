@@ -8,5 +8,5 @@ public class MentorTrainings
     /// <summary>
     /// Системное название цели.
     /// </summary>
-    public string PurposeSysName { get; set; }
+    public string TrainingSysName { get; set; }
 }

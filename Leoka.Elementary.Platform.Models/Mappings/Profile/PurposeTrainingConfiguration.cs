@@ -14,8 +14,7 @@ public partial class PurposeTrainingConfiguration : IEntityTypeConfiguration<Pur
 
         entity.Property(e => e.PurposeId)
             .HasColumnName("PurposeId")
-            .HasColumnType("serial")
-            .ValueGeneratedNever();
+            .HasColumnType("serial");
 
         entity.Property(e => e.PurposeSysName)
             .HasColumnName("PurposeSysName")

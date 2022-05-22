@@ -14,8 +14,7 @@ public partial class MentorTrainingConfiguration : IEntityTypeConfiguration<Ment
         
         entity.Property(e => e.TrainingId)
             .HasColumnName("TrainingId")
-            .HasColumnType("bigserial")
-            .ValueGeneratedNever();
+            .HasColumnType("bigserial");
         
         entity.Property(e => e.TrainingName)
             .HasColumnName("TrainingName")

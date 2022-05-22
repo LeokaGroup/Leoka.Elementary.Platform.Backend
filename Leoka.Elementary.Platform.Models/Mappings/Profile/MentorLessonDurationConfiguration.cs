@@ -14,8 +14,7 @@ public partial class MentorLessonDurationConfiguration : IEntityTypeConfiguratio
         
         entity.Property(e => e.DurationId)
             .HasColumnName("DurationId")
-            .HasColumnType("bigserial")
-            .ValueGeneratedNever();
+            .HasColumnType("bigserial");
         
         entity.Property(e => e.Time)
             .HasColumnName("Time")

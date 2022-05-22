@@ -307,6 +307,12 @@ public sealed class ProfileRepository : IProfileRepository
             foreach (var item in mentorTrainings)
             {
                 item.UserId = userId;
+                
+                // Запишет название цели подготовки.
+                item.TrainingName = await _dbContext.PurposeTrainings
+                    .Where(p => p.PurposeSysName.Equals(item.TrainingSysName))
+                    .Select(p => p.PurposeName)
+                    .FirstOrDefaultAsync();
             }
             
             await _dbContext.MentorTrainings.AddRangeAsync(mentorTrainings);

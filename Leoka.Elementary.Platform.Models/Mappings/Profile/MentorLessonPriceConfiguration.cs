@@ -14,8 +14,7 @@ public partial class MentorLessonPriceConfiguration : IEntityTypeConfiguration<M
         
         entity.Property(e => e.PriceId)
             .HasColumnName("PriceId")
-            .HasColumnType("bigserial")
-            .ValueGeneratedNever();
+            .HasColumnType("bigserial");
         
         entity.Property(e => e.Price)
             .HasColumnName("Price")

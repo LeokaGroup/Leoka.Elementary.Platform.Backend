@@ -14,8 +14,7 @@ public partial class MentorProfileInfoConfiguration : IEntityTypeConfiguration<M
         
         entity.Property(e => e.UserProfileInfoId)
             .HasColumnName("UserProfileInfoId")
-            .HasColumnType("bigserial")
-            .ValueGeneratedNever();
+            .HasColumnType("bigserial");
         
         entity.Property(e => e.ProfileIconUrl)
             .HasColumnName("ProfileIconUrl")

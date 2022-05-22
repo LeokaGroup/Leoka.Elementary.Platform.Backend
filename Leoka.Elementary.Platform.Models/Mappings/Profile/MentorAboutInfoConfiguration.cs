@@ -8,14 +8,13 @@ public partial class MentorAboutInfoConfiguration : IEntityTypeConfiguration<Men
 {
     public void Configure(EntityTypeBuilder<MentorAboutInfoEntity> entity)
     {
-        entity.ToTable("MentorAboutInfo", "dbo");
+        entity.ToTable("MentorAboutInfo", "Profile");
 
         entity.HasKey(e => e.AboutInfoId);
         
         entity.Property(e => e.AboutInfoId)
             .HasColumnName("AboutInfoId")
-            .HasColumnType("bigserial")
-            .ValueGeneratedNever();
+            .HasColumnType("bigserial");
         
         entity.Property(e => e.AboutInfoText)
             .HasColumnName("AboutInfoText")

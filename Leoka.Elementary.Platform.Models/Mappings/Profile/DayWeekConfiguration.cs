@@ -14,8 +14,7 @@ public partial class DayWeekConfiguration : IEntityTypeConfiguration<DayWeekEnti
 
         entity.Property(e => e.DayId)
             .HasColumnName("DayId")
-            .HasColumnType("serial")
-            .ValueGeneratedNever();
+            .HasColumnType("serial");
 
         entity.Property(e => e.DayName)
             .HasColumnName("DayName")
