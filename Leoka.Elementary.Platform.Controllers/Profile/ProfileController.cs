@@ -1,9 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Base;
-using Leoka.Elementary.Platform.Models.Profile.Input;
+using Leoka.Elementary.Platform.Core.Filters;
 using Leoka.Elementary.Platform.Models.Profile.Output;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,12 +10,12 @@ namespace Leoka.Elementary.Platform.Controllers.Profile;
 /// <summary>
 /// Контроллер работы с профилем пользователя.
 /// </summary>
+[AuthFilter]
 [ApiController, Route("profile")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class ProfileController : BaseController
 {
     private readonly IProfileService _profileService;
-    
+
     public ProfileController(IProfileService profileService)
     {
         _profileService = profileService;
@@ -125,13 +123,13 @@ public class ProfileController : BaseController
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync([FromBody] MentorProfileInfoInput mentorProfileInfoInput, [FromForm] IFormCollection mentorCertificates)
+    public async Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync([FromForm] string profileData, [FromForm] IFormCollection mentorFiles)
     {
-        var result = await _profileService.SaveProfileUserInfoAsync(mentorProfileInfoInput, mentorCertificates, GetUserName());
-
+        var result = await _profileService.SaveProfileUserInfoAsync(profileData, mentorFiles, GetUserName());
+        
         return result;
     }
-    
+
     /// <summary>
     /// Метод получит дни недели.
     /// </summary>

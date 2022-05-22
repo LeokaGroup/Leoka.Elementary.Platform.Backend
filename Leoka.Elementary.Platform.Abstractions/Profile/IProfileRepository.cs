@@ -44,9 +44,11 @@ public interface IProfileRepository
     /// Метод сохранит данные анкеты пользователя.
     /// </summary>
     /// <param name="mentorProfileInfoInput">Входная модель.</param>
+    /// <param name="urlCertificates">Список путей к изображениям сертификатов.</param>
+    /// <param name="urlAvatar">Путь к изображению профиля пользователя.</param>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Выходная модель с изменениями.</returns>
-    Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput, IFormCollection mentorCertificates, long userId);
+    Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput, string[] urlCertificates, string urlAvatar, long userId);
     
     /// <summary>
     /// Метод получит дни недели.

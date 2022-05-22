@@ -73,5 +73,5 @@ public class MentorProfileInfoInput
     /// <summary>
     /// Список информации о преподавателе.
     /// </summary>
-    public List<MentorAboutInfo> MentorAboutInfos { get; set; } = new();
+    public List<MentorAboutInfo> MentorAboutInfo { get; set; } = new();
 }

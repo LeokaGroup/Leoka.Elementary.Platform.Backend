@@ -216,9 +216,11 @@ public sealed class ProfileRepository : IProfileRepository
     /// Метод сохранит данные анкеты пользователя.
     /// </summary>
     /// <param name="mentorProfileInfoInput">Входная модель.</param>
+    /// <param name="urlCertificates">Список путей к изображениям сертификатов.</param>
+    /// <param name="urlAvatar">Путь к изображению профиля пользователя.</param>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Выходная модель с изменениями.</returns>
-    public async Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput, IFormCollection mentorCertificates, long userId)
+    public async Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput, string[] urlCertificates, string urlAvatar, long userId)
     {
         try
         {
@@ -230,7 +232,11 @@ public sealed class ProfileRepository : IProfileRepository
                 SecondName = mentorProfileInfoInput.SecondName,
                 IsVisibleAllContact = mentorProfileInfoInput.IsVisibleAllContact,
                 Email = mentorProfileInfoInput.Email,
-                PhoneNumber = mentorProfileInfoInput.PhoneNumber
+                PhoneNumber = mentorProfileInfoInput.PhoneNumber,
+                ProfileIconUrl = urlAvatar,
+                FullName = mentorProfileInfoInput.FirstName 
+                           + " " + mentorProfileInfoInput.LastName 
+                           + " " + mentorProfileInfoInput.SecondName
             });
             await _dbContext.SaveChangesAsync();
 
@@ -238,10 +244,25 @@ public sealed class ProfileRepository : IProfileRepository
 
             // Добавит список предметов.
             var mentorItems = mapper.Map<List<MentorProfileItemEntity>>(mentorProfileInfoInput.MentorItems);
-
+            var i = 0;
+            
             foreach (var item in mentorItems)
             {
+                if (i == 0)
+                {
+                    i = 1;
+                }
+                
                 item.UserId = userId;
+                item.Position = i;
+                
+                // Запишет название предмета.
+                item.ItemName = await _dbContext.ProfileItems
+                    .Where(p => p.ItemSysName.Equals(item.ItemSysName))
+                    .Select(p => p.ItemName)
+                    .FirstOrDefaultAsync();
+                
+                i++;
             }
             
             await _dbContext.MentorProfileItems.AddRangeAsync(mentorItems);
@@ -311,6 +332,32 @@ public sealed class ProfileRepository : IProfileRepository
             }
             
             await _dbContext.MentorEducations.AddRangeAsync(mentorEducations);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит информацию о преподавателе.
+            var mentorAboutInfo = mapper.Map<List<MentorAboutInfoEntity>>(mentorProfileInfoInput.MentorAboutInfo);
+            
+            foreach (var item in mentorAboutInfo)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorAboutInfos.AddRangeAsync(mentorAboutInfo);
+            await _dbContext.SaveChangesAsync();
+            
+            // Запишет пути к сертификатам.
+            var certificatesList = new List<MentorCertificateEntity>();
+            
+            foreach (var item in urlCertificates)
+            {
+                certificatesList.Add(new MentorCertificateEntity
+                {
+                    CertificateUrl = item,
+                    UserId = userId
+                });
+            }
+
+            await _dbContext.MentorCertificates.AddRangeAsync(certificatesList);
             await _dbContext.SaveChangesAsync();
 
             var result = mapper.Map<MentorProfileInfoOutput>(mentorProfileInfoInput);

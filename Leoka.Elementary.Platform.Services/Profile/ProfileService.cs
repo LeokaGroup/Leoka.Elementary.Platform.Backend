@@ -5,6 +5,7 @@ using Leoka.Elementary.Platform.Core.Exceptions;
 using Leoka.Elementary.Platform.Models.Profile.Input;
 using Leoka.Elementary.Platform.Models.Profile.Output;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace Leoka.Elementary.Platform.Services.Profile;
 
@@ -151,96 +152,107 @@ public sealed class ProfileService : IProfileService
     /// <param name="mentorProfileInfoInput">Входная модель.</param>
     /// <param name="account">Аккаунт пользователя.</param>
     /// <returns>Выходная модель с изменениями.</returns>
-    public async Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput, IFormCollection mentorCertificates, string account)
+    public async Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(string mentorProfileInfoDataInput, IFormCollection mentorFiles, string account)
     {
         try
         {
             var result = new MentorProfileInfoOutput();
+            var mentorProfileInfo = JsonConvert.DeserializeObject<MentorProfileInfoInput>(mentorProfileInfoDataInput);
             
             // Получит Id пользователя.
             var user = await _userRepository.GetUserByEmailAsync(account);
 
             if (user is null)
             {
-                throw new NotFoundUserException(account);
+                throw new NotFoundUserException(account); 
             }
             
             // Получит роль пользователя.
             var role = await _roleRepository.GetUserRoleAsync(user.UserId);
 
             // Если преподаватель.
-            if (role == 2)
+            if (role == 2 && mentorProfileInfo is not null)
             {
                 // Проверка ФИО.
-                if (string.IsNullOrEmpty(mentorProfileInfoInput.FirstName) 
-                    || string.IsNullOrEmpty(mentorProfileInfoInput.LastName)
-                    || string.IsNullOrEmpty(mentorProfileInfoInput.SecondName))
+                if (string.IsNullOrEmpty(mentorProfileInfo.FirstName) 
+                    || string.IsNullOrEmpty(mentorProfileInfo.LastName)
+                    || string.IsNullOrEmpty(mentorProfileInfo.SecondName))
                 {
                     throw new EmptyUserFioException();
                 }
-            
+                
                 // Проверит контактные данные.
-                if (string.IsNullOrEmpty(mentorProfileInfoInput.Email) 
-                    || string.IsNullOrEmpty(mentorProfileInfoInput.PhoneNumber))
+                if (string.IsNullOrEmpty(mentorProfileInfo.Email) 
+                    || string.IsNullOrEmpty(mentorProfileInfo.PhoneNumber))
                 {
                     throw new EmptyContactException();
                 }
-            
+                
                 // Проверит список предметов.
-                if (!mentorProfileInfoInput.MentorItems.Any())
+                if (!mentorProfileInfo.MentorItems.Any())
                 {
                     throw new EmptyMentorItemsException();
                 }
-
+                
                 // Проверит список цен преподавателя.
-                if (!mentorProfileInfoInput.MentorPrices.Any())
+                if (!mentorProfileInfo.MentorPrices.Any())
                 {
                     throw new EmptyPricesException();
                 }
                 
                 // Проверит длительности занятий преподавателя.
-                if (!mentorProfileInfoInput.MentorDurations.Any())
+                if (!mentorProfileInfo.MentorDurations.Any())
                 {
                     throw new EmptyDurationException();
                 }
                 
                 // Проверит время занятий преподавателя.
-                if (!mentorProfileInfoInput.MentorTimes.Any())
+                if (!mentorProfileInfo.MentorTimes.Any())
                 {
                     throw new EmptyTimeException();
                 }
                 
                 // Проверит цели подготовки.
-                if (!mentorProfileInfoInput.MentorTrainings.Any())
+                if (!mentorProfileInfo.MentorTrainings.Any())
                 {
                     throw new EmptyTrainingException();
                 }
                 
                 // Проверит опыт преподавателя.
-                if (!mentorProfileInfoInput.MentorExperience.Any())
+                if (!mentorProfileInfo.MentorExperience.Any())
                 {
                     throw new EmptyExperienceException();
                 }
                 
                 // Проверит образование преподавателя.
-                if (!mentorProfileInfoInput.MentorEducations.Any())
+                if (!mentorProfileInfo.MentorEducations.Any())
                 {
                     throw new EmptyEducationsException();
                 }
                 
-                // Проверит сертификаты преподавателя.
-                if (!mentorCertificates.Files.Any())
+                // Проверит файлы преподавателя.
+                if (!mentorFiles.Files.Any())
                 {
-                    throw new EmptyCertificatesException();
+                    throw new EmptyFilesException();
                 }
                 
                 // Проверит информацию о преподавателе.
-                if (!mentorProfileInfoInput.MentorAboutInfos.Any())
+                if (!mentorProfileInfo.MentorAboutInfo.Any())
                 {
                     throw new EmptyAboutInfoException();
                 }
 
-                result = await _profileRepository.SaveProfileUserInfoAsync(mentorProfileInfoInput, mentorCertificates, user.UserId);
+                var urlAvatar = mentorFiles.Files
+                    .Where(f => f.Name.Equals("profileImage"))
+                    .Select(f => f.FileName)
+                    .FirstOrDefault();
+                
+                var urlMentorCertificates = mentorFiles.Files
+                    .Where(f => f.Name.Equals("mentorCertificates"))
+                    .Select(f => f.FileName)
+                    .ToArray();
+                
+                result = await _profileRepository.SaveProfileUserInfoAsync(mentorProfileInfo, urlMentorCertificates, urlAvatar, user.UserId);
             }
 
             return result;

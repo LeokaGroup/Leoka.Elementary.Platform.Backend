@@ -2,7 +2,6 @@
 using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Models.User.Input;
 using Leoka.Elementary.Platform.Models.User.Output;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +11,6 @@ namespace Leoka.Elementary.Platform.Controllers.User;
 /// Контроллер для работы с пользователями.
 /// </summary>
 [ApiController, Route("user")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class UserController : BaseController
 {
     private readonly IUserService _userService;

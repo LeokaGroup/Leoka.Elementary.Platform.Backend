@@ -8,7 +8,7 @@ using Leoka.Elementary.Platform.Models.Profile.Output;
 namespace Leoka.Elementary.Platform.Core.Mapper;
 
 /// <summary>
-/// Класс описывает конфигурацию маппера.
+/// Класс конфигурации маппера.
 /// </summary>
 public class MappingProfile : Profile
 {
@@ -24,13 +24,14 @@ public class MappingProfile : Profile
         CreateMap<MainBestQuestionOptionEntity, BestQuestionVariantItemsOutput>();
         CreateMap<MainBestOptionEntity, OptionOutput>();
         
-        CreateMap<MentorProfileItemEntity, MentorProfileItems>();
+        CreateMap<MentorProfileItems, MentorProfileItemEntity>();
         CreateMap<MentorLessonPriceEntity, MentorProfileItems>();
-        CreateMap<MentorLessonDurationEntity, MentorProfileItems>();
-        CreateMap<MentorTimeEntity, MentorTimes>();
-        CreateMap<MentorTrainingEntity, MentorTrainings>();
-        CreateMap<MentorExperienceEntity, MentorExperience>();
-        CreateMap<MentorEducationEntity, MentorEducations>();
+        CreateMap<MentorProfileItems, MentorLessonDurationEntity>();
+        CreateMap<MentorTimes, MentorTimeEntity>();
+        CreateMap<MentorTrainings, MentorTrainingEntity>();
+        CreateMap<MentorExperience, MentorExperienceEntity>();
+        CreateMap<MentorEducations, MentorEducationEntity>();
         CreateMap<MentorProfileInfoOutput, MentorProfileInfoInput>();
+        CreateMap<MentorAboutInfo, MentorAboutInfoEntity>();
     }
 }
