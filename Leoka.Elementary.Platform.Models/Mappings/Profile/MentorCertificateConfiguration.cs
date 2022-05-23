@@ -16,8 +16,8 @@ public partial class MentorCertificateConfiguration : IEntityTypeConfiguration<M
             .HasColumnName("CertificateId")
             .HasColumnType("bigserial");
         
-        entity.Property(e => e.CertificateUrl)
-            .HasColumnName("CertificateUrl")
+        entity.Property(e => e.CertificateName)
+            .HasColumnName("CertificateName")
             .HasColumnType("text")
             .IsRequired();
 

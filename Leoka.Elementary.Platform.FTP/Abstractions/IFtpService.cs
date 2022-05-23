@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Leoka.Elementary.Platform.FTP.Abstractions;
 
@@ -13,4 +14,11 @@ public interface IFtpService
     /// <param name="files">Файлы для отправки.</param>
     /// <param name="userId">Id пользователя.</param>
     Task UploadProfileFilesFtpAsync(IFormFileCollection files, long userId);
+
+    /// <summary>
+    /// Метод получит список файлов сертификатов с сервера.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список файлов.</returns>
+    Task<IEnumerable<FileContentResult>> GetUserCertsFilesAsync(long userId);
 }

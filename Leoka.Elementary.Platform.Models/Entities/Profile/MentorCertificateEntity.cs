@@ -13,7 +13,7 @@ public class MentorCertificateEntity
     /// <summary>
     /// Изображение сертификата.
     /// </summary>
-    public string CertificateUrl { get; set; }
+    public string CertificateName { get; set; }
 
     /// <summary>
     /// Id пользователя.

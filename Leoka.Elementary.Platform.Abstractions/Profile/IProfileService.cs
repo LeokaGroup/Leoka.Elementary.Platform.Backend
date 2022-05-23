@@ -1,5 +1,4 @@
-﻿using Leoka.Elementary.Platform.Models.Profile.Input;
-using Leoka.Elementary.Platform.Models.Profile.Output;
+﻿using Leoka.Elementary.Platform.Models.Profile.Output;
 using Microsoft.AspNetCore.Http;
 
 namespace Leoka.Elementary.Platform.Abstractions.Profile;
@@ -54,4 +53,11 @@ public interface IProfileService
     /// </summary>
     /// <returns>Список дней недели.</returns>
     Task<IEnumerable<DayWeekOutput>> GetDaysWeekAsync();
+
+    /// <summary>
+    /// Метод получит список сертификатов пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список сертификатов.</returns>
+    Task<IEnumerable<MentorCertificateOutput>> GetUserCertsAsync(long userId);
 }

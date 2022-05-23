@@ -2,6 +2,7 @@
 using System.Net.FtpClient;
 using Leoka.Elementary.Platform.FTP.Abstractions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
 namespace Leoka.Elementary.Platform.FTP.Services;
@@ -18,7 +19,7 @@ public class FtpService : IFtpService
     
     // Путь к изображениям.
     private const string PathImages = "/images";
-    
+
     public FtpService(IConfiguration configuration)
     {
         _configuration = configuration;
@@ -33,6 +34,10 @@ public class FtpService : IFtpService
     {
         try
         {
+            // Путь к файлам пользователя.
+            var userFolderPath = "/" + userId;
+            // var userDocsFolderPath = "/" + userId;
+            
             if (files.Count > 0)
             {
                 var host = _configuration.GetSection("FtpSettings:Host").Value;
@@ -61,6 +66,22 @@ public class FtpService : IFtpService
                 {
                     ftp.CreateDirectory(PathImages);
                 }
+                
+                // Проверит существование папки изображений пользователя.
+                var checkUserImegesFolder = ftp.GetListing().Where(f => f.FullName.Equals(PathImages + userFolderPath));
+                
+                if (!checkUserImegesFolder.Any())
+                {
+                    ftp.CreateDirectory(PathImages + userFolderPath);
+                }
+                
+                // Проверит существование папки документов пользователя.
+                var checkUserDocsFolder = ftp.GetListing().Where(f => f.FullName.Equals(PathDocs + userFolderPath));
+                
+                if (!checkUserDocsFolder.Any())
+                {
+                    ftp.CreateDirectory(PathDocs + userFolderPath);
+                }
 
                 // Закачать файлы на сервер в папку фронта (изображения).
                 foreach (var file in files)
@@ -71,7 +92,8 @@ public class FtpService : IFtpService
                         || file.FileName.EndsWith(".jpeg")
                         || file.FileName.EndsWith(".svg"))
                     {
-                        ftp.SetWorkingDirectory(PathImages);
+                        // ftp.SetWorkingDirectory(PathImages);
+                        ftp.SetWorkingDirectory(PathImages + userFolderPath);
                     }
 
                     // Если документы.
@@ -82,16 +104,49 @@ public class FtpService : IFtpService
                              || file.FileName.EndsWith(".doc")
                              || file.FileName.EndsWith(".xls"))
                     {
-                        ftp.SetWorkingDirectory(PathDocs);
+                        // ftp.SetWorkingDirectory(PathDocs);
+                        ftp.SetWorkingDirectory(PathDocs + userFolderPath);
                     }
                     
-                    // Добавит файл на сервер.
+                    // Добавит файл на сервер проставляя имя файла учитывая Id пользователя.
                     await using var remote = ftp.OpenWrite(string.Concat(userId, "_") + file.FileName, FtpDataType.Binary);
                     await file.CopyToAsync(remote);
                 }
 
                 ftp.Disconnect();
             }
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит список файлов сертификатов с сервера.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список файлов.</returns>
+    public async Task<IEnumerable<FileContentResult>> GetUserCertsFilesAsync(long userId)
+    {
+        try
+        {
+            var host = _configuration.GetSection("FtpSettings:Host").Value;
+            var login = _configuration.GetSection("FtpSettings:Login").Value;
+            var password = _configuration.GetSection("FtpSettings:Password").Value;
+            var ftp = new FtpClient
+            {
+                Host = host,
+                Credentials = new NetworkCredential(login, password)
+            };
+
+            ftp.Connect();
+            ftp.SetWorkingDirectory(PathImages);
+
+            return null;
         }
         
         // TODO: добавить логирование ошибок.

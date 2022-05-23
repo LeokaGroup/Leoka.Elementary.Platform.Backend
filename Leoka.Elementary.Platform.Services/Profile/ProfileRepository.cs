@@ -357,7 +357,7 @@ public sealed class ProfileRepository : IProfileRepository
             {
                 certificatesList.Add(new MentorCertificateEntity
                 {
-                    CertificateUrl = item,
+                    CertificateName = item,
                     UserId = userId
                 });
             }
@@ -394,6 +394,36 @@ public sealed class ProfileRepository : IProfileRepository
                     Position = d.Position
                 })
                 .OrderBy(o => o.Position)
+                .ToListAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит список сертификатов пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список сертификатов.</returns>
+    public async Task<IEnumerable<MentorCertificateOutput>> GetUserCertsAsync(long userId)
+    {
+        try
+        {
+            var result = await _dbContext.MentorCertificates
+                .Where(c => c.UserId == userId)
+                .Select(c => new MentorCertificateOutput
+                {
+                    CertificateId = c.CertificateId,
+                    CertificateName = c.CertificateName,
+                    UserId = c.UserId
+                })
                 .ToListAsync();
 
             return result;

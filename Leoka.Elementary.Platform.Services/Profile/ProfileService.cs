@@ -305,4 +305,26 @@ public sealed class ProfileService : IProfileService
             throw new EmptyAboutInfoException();
         }
     }
+    
+    /// <summary>
+    /// Метод получит список сертификатов пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список сертификатов.</returns>
+    public async Task<IEnumerable<MentorCertificateOutput>> GetUserCertsAsync(long userId)
+    {
+        try
+        {
+            var result = await _profileRepository.GetUserCertsAsync(userId);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
