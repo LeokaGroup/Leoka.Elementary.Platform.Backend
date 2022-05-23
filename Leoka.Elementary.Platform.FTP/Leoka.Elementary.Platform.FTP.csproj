@@ -6,4 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Leoka.Elementary.Platform.Core\Leoka.Elementary.Platform.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Net.FtpClient" Version="1.0.5824.34026" />
+    </ItemGroup>
+
 </Project>

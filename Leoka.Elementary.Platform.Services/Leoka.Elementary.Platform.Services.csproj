@@ -11,6 +11,7 @@
       <ProjectReference Include="..\Leoka.Elementary.Platform.Access\Leoka.Elementary.Platform.Access.csproj" />
       <ProjectReference Include="..\Leoka.Elementary.Platform.Base\Leoka.Elementary.Platform.Base.csproj" />
       <ProjectReference Include="..\Leoka.Elementary.Platform.Core\Leoka.Elementary.Platform.Core.csproj" />
+      <ProjectReference Include="..\Leoka.Elementary.Platform.FTP\Leoka.Elementary.Platform.FTP.csproj" />
       <ProjectReference Include="..\Leoka.Elementary.Platform.Mailings\Leoka.Elementary.Platform.Mailings.csproj" />
       <ProjectReference Include="..\Leoka.Elementary.Platform.Models\Leoka.Elementary.Platform.Models.csproj" />
     </ItemGroup>

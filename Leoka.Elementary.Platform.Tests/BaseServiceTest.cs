@@ -2,6 +2,7 @@
 using Leoka.Elementary.Platform.Access.Service;
 using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.Core.Utils;
+using Leoka.Elementary.Platform.FTP.Services;
 using Leoka.Elementary.Platform.Mailings.Services;
 using Leoka.Elementary.Platform.Services.MainPage;
 using Leoka.Elementary.Platform.Services.Profile;
@@ -28,6 +29,7 @@ public class BaseServiceTest
     protected MainPageRepository MainPageRepository;
     protected ProfileRepository ProfileRepository;
     protected ProfileService ProfileService;
+    protected FtpService FtpService;
     
     public BaseServiceTest()
     {
@@ -50,6 +52,7 @@ public class BaseServiceTest
         MainPageService = new MainPageService(MainPageRepository, AutoFac.Resolve<IMapper>());
 
         ProfileRepository = new ProfileRepository(PostgreDbContext);
-        ProfileService = new ProfileService(ProfileRepository, RoleRepository, UserRepository);
+        FtpService = new FtpService(null);
+        ProfileService = new ProfileService(ProfileRepository, RoleRepository, UserRepository, FtpService);
     }
 }

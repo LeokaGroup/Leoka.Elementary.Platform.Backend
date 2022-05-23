@@ -5,7 +5,6 @@ using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.Models.Entities.Profile;
 using Leoka.Elementary.Platform.Models.Profile.Input;
 using Leoka.Elementary.Platform.Models.Profile.Output;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace Leoka.Elementary.Platform.Services.Profile;
