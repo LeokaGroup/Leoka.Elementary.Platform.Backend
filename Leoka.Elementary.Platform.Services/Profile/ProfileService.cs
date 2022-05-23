@@ -311,7 +311,7 @@ public sealed class ProfileService : IProfileService
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список сертификатов.</returns>
-    public async Task<IEnumerable<MentorCertificateOutput>> GetUserCertsAsync(long userId)
+    public async Task<string[]> GetUserCertsAsync(long userId)
     {
         try
         {

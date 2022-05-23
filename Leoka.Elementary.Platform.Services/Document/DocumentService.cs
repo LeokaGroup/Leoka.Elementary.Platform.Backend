@@ -2,6 +2,7 @@
 using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Abstractions.User;
 using Leoka.Elementary.Platform.Core.Exceptions;
+using Leoka.Elementary.Platform.FTP.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Leoka.Elementary.Platform.Services.Document;
@@ -13,12 +14,15 @@ public class DocumentService : IDocumentService
 {
     private readonly IUserRepository _userRepository;
     private readonly IProfileService _profileService;
+    private readonly IFtpService _ftpService;
     
     public DocumentService(IUserRepository userRepository,
-        IProfileService profileService)
+        IProfileService profileService,
+        IFtpService ftpService)
     {
         _userRepository = userRepository;
         _profileService = profileService;
+        _ftpService = ftpService;
     }
 
     /// <summary>
@@ -31,6 +35,7 @@ public class DocumentService : IDocumentService
         try
         {
             var user = await _userRepository.GetUserByEmailAsync(account);
+            IEnumerable<FileContentResult> result = null;
 
             if (user is null)
             {
@@ -38,12 +43,15 @@ public class DocumentService : IDocumentService
             }
 
             // Получит список сертификатов пользователя.
-            var certs = await _profileService.GetUserCertsAsync(user.UserId);
-            
-            // Получит список файлов сертификатов с сервера.
-            // var result = 
+            var certsNames = await _profileService.GetUserCertsAsync(user.UserId);
 
-            return null;
+            if (certsNames.Any())
+            {
+                // Получит список файлов сертификатов с сервера.
+                result = await _ftpService.GetUserCertsFilesAsync(user.UserId, certsNames);
+            }
+
+            return result;
         }
         
         // TODO: добавить логирование ошибок.

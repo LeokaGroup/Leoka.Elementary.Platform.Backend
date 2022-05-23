@@ -36,8 +36,7 @@ public class FtpService : IFtpService
         {
             // Путь к файлам пользователя.
             var userFolderPath = "/" + userId;
-            // var userDocsFolderPath = "/" + userId;
-            
+
             if (files.Count > 0)
             {
                 var host = _configuration.GetSection("FtpSettings:Host").Value;
@@ -92,7 +91,6 @@ public class FtpService : IFtpService
                         || file.FileName.EndsWith(".jpeg")
                         || file.FileName.EndsWith(".svg"))
                     {
-                        // ftp.SetWorkingDirectory(PathImages);
                         ftp.SetWorkingDirectory(PathImages + userFolderPath);
                     }
 
@@ -104,7 +102,6 @@ public class FtpService : IFtpService
                              || file.FileName.EndsWith(".doc")
                              || file.FileName.EndsWith(".xls"))
                     {
-                        // ftp.SetWorkingDirectory(PathDocs);
                         ftp.SetWorkingDirectory(PathDocs + userFolderPath);
                     }
                     
@@ -129,11 +126,14 @@ public class FtpService : IFtpService
     /// Метод получит список файлов сертификатов с сервера.
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
+    /// <param name="certsUrls">Названия файлов сертификатов.</param>
     /// <returns>Список файлов.</returns>
-    public async Task<IEnumerable<FileContentResult>> GetUserCertsFilesAsync(long userId)
+    public async Task<IEnumerable<FileContentResult>> GetUserCertsFilesAsync(long userId, string[] certsNames)
     {
         try
         {
+            // Путь к файлам пользователя.
+            var userFolderPath = "/" + userId;
             var host = _configuration.GetSection("FtpSettings:Host").Value;
             var login = _configuration.GetSection("FtpSettings:Login").Value;
             var password = _configuration.GetSection("FtpSettings:Password").Value;
@@ -143,10 +143,23 @@ public class FtpService : IFtpService
                 Credentials = new NetworkCredential(login, password)
             };
 
-            ftp.Connect();
-            ftp.SetWorkingDirectory(PathImages);
+            var files = new List<FileContentResult>();
 
-            return null;
+            ftp.Connect();
+            ftp.SetWorkingDirectory(PathImages + userFolderPath);
+
+            // Получит список сертификатов пользователя.
+            foreach (var certName in certsNames)
+            {
+                await using var readStream = ftp.OpenRead(userId + "_" + certName, FtpDataType.Binary);
+                var byteData = await GetByteArrayAsync(readStream);
+                var file = new FileContentResult(byteData, "application/octet-stream");
+                files.Add(file);
+            }
+
+            ftp.Disconnect();
+
+            return files;
         }
         
         // TODO: добавить логирование ошибок.
@@ -155,5 +168,24 @@ public class FtpService : IFtpService
             Console.WriteLine(e);
             throw;
         }
+    }
+    
+    /// <summary>
+    /// Метод получит массив байт из потока.
+    /// </summary>
+    /// <param name="input">Поток.</param>
+    /// <returns>Масив байт.</returns>
+    private async Task<byte[]> GetByteArrayAsync(Stream input)
+    {
+        var buffer = new byte[16*1024];
+        await using MemoryStream ms = new MemoryStream();
+        var read = 0;
+                
+        while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
+        {
+            ms.Write(buffer, 0, read);
+        }
+                
+        return ms.ToArray();
     }
 }

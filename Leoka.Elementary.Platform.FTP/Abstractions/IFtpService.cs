@@ -19,6 +19,7 @@ public interface IFtpService
     /// Метод получит список файлов сертификатов с сервера.
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
+    /// <param name="certsUrls">Названия файлов сертификатов.</param>
     /// <returns>Список файлов.</returns>
-    Task<IEnumerable<FileContentResult>> GetUserCertsFilesAsync(long userId);
+    Task<IEnumerable<FileContentResult>> GetUserCertsFilesAsync(long userId, string[] certsNames);
 }

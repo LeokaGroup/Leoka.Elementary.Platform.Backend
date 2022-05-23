@@ -59,5 +59,5 @@ public interface IProfileService
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список сертификатов.</returns>
-    Task<IEnumerable<MentorCertificateOutput>> GetUserCertsAsync(long userId);
+    Task<string[]> GetUserCertsAsync(long userId);
 }

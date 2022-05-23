@@ -412,19 +412,14 @@ public sealed class ProfileRepository : IProfileRepository
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список сертификатов.</returns>
-    public async Task<IEnumerable<MentorCertificateOutput>> GetUserCertsAsync(long userId)
+    public async Task<string[]> GetUserCertsAsync(long userId)
     {
         try
         {
             var result = await _dbContext.MentorCertificates
                 .Where(c => c.UserId == userId)
-                .Select(c => new MentorCertificateOutput
-                {
-                    CertificateId = c.CertificateId,
-                    CertificateName = c.CertificateName,
-                    UserId = c.UserId
-                })
-                .ToListAsync();
+                .Select(c => c.CertificateName)
+                .ToArrayAsync();
 
             return result;
         }
