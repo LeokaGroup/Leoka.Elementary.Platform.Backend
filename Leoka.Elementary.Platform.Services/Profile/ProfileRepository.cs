@@ -235,7 +235,8 @@ public sealed class ProfileRepository : IProfileRepository
                 ProfileIconUrl = urlAvatar,
                 FullName = mentorProfileInfoInput.FirstName 
                            + " " + mentorProfileInfoInput.LastName 
-                           + " " + mentorProfileInfoInput.SecondName
+                           + " " + mentorProfileInfoInput.SecondName,
+                UserId = userId
             });
             await _dbContext.SaveChangesAsync();
 
@@ -445,6 +446,185 @@ public sealed class ProfileRepository : IProfileRepository
                 .Where(u => u.Email.Equals(account))
                 .Select(u => u.ProfileIconUrl)
                 .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит данные анкеты пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Id роли пользователя.</param>
+    /// <returns>Данные анкеты пользователя.</returns>
+    public async Task<WorksheetOutput> GetProfileWorkSheetAsync(long userId, int roleId)
+    {
+        try
+        {
+            var result = new WorksheetOutput();
+
+            // Если преподаватель.
+            if (roleId == 2)
+            {
+                // Получит основную информацию анкеты.
+                var userInfo = await _dbContext.MentorProfileInfo
+                    .Where(pi => pi.UserId == userId)
+                    .Select(pi => new WorksheetOutput
+                    {
+                        FirstName = pi.FirstName,
+                        LastName = pi.LastName,
+                        SecondName = pi.SecondName,
+                        Email = pi.Email,
+                        PhoneNumber = pi.PhoneNumber,
+                        IsVisibleAllContact = pi.IsVisibleAllContact
+                    })
+                    .FirstOrDefaultAsync();
+
+                // Если есть основная информация анкеты.
+                if (userInfo is not null)
+                {
+                    result.FirstName = userInfo.FirstName;
+                    result.LastName = userInfo.LastName;
+                    result.SecondName = userInfo.SecondName;
+                    result.Email = userInfo.Email;
+                    result.PhoneNumber = userInfo.PhoneNumber;
+                    result.IsVisibleAllContact = userInfo.IsVisibleAllContact;
+                }
+
+                // Получит предметы преподавателя.
+                var mentorProfileItems = await _dbContext.MentorProfileItems
+                    .Where(i => i.UserId == userId)
+                    .Select(i => new ProfileItemOutput
+                    {
+                        ItemName = i.ItemName,
+                        ItemSysName = i.ItemSysName,
+                        Position = i.Position
+                    })
+                    .ToArrayAsync();
+
+                // Если есть предметы преподавателя.
+                if (mentorProfileItems.Any())
+                {
+                    result.MentorItems.AddRange(mentorProfileItems);
+                }
+                
+                // Получит цены преподавателя.
+                var mentorLessonPrices = await _dbContext.MentorLessonPrices
+                    .Where(p => p.UserId == userId)
+                    .Select(p => new MentorProfilePrices
+                    {
+                        Price = p.Price,
+                        Unit = p.Unit
+                    })
+                    .ToArrayAsync();
+
+                // Если есть цены.
+                if (mentorLessonPrices.Any())
+                {
+                    result.MentorPrices.AddRange(mentorLessonPrices);
+                }
+                
+                // Получит длительности.
+                var mentorLessonDurations = await _dbContext.MentorLessonDurations
+                    .Where(d => d.UserId == userId)
+                    .Select(d => new MentorProfileDurations
+                    {
+                        Time = d.Time,
+                        Unit = d.Unit
+                    })
+                    .ToArrayAsync();
+                
+                // Если есть длительности.
+                if (mentorLessonDurations.Any())
+                {
+                    result.MentorDurations.AddRange(mentorLessonDurations);
+                }
+                
+                // Получит время.
+                var times = await _dbContext.MentorTimes
+                    .Where(t => t.UserId == userId)
+                    .Select(t => new MentorTimes
+                    {
+                        Day = t.Day,
+                        TimeStart = t.TimeStart,
+                        TimeEnd = t.TimeEnd
+                    })
+                    .ToArrayAsync();
+                
+                // Если есть время.
+                if (times.Any())
+                {
+                    result.MentorTimes.AddRange(times);
+                }
+                
+                // Получит цели подготовки.
+                var mentorTrainings = await _dbContext.MentorTrainings
+                    .Where(t => t.UserId == userId)
+                    .Select(t => new PurposeTrainingOutput
+                    {
+                        PurposeName = t.TrainingName,
+                        PurposeSysName = t.TrainingSysName
+                    })
+                    .ToArrayAsync();
+                
+                // Если есть цели.
+                if (mentorTrainings.Any())
+                {
+                    result.MentorTrainings.AddRange(mentorTrainings);
+                }
+                
+                // Получит опыт.
+                var mentorExperience = await _dbContext.MentorExperience
+                    .Where(e => e.UserId == userId)
+                    .Select(e => new MentorExperience
+                    {
+                        ExperienceText = e.ExperienceText
+                    })
+                    .ToArrayAsync();
+                
+                // Если есть опыт.
+                if (mentorExperience.Any())
+                {
+                    result.MentorExperience.AddRange(mentorExperience);
+                }
+                
+                // Получит образование.
+                var mentorEducations = await _dbContext.MentorEducations
+                    .Where(e => e.UserId == userId)
+                    .Select(e => new MentorEducations
+                    {
+                        EducationText = e.EducationText
+                    })
+                    .ToArrayAsync();
+                
+                // Если есть образование.
+                if (mentorEducations.Any())
+                {
+                    result.MentorEducations.AddRange(mentorEducations);
+                }
+                
+                // Получит информацию.
+                var mentorAboutInfo = await _dbContext.MentorAboutInfos
+                    .Where(a => a.UserId == userId)
+                    .Select(a => new MentorAboutInfo
+                    {
+                        AboutInfoText = a.AboutInfoText
+                    })
+                    .ToArrayAsync();
+                
+                // Если есть информация.
+                if (mentorAboutInfo.Any())
+                {
+                    result.MentorAboutInfo.AddRange(mentorAboutInfo);
+                }
+            }
 
             return result;
         }

@@ -68,4 +68,12 @@ public interface IProfileRepository
     /// <param name="account">Аккаунт.</param>
     /// <returns>Аватар профиля пользователя.</returns>
     Task<string> GetProfileAvatarAsync(string account);
+    
+    /// <summary>
+    /// Метод получит данные анкеты пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Id роли пользователя.</param>
+    /// <returns>Данные анкеты пользователя.</returns>
+    Task<WorksheetOutput> GetProfileWorkSheetAsync(long userId, int roleId);
 }

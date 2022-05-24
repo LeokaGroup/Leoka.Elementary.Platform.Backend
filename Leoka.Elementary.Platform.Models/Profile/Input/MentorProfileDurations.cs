@@ -14,4 +14,9 @@ public class MentorProfileDurations
     ///  В чем измеряется длительность.
     /// </summary>
     public string Unit { get; set; }
+
+    /// <summary>
+    /// Полная длительность.
+    /// </summary>
+    public string FullDuration => Time + " " + Unit;
 }

@@ -55,6 +55,11 @@ public partial class MentorProfileInfoConfiguration : IEntityTypeConfiguration<M
             .HasColumnType("varchar(150)")
             .IsRequired();
         
+        entity.Property(e => e.UserId)
+            .HasColumnName("UserId")
+            .HasColumnType("bigint")
+            .IsRequired();
+        
         entity.HasIndex(u => u.UserProfileInfoId)
             .HasName("PK_MentorProfileInfoUserProfileInfoId")
             .IsUnique();

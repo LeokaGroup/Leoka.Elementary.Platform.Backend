@@ -67,4 +67,11 @@ public interface IProfileService
     /// <param name="account">Аккаунт.</param>
     /// <returns>Аватар профиля пользователя.</returns>
     Task<FileContentAvatarOutput> GetProfileAvatarAsync(string account);
+
+    /// <summary>
+    /// Метод получит данные анкеты пользователя.
+    /// </summary>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Данные анкеты пользователя.</returns>
+    Task<WorksheetOutput> GetProfileWorkSheetAsync(string account);
 }

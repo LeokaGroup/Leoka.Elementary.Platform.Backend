@@ -165,4 +165,22 @@ public class ProfileController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод получит данные анкеты пользователя.
+    /// </summary>
+    /// <returns>Данные анкеты пользователя.</returns>
+    [HttpGet]
+    [Route("worksheet")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> GetProfileWorkSheetAsync()
+    {
+        var result = await _profileService.GetProfileWorkSheetAsync(GetUserName());
+
+        return result;
+    }
 }

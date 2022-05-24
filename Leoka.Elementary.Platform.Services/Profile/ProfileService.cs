@@ -351,4 +351,41 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные анкеты пользователя.
+    /// </summary>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Данные анкеты пользователя.</returns>
+    public async Task<WorksheetOutput> GetProfileWorkSheetAsync(string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            var user = await _userRepository.GetUserByEmailAsync(account);
+
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            // Проверит роль пользователя.
+            var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
+
+            var result = await _profileRepository.GetProfileWorkSheetAsync(user.UserId, roleId);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
