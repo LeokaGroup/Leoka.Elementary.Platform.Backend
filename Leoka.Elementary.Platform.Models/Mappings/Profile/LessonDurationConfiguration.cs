@@ -14,8 +14,7 @@ public partial class LessonDurationConfiguration : IEntityTypeConfiguration<Less
 
         entity.Property(e => e.DurationId)
             .HasColumnName("DurationId")
-            .HasColumnType("serial")
-            .ValueGeneratedNever();
+            .HasColumnType("serial");
 
         entity.Property(e => e.Time)
             .HasColumnName("Time")

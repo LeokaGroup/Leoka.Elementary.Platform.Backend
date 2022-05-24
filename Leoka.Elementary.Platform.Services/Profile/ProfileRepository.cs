@@ -1,5 +1,9 @@
-﻿using Leoka.Elementary.Platform.Abstractions.Profile;
+﻿using AutoMapper;
+using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Core.Data;
+using Leoka.Elementary.Platform.Core.Utils;
+using Leoka.Elementary.Platform.Models.Entities.Profile;
+using Leoka.Elementary.Platform.Models.Profile.Input;
 using Leoka.Elementary.Platform.Models.Profile.Output;
 using Microsoft.EntityFrameworkCore;
 
@@ -195,6 +199,252 @@ public sealed class ProfileRepository : IProfileRepository
                     PurposeName = p.PurposeName
                 })
                 .ToListAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод сохранит данные анкеты пользователя.
+    /// </summary>
+    /// <param name="mentorProfileInfoInput">Входная модель.</param>
+    /// <param name="urlCertificates">Список путей к изображениям сертификатов.</param>
+    /// <param name="urlAvatar">Путь к изображению профиля пользователя.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Выходная модель с изменениями.</returns>
+    public async Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput, string[] urlCertificates, string urlAvatar, long userId)
+    {
+        try
+        {
+            // Добавит ФИО и контактные данные.
+            await _dbContext.MentorProfileInfo.AddAsync(new MentorProfileInfoEntity
+            {
+                FirstName = mentorProfileInfoInput.FirstName,
+                LastName = mentorProfileInfoInput.LastName,
+                SecondName = mentorProfileInfoInput.SecondName,
+                IsVisibleAllContact = mentorProfileInfoInput.IsVisibleAllContact,
+                Email = mentorProfileInfoInput.Email,
+                PhoneNumber = mentorProfileInfoInput.PhoneNumber,
+                ProfileIconUrl = urlAvatar,
+                FullName = mentorProfileInfoInput.FirstName 
+                           + " " + mentorProfileInfoInput.LastName 
+                           + " " + mentorProfileInfoInput.SecondName
+            });
+            await _dbContext.SaveChangesAsync();
+
+            var mapper = AutoFac.Resolve<IMapper>();
+
+            // Добавит список предметов.
+            var mentorItems = mapper.Map<List<MentorProfileItemEntity>>(mentorProfileInfoInput.MentorItems);
+            var i = 0;
+            
+            foreach (var item in mentorItems)
+            {
+                if (i == 0)
+                {
+                    i = 1;
+                }
+                
+                item.UserId = userId;
+                item.Position = i;
+                
+                // Запишет название предмета.
+                item.ItemName = await _dbContext.ProfileItems
+                    .Where(p => p.ItemSysName.Equals(item.ItemSysName))
+                    .Select(p => p.ItemName)
+                    .FirstOrDefaultAsync();
+                
+                i++;
+            }
+            
+            await _dbContext.MentorProfileItems.AddRangeAsync(mentorItems);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит список цен преподавателя.
+            var mentorPrices = mapper.Map<List<MentorLessonPriceEntity>>(mentorProfileInfoInput.MentorPrices);
+            
+            foreach (var item in mentorPrices)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorLessonPrices.AddRangeAsync(mentorPrices);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит длительности занятий преподавателя.
+            var mentorDurations = mapper.Map<List<MentorLessonDurationEntity>>(mentorProfileInfoInput.MentorDurations);
+            
+            foreach (var item in mentorDurations)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorLessonDurations.AddRangeAsync(mentorDurations);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит время занятий преподавателя.
+            var mentorTimes = mapper.Map<List<MentorTimeEntity>>(mentorProfileInfoInput.MentorTimes);
+            
+            foreach (var item in mentorTimes)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorTimes.AddRangeAsync(mentorTimes);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит цели подготовки.
+            var mentorTrainings = mapper.Map<List<MentorTrainingEntity>>(mentorProfileInfoInput.MentorTrainings);
+            
+            foreach (var item in mentorTrainings)
+            {
+                item.UserId = userId;
+                
+                // Запишет название цели подготовки.
+                item.TrainingName = await _dbContext.PurposeTrainings
+                    .Where(p => p.PurposeSysName.Equals(item.TrainingSysName))
+                    .Select(p => p.PurposeName)
+                    .FirstOrDefaultAsync();
+            }
+            
+            await _dbContext.MentorTrainings.AddRangeAsync(mentorTrainings);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит опыт преподавателя.
+            var mentorExperience = mapper.Map<List<MentorExperienceEntity>>(mentorProfileInfoInput.MentorExperience);
+            
+            foreach (var item in mentorExperience)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorExperience.AddRangeAsync(mentorExperience);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит образование преподавателя.
+            var mentorEducations = mapper.Map<List<MentorEducationEntity>>(mentorProfileInfoInput.MentorEducations);
+            
+            foreach (var item in mentorEducations)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorEducations.AddRangeAsync(mentorEducations);
+            await _dbContext.SaveChangesAsync();
+            
+            // Добавит информацию о преподавателе.
+            var mentorAboutInfo = mapper.Map<List<MentorAboutInfoEntity>>(mentorProfileInfoInput.MentorAboutInfo);
+            
+            foreach (var item in mentorAboutInfo)
+            {
+                item.UserId = userId;
+            }
+            
+            await _dbContext.MentorAboutInfos.AddRangeAsync(mentorAboutInfo);
+            await _dbContext.SaveChangesAsync();
+            
+            // Запишет пути к сертификатам.
+            var certificatesList = new List<MentorCertificateEntity>();
+            
+            foreach (var item in urlCertificates)
+            {
+                certificatesList.Add(new MentorCertificateEntity
+                {
+                    CertificateName = item,
+                    UserId = userId
+                });
+            }
+
+            await _dbContext.MentorCertificates.AddRangeAsync(certificatesList);
+            await _dbContext.SaveChangesAsync();
+
+            var result = mapper.Map<MentorProfileInfoOutput>(mentorProfileInfoInput);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит дни недели.
+    /// </summary>
+    /// <returns>Список дней недели.</returns>
+    public async Task<IEnumerable<DayWeekOutput>> GetDaysWeekAsync()
+    {
+        try
+        {
+            var result = await _dbContext.DaysWeek
+                .Select(d => new DayWeekOutput
+                {
+                    DayName = d.DayName,
+                    DaySysName = d.DaySysName,
+                    Position = d.Position
+                })
+                .OrderBy(o => o.Position)
+                .ToListAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит список сертификатов пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список сертификатов.</returns>
+    public async Task<string[]> GetUserCertsAsync(long userId)
+    {
+        try
+        {
+            var result = await _dbContext.MentorCertificates
+                .Where(c => c.UserId == userId)
+                .Select(c => c.CertificateName)
+                .ToArrayAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит аватар профиля пользователя.
+    /// </summary>
+    /// <param name="account">.</param>
+    /// <returns>Аватар профиля пользователя.</returns>
+    public async Task<string> GetProfileAvatarAsync(string account)
+    {
+        try
+        {
+            var result = await _dbContext.MentorProfileInfo
+                .Where(u => u.Email.Equals(account))
+                .Select(u => u.ProfileIconUrl)
+                .FirstOrDefaultAsync();
 
             return result;
         }

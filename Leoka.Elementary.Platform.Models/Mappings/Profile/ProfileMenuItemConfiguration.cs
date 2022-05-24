@@ -14,8 +14,7 @@ public partial class ProfileMenuItemConfiguration : IEntityTypeConfiguration<Pro
         
         entity.Property(e => e.ProfileMenuId)
             .HasColumnName("ProfileMenuId")
-            .HasColumnType("serial")
-            .ValueGeneratedNever();
+            .HasColumnType("serial");
 
         entity.Property(e => e.ProfileItemUrl)
             .HasColumnName("ProfileItemUrl")

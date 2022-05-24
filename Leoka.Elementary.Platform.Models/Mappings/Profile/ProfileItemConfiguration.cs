@@ -14,8 +14,7 @@ public partial class ProfileItemConfiguration : IEntityTypeConfiguration<Profile
         
         entity.Property(e => e.ProfileItemId)
             .HasColumnName("ProfileItemId")
-            .HasColumnType("serial")
-            .ValueGeneratedNever();
+            .HasColumnType("serial");
         
         entity.Property(e => e.ItemName)
             .HasColumnName("ItemName")

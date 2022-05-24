@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Leoka.Elementary.Platform.Models.Entities.MainPage;
+using Leoka.Elementary.Platform.Models.Entities.Profile;
 using Leoka.Elementary.Platform.Models.MainPage.Output;
+using Leoka.Elementary.Platform.Models.Profile.Input;
+using Leoka.Elementary.Platform.Models.Profile.Output;
 
 namespace Leoka.Elementary.Platform.Core.Mapper;
 
 /// <summary>
-/// Класс описывает конфигурацию маппера.
+/// Класс конфигурации маппера.
 /// </summary>
 public class MappingProfile : Profile
 {
@@ -20,5 +23,16 @@ public class MappingProfile : Profile
         CreateMap<MainBestQuestionEntity, BestQuestionOutput>();
         CreateMap<MainBestQuestionOptionEntity, BestQuestionVariantItemsOutput>();
         CreateMap<MainBestOptionEntity, OptionOutput>();
+        
+        CreateMap<MentorProfileItems, MentorProfileItemEntity>();
+        CreateMap<MentorProfilePrices, MentorLessonPriceEntity>();
+        CreateMap<MentorProfileDurations, MentorLessonDurationEntity>();
+        CreateMap<MentorTimes, MentorTimeEntity>();
+        CreateMap<MentorTrainings, MentorTrainingEntity>();
+        CreateMap<MentorExperience, MentorExperienceEntity>();
+        CreateMap<MentorEducations, MentorEducationEntity>();
+        CreateMap<MentorAboutInfo, MentorAboutInfoEntity>();
+        
+        CreateMap<MentorProfileInfoInput, MentorProfileInfoOutput>();
     }
 }

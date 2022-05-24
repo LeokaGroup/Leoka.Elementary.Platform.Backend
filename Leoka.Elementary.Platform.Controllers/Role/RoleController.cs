@@ -2,7 +2,6 @@
 using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Models.Role.Output;
 using Leoka.Elementary.Platform.Models.User.Output;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,7 +11,6 @@ namespace Leoka.Elementary.Platform.Controllers.Role;
 /// Контроллер по работе с ролями.
 /// </summary>
 [ApiController, Route("role")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class RoleController : BaseController
 {
     private readonly IRoleService _roleService;

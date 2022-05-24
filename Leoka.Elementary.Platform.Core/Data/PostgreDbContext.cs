@@ -152,4 +152,59 @@ public class PostgreDbContext : DbContext
     /// Таблица Profile.PurposeTrainings.
     /// </summary>
     public DbSet<PurposeTrainingEntity> PurposeTrainings { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorProfileInfo.
+    /// </summary>
+    public DbSet<MentorProfileInfoEntity> MentorProfileInfo { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorProfileItems.
+    /// </summary>
+    public DbSet<MentorProfileItemEntity> MentorProfileItems { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorLessonPrices.
+    /// </summary>
+    public DbSet<MentorLessonPriceEntity> MentorLessonPrices { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorLessonDurations.
+    /// </summary>
+    public DbSet<MentorLessonDurationEntity> MentorLessonDurations { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorTrainings.
+    /// </summary>
+    public DbSet<MentorTrainingEntity> MentorTrainings { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorEducations.
+    /// </summary>
+    public DbSet<MentorEducationEntity> MentorEducations { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorExperience.
+    /// </summary>
+    public DbSet<MentorExperienceEntity> MentorExperience { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorCertificates.
+    /// </summary>
+    public DbSet<MentorCertificateEntity> MentorCertificates { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorTimes.
+    /// </summary>
+    public DbSet<MentorTimeEntity> MentorTimes { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.DaysWeek.
+    /// </summary>
+    public DbSet<DayWeekEntity> DaysWeek { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorAboutInfo.
+    /// </summary>
+    public DbSet<MentorAboutInfoEntity> MentorAboutInfos { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using Leoka.Elementary.Platform.Models.Profile.Output;
+﻿using Leoka.Elementary.Platform.Models.Profile.Input;
+using Leoka.Elementary.Platform.Models.Profile.Output;
 
 namespace Leoka.Elementary.Platform.Abstractions.Profile;
 
@@ -37,4 +38,34 @@ public interface IProfileRepository
     /// </summary>
     /// <returns>Список целей подготовки.</returns>
     Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync();
+    
+    /// <summary>
+    /// Метод сохранит данные анкеты пользователя.
+    /// </summary>
+    /// <param name="mentorProfileInfoInput">Входная модель.</param>
+    /// <param name="urlCertificates">Список путей к изображениям сертификатов.</param>
+    /// <param name="urlAvatar">Путь к изображению профиля пользователя.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Выходная модель с изменениями.</returns>
+    Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput, string[] urlCertificates, string urlAvatar, long userId);
+    
+    /// <summary>
+    /// Метод получит дни недели.
+    /// </summary>
+    /// <returns>Список дней недели.</returns>
+    Task<IEnumerable<DayWeekOutput>> GetDaysWeekAsync();
+    
+    /// <summary>
+    /// Метод получит список сертификатов пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список сертификатов.</returns>
+    Task<string[]> GetUserCertsAsync(long userId);
+    
+    /// <summary>
+    /// Метод получит аватар профиля пользователя.
+    /// </summary>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Аватар профиля пользователя.</returns>
+    Task<string> GetProfileAvatarAsync(string account);
 }

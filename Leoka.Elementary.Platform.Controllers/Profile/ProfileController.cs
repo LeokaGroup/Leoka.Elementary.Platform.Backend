@@ -1,8 +1,8 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Base;
+using Leoka.Elementary.Platform.Core.Filters;
 using Leoka.Elementary.Platform.Models.Profile.Output;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Leoka.Elementary.Platform.Controllers.Profile;
@@ -10,12 +10,12 @@ namespace Leoka.Elementary.Platform.Controllers.Profile;
 /// <summary>
 /// Контроллер работы с профилем пользователя.
 /// </summary>
+[AuthFilter]
 [ApiController, Route("profile")]
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class ProfileController : BaseController
 {
     private readonly IProfileService _profileService;
-    
+
     public ProfileController(IProfileService profileService)
     {
         _profileService = profileService;
@@ -107,6 +107,61 @@ public class ProfileController : BaseController
     public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync()
     {
         var result = await _profileService.GetPurposeTrainingsAsync();
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод сохранит данные анкеты пользователя.
+    /// </summary>
+    /// <param name="mentorProfileInfoInput">Входная модель.</param>
+    /// <returns>Выходная модель с изменениями.</returns>
+    [HttpPost]
+    [Route("profile-info")]
+    [ProducesResponseType(200, Type = typeof(MentorProfileInfoOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync([FromForm] string profileData, [FromForm] IFormCollection mentorFiles)
+    {
+        var result = await _profileService.SaveProfileUserInfoAsync(profileData, mentorFiles, GetUserName());
+        
+        return result;
+    }
+
+    /// <summary>
+    /// Метод получит дни недели.
+    /// </summary>
+    /// <returns>Список дней недели.</returns>
+    [HttpGet]
+    [Route("days-week")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<DayWeekOutput>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<IEnumerable<DayWeekOutput>> GetDaysWeekAsync()
+    {
+        var result = await _profileService.GetDaysWeekAsync();
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод получит аватар профиля пользователя.
+    /// </summary>
+    /// <returns>Аватар профиля пользователя.</returns>
+    [HttpGet]
+    [Route("avatar")]
+    [ProducesResponseType(200, Type = typeof(FileContentAvatarOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<FileContentAvatarOutput> GetProfileAvatarAsync()
+    {
+        var result = await _profileService.GetProfileAvatarAsync(GetUserName());
 
         return result;
     }
