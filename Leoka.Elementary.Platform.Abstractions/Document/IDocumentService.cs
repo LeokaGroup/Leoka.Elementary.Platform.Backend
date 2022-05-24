@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Leoka.Elementary.Platform.Models.Profile.Output;
 
 namespace Leoka.Elementary.Platform.Abstractions.Document;
 
@@ -12,5 +12,5 @@ public interface IDocumentService
     /// </summary>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Список сертификатов.</returns>
-    Task<IEnumerable<FileContentResult>> GetProfileCertsAsync(string account);
+    Task<IEnumerable<FileContentResultOutput>> GetProfileCertsAsync(string account);
 }

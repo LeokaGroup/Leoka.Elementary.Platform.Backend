@@ -3,6 +3,7 @@ using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Abstractions.User;
 using Leoka.Elementary.Platform.Core.Exceptions;
 using Leoka.Elementary.Platform.FTP.Abstractions;
+using Leoka.Elementary.Platform.Models.Profile.Output;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Leoka.Elementary.Platform.Services.Document;
@@ -30,12 +31,12 @@ public class DocumentService : IDocumentService
     /// </summary>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Список сертификатов.</returns>
-    public async Task<IEnumerable<FileContentResult>> GetProfileCertsAsync(string account)
+    public async Task<IEnumerable<FileContentResultOutput>> GetProfileCertsAsync(string account)
     {
         try
         {
             var user = await _userRepository.GetUserByEmailAsync(account);
-            IEnumerable<FileContentResult> result = null;
+            IEnumerable<FileContentResultOutput> result = null;
 
             if (user is null)
             {

@@ -147,4 +147,22 @@ public class ProfileController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод получит аватар профиля пользователя.
+    /// </summary>
+    /// <returns>Аватар профиля пользователя.</returns>
+    [HttpGet]
+    [Route("avatar")]
+    [ProducesResponseType(200, Type = typeof(FileContentAvatarOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<FileContentAvatarOutput> GetProfileAvatarAsync()
+    {
+        var result = await _profileService.GetProfileAvatarAsync(GetUserName());
+
+        return result;
+    }
 }

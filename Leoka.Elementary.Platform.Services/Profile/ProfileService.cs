@@ -327,4 +327,28 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит аватар профиля пользователя.
+    /// </summary>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Аватар профиля пользователя.</returns>
+    public async Task<FileContentAvatarOutput> GetProfileAvatarAsync(string account)
+    {
+        try
+        {
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            var avatar = await _profileRepository.GetProfileAvatarAsync(account);
+            var result = await _ftpService.GetProfileAvatarAsync(user.UserId, avatar);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

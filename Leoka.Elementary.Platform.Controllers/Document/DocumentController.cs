@@ -1,6 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.Document;
 using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Core.Filters;
+using Leoka.Elementary.Platform.Models.Profile.Output;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Leoka.Elementary.Platform.Controllers.Document;
@@ -25,12 +26,12 @@ public class DocumentController : BaseController
     /// <returns>Список сертификатов.</returns>
     [HttpGet]
     [Route("profile/certs")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<FileContentResultOutput>))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<IEnumerable<FileContentResult>> GetProfileCertsAsync()
+    public async Task<IEnumerable<FileContentResultOutput>> GetProfileCertsAsync()
     {
         var result = await _documentService.GetProfileCertsAsync(GetUserName());
 

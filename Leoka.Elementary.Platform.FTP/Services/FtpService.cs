@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.FtpClient;
 using Leoka.Elementary.Platform.FTP.Abstractions;
+using Leoka.Elementary.Platform.Models.Profile.Output;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -13,10 +14,10 @@ namespace Leoka.Elementary.Platform.FTP.Services;
 public class FtpService : IFtpService
 {
     private readonly IConfiguration _configuration;
-    
+
     // Путь к документам.
     private const string PathDocs = "/docs";
-    
+
     // Путь к изображениям.
     private const string PathImages = "/images";
 
@@ -49,34 +50,34 @@ public class FtpService : IFtpService
                 };
 
                 ftp.Connect();
-                
+
                 var checkDirectoryCertsDocs = ftp.GetListing().Where(f => f.FullName.Equals(PathDocs));
-                
+
                 // Проверит существование папки документов. Если ее нет, то создаст.
                 if (!checkDirectoryCertsDocs.Any())
                 {
                     ftp.CreateDirectory(PathDocs);
                 }
-                
+
                 var checkDirectoryCertsImages = ftp.GetListing().Where(f => f.FullName.Equals(PathImages));
-                
+
                 // Проверит существование папки изображений сертификатов. Если ее нет, то создаст.
                 if (!checkDirectoryCertsImages.Any())
                 {
                     ftp.CreateDirectory(PathImages);
                 }
-                
+
                 // Проверит существование папки изображений пользователя.
                 var checkUserImegesFolder = ftp.GetListing().Where(f => f.FullName.Equals(PathImages + userFolderPath));
-                
+
                 if (!checkUserImegesFolder.Any())
                 {
                     ftp.CreateDirectory(PathImages + userFolderPath);
                 }
-                
+
                 // Проверит существование папки документов пользователя.
                 var checkUserDocsFolder = ftp.GetListing().Where(f => f.FullName.Equals(PathDocs + userFolderPath));
-                
+
                 if (!checkUserDocsFolder.Any())
                 {
                     ftp.CreateDirectory(PathDocs + userFolderPath);
@@ -104,16 +105,17 @@ public class FtpService : IFtpService
                     {
                         ftp.SetWorkingDirectory(PathDocs + userFolderPath);
                     }
-                    
+
                     // Добавит файл на сервер проставляя имя файла учитывая Id пользователя.
-                    await using var remote = ftp.OpenWrite(string.Concat(userId, "_") + file.FileName, FtpDataType.Binary);
+                    await using var remote =
+                        ftp.OpenWrite(string.Concat(userId, "_") + file.FileName, FtpDataType.Binary);
                     await file.CopyToAsync(remote);
                 }
 
                 ftp.Disconnect();
             }
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -128,7 +130,7 @@ public class FtpService : IFtpService
     /// <param name="userId">Id пользователя.</param>
     /// <param name="certsUrls">Названия файлов сертификатов.</param>
     /// <returns>Список файлов.</returns>
-    public async Task<IEnumerable<FileContentResult>> GetUserCertsFilesAsync(long userId, string[] certsNames)
+    public async Task<IEnumerable<FileContentResultOutput>> GetUserCertsFilesAsync(long userId, string[] certsNames)
     {
         try
         {
@@ -143,7 +145,7 @@ public class FtpService : IFtpService
                 Credentials = new NetworkCredential(login, password)
             };
 
-            var files = new List<FileContentResult>();
+            var files = new List<FileContentResultOutput>();
 
             ftp.Connect();
             ftp.SetWorkingDirectory(PathImages + userFolderPath);
@@ -154,14 +156,19 @@ public class FtpService : IFtpService
                 await using var readStream = ftp.OpenRead(userId + "_" + certName, FtpDataType.Binary);
                 var byteData = await GetByteArrayAsync(readStream);
                 var file = new FileContentResult(byteData, "application/octet-stream");
-                files.Add(file);
+
+                files.Add(new FileContentResultOutput
+                {
+                    Cert = file,
+                    Extension = Path.GetExtension(certName).Replace(".", "")
+                });
             }
 
             ftp.Disconnect();
 
             return files;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -169,7 +176,7 @@ public class FtpService : IFtpService
             throw;
         }
     }
-    
+
     /// <summary>
     /// Метод получит массив байт из потока.
     /// </summary>
@@ -177,15 +184,75 @@ public class FtpService : IFtpService
     /// <returns>Масив байт.</returns>
     private async Task<byte[]> GetByteArrayAsync(Stream input)
     {
-        var buffer = new byte[16*1024];
+        var buffer = new byte[16 * 1024];
         await using MemoryStream ms = new MemoryStream();
         var read = 0;
-                
+
         while ((read = await input.ReadAsync(buffer, 0, buffer.Length)) > 0)
         {
             ms.Write(buffer, 0, read);
         }
-                
+
         return ms.ToArray();
+    }
+
+    /// <summary>
+    /// Метод получит аватар профиля пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="avatar">Изображение аватара.</param>
+    /// <returns>Аватар профиля пользователя.</returns>
+    public async Task<FileContentAvatarOutput> GetProfileAvatarAsync(long userId, string avatar)
+    {
+        try
+        {
+            // Путь к файлам пользователя.
+            var userFolderPath = "/" + userId;
+            var host = _configuration.GetSection("FtpSettings:Host").Value;
+            var login = _configuration.GetSection("FtpSettings:Login").Value;
+            var password = _configuration.GetSection("FtpSettings:Password").Value;
+            var ftp = new FtpClient
+            {
+                Host = host,
+                Credentials = new NetworkCredential(login, password)
+            };
+            var result = new FileContentAvatarOutput();
+
+            ftp.Connect();
+            ftp.SetWorkingDirectory(PathImages + userFolderPath);
+            
+            // Получит список файлов пользователя.
+            var userFiles = ftp.GetListing();
+
+            // Если аватар был загружен ранее.
+            var checkUserAvatar = userFiles.Where(f => f.Name.Replace(userId + "_", "").Equals(avatar));
+            
+            if (checkUserAvatar.Any())
+            {
+                await using var readStream = ftp.OpenRead(userId + "_" + avatar, FtpDataType.Binary);
+                var byteData = await GetByteArrayAsync(readStream);
+                var file = new FileContentResult(byteData, "application/octet-stream");
+                result.Avatar = file;
+                result.Extension = Path.GetExtension(avatar).Replace(".", "");
+            }
+
+            // Вернуть аватар по дефолту.
+            else
+            {
+                result.IsNoPhoto = true;
+                result.AvatarUrl = "../../../../../assets/images/profile/nophoto.svg";
+            }
+
+            ftp.Disconnect();
+
+            return result;
+        }
+
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

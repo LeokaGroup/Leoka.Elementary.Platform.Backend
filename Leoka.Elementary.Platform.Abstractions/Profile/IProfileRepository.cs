@@ -61,4 +61,11 @@ public interface IProfileRepository
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список сертификатов.</returns>
     Task<string[]> GetUserCertsAsync(long userId);
+    
+    /// <summary>
+    /// Метод получит аватар профиля пользователя.
+    /// </summary>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Аватар профиля пользователя.</returns>
+    Task<string> GetProfileAvatarAsync(string account);
 }

@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Leoka.Elementary.Platform.Models.Profile.Output;
+using Microsoft.AspNetCore.Http;
 
 namespace Leoka.Elementary.Platform.FTP.Abstractions;
 
@@ -21,5 +21,13 @@ public interface IFtpService
     /// <param name="userId">Id пользователя.</param>
     /// <param name="certsUrls">Названия файлов сертификатов.</param>
     /// <returns>Список файлов.</returns>
-    Task<IEnumerable<FileContentResult>> GetUserCertsFilesAsync(long userId, string[] certsNames);
+    Task<IEnumerable<FileContentResultOutput>> GetUserCertsFilesAsync(long userId, string[] certsNames);
+
+    /// <summary>
+    /// Метод получит аватар профиля пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="avatar">Изображение аватара.</param>
+    /// <returns>Аватар профиля пользователя.</returns>
+    Task<FileContentAvatarOutput> GetProfileAvatarAsync(long userId, string avatar);
 }

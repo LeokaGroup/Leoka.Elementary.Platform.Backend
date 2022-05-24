@@ -431,4 +431,29 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит аватар профиля пользователя.
+    /// </summary>
+    /// <param name="account">.</param>
+    /// <returns>Аватар профиля пользователя.</returns>
+    public async Task<string> GetProfileAvatarAsync(string account)
+    {
+        try
+        {
+            var result = await _dbContext.MentorProfileInfo
+                .Where(u => u.Email.Equals(account))
+                .Select(u => u.ProfileIconUrl)
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
