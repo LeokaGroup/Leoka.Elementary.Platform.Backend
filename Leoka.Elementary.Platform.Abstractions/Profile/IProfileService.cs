@@ -74,4 +74,11 @@ public interface IProfileService
     /// <param name="account">Аккаунт.</param>
     /// <returns>Данные анкеты пользователя.</returns>
     Task<WorksheetOutput> GetProfileWorkSheetAsync(string account);
+
+    /// <summary>
+    /// Метод обновит аватар пользователя.
+    /// </summary>
+    /// <param name="avatar">Новое изображение аватара.</param>
+    /// <returns>Новый файл аватара.</returns>
+    Task<FileContentAvatarOutput> UpdateAvatarAsync(IFormCollection avatar, string account);
 }

@@ -76,4 +76,20 @@ public interface IProfileRepository
     /// <param name="roleId">Id роли пользователя.</param>
     /// <returns>Данные анкеты пользователя.</returns>
     Task<WorksheetOutput> GetProfileWorkSheetAsync(long userId, int roleId);
+
+    /// <summary>
+    /// Метод получит старое название аватара пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Id роли.</param>
+    /// <returns>Название аватара.</returns>
+    Task<string> GetOldAvatatName(long userId, int roleId);
+    
+    /// <summary>
+    /// Метод обновит название аватара пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Id роли.</param>
+    /// <param name="avatarName">Название аватара.</param>
+    Task UpdateAvatatName(long userId, int roleId, string avatarName);
 }

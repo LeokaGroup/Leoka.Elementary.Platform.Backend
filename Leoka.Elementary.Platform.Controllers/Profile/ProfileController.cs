@@ -183,4 +183,23 @@ public class ProfileController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод обновит аватар пользователя.
+    /// </summary>
+    /// <param name="avatar">Новое изображение аватара.</param>
+    /// <returns>Новый файл аватара.</returns>
+    [HttpPatch]
+    [Route("avatar")]
+    [ProducesResponseType(200, Type = typeof(FileContentAvatarOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<FileContentAvatarOutput> UpdateAvatarAsync([FromForm] IFormCollection avatar)
+    {
+        var result = await _profileService.UpdateAvatarAsync(avatar, GetUserName());
+
+        return result;
+    }
 }

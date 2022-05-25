@@ -636,4 +636,69 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит старое название аватара пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Id роли.</param>
+    /// <returns>Название аватара.</returns>
+    public async Task<string> GetOldAvatatName(long userId, int roleId)
+    {
+        try
+        {
+            var result = string.Empty;
+            
+            // Если нужно получить название аватара преподавателя.
+            if (roleId == 2)
+            {
+                result = await _dbContext.MentorProfileInfo
+                    .Where(i => i.UserId == userId)
+                    .Select(i => i.ProfileIconUrl)
+                    .FirstOrDefaultAsync();
+            }
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит название аватара пользователя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Id роли.</param>
+    /// <param name="avatarName">Название аватара.</param>
+    public async Task UpdateAvatatName(long userId, int roleId, string avatarName)
+    {
+        try
+        {
+            // Если нужно обновить название аватара преподавателя.
+            if (roleId == 2)
+            {
+                var info = await _dbContext.MentorProfileInfo
+                    .Where(i => i.UserId == userId)
+                    .FirstOrDefaultAsync();
+
+                if (info is not null)
+                {
+                    info.ProfileIconUrl = avatarName;
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

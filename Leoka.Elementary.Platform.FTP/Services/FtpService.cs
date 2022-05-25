@@ -107,8 +107,7 @@ public class FtpService : IFtpService
                     }
 
                     // Добавит файл на сервер проставляя имя файла учитывая Id пользователя.
-                    await using var remote =
-                        ftp.OpenWrite(string.Concat(userId, "_") + file.FileName, FtpDataType.Binary);
+                    await using var remote =ftp.OpenWrite(string.Concat(userId, "_") + file.FileName, FtpDataType.Binary);
                     await file.CopyToAsync(remote);
                 }
 
@@ -248,6 +247,71 @@ public class FtpService : IFtpService
             return result;
         }
 
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод удалит аватар пользователя с сервера.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="file">Файл для удаления.</param>
+    /// <param name="removeFileName">Название старого аватара.</param>
+    /// <returns>Статус удаления.</returns>
+    public async Task UpdateAvatarAsync(long userId, IFormCollection newFile, string removeFileName)
+    {
+        try
+        {
+            // Путь к файлам пользователя.
+            var userFolderPath = "/" + userId;
+
+            if (!newFile.Files.Any())
+            {
+                return;
+            }
+
+            var fileName = newFile.Files.FirstOrDefault()?.FileName;
+
+            var host = _configuration.GetSection("FtpSettings:Host").Value;
+            var login = _configuration.GetSection("FtpSettings:Login").Value;
+            var password = _configuration.GetSection("FtpSettings:Password").Value;
+            var ftp = new FtpClient
+            {
+                Host = host,
+                Credentials = new NetworkCredential(login, password)
+            };
+
+            ftp.Connect();
+            ftp.SetWorkingDirectory(PathImages + userFolderPath);
+            
+            // Получит список файлов пользователя.
+            var userFiles = ftp.GetListing();
+            var checkOldAvatar = userFiles.Where(f => f.Name.Replace(userId + "_", "").Equals(removeFileName));
+
+            if (!checkOldAvatar.Any())
+            {
+                return;
+            }
+            
+            // Удалит старый аватар с сервера.
+            ftp.DeleteFile(userId + "_" + removeFileName);
+            
+            // Добавит новый аватар на сервер.
+            await using var remote = ftp.OpenWrite(string.Concat(userId, "_") + fileName, FtpDataType.Binary);
+            var addFile = newFile.Files.FirstOrDefault();
+
+            if (addFile is not null)
+            {
+                await addFile.CopyToAsync(remote);   
+            }
+
+            ftp.Disconnect();
+        }
+        
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {

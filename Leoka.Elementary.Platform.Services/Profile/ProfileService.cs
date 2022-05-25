@@ -388,4 +388,61 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод обновит аватар пользователя.
+    /// </summary>
+    /// <param name="avatar">Новое изображение аватара.</param>
+    /// <returns>Новый файл аватара.</returns>
+    public async Task<FileContentAvatarOutput> UpdateAvatarAsync(IFormCollection avatar, string account)
+    {
+        try
+        {
+            var result = new FileContentAvatarOutput();
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            if (!avatar.Files.Any())
+            {
+                throw new EmptyAvatarException(account);
+            }
+
+            var user = await _userRepository.GetUserByEmailAsync(account);
+
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            // Получит старое название аватара пользователя.
+            var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
+            var oldAvatarName = await _profileRepository.GetOldAvatatName(user.UserId, roleId);
+
+            // Удалит старый аватар с сервера и добавит новый.
+            await _ftpService.UpdateAvatarAsync(user.UserId, avatar, oldAvatarName);
+
+            var file = avatar.Files.FirstOrDefault();
+
+            if (file is not null)
+            {
+                // Запишет новый аватар в БД.
+                await _profileRepository.UpdateAvatatName(user.UserId, roleId, file.FileName);
+            
+                // Получит новый файл.
+                result = await _ftpService.GetProfileAvatarAsync(user.UserId, file.FileName);
+            }
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
