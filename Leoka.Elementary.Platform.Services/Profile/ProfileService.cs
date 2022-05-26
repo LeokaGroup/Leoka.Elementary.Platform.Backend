@@ -445,4 +445,49 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод обновит ФИО пользователя.
+    /// </summary>
+    /// <param name="firstName">Аккаунт.</param>
+    /// <param name="lastName">Аккаунт.</param>
+    /// <param name="secondName">Аккаунт.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Измененные данные.</returns>
+    public async Task<MentorProfileInfoOutput> UpdateUserFioAsync(string firstName, string lastName, string secondName, string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(secondName))
+            {
+                throw new EmptyUserFioException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
+            
+            // Обновит фио пользователя.
+            var result = await _profileRepository.UpdateUserFioAsync(firstName, lastName, secondName, user.UserId, roleId);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

@@ -92,4 +92,15 @@ public interface IProfileRepository
     /// <param name="roleId">Id роли.</param>
     /// <param name="avatarName">Название аватара.</param>
     Task UpdateAvatatName(long userId, int roleId, string avatarName);
+    
+    /// <summary>
+    /// Метод обновит ФИО пользователя.
+    /// </summary>
+    /// <param name="firstName">Аккаунт.</param>
+    /// <param name="lastName">Аккаунт.</param>
+    /// <param name="secondName">Аккаунт.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Роль пользователя.</param>
+    /// <returns>Измененные данные.</returns>
+    Task<MentorProfileInfoOutput> UpdateUserFioAsync(string firstName, string lastName, string secondName, long userId, int roleId);
 }

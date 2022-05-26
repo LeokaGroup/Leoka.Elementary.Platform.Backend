@@ -701,4 +701,53 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод обновит ФИО пользователя.
+    /// </summary>
+    /// <param name="firstName">Аккаунт.</param>
+    /// <param name="lastName">Аккаунт.</param>
+    /// <param name="secondName">Аккаунт.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Роль пользователя.</param>
+    /// <returns>Измененные данные.</returns>
+    public async Task<MentorProfileInfoOutput> UpdateUserFioAsync(string firstName, string lastName, string secondName, long userId, int roleId)
+    {
+        try
+        {
+            var result = new MentorProfileInfoOutput();
+            
+            // Если нужно обновить фио преподавателя.
+            if (roleId == 2)
+            {
+                var info = await _dbContext.MentorProfileInfo
+                    .Where(i => i.UserId == userId)
+                    .FirstOrDefaultAsync();
+
+                if (info is not null)
+                {
+                    info.FirstName = firstName;
+                    info.LastName = lastName;
+                    info.SecondName = secondName;
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                result = new MentorProfileInfoOutput
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    SecondName = secondName
+                };
+            }
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

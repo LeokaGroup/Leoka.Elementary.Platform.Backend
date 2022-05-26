@@ -81,4 +81,14 @@ public interface IProfileService
     /// <param name="avatar">Новое изображение аватара.</param>
     /// <returns>Новый файл аватара.</returns>
     Task<FileContentAvatarOutput> UpdateAvatarAsync(IFormCollection avatar, string account);
+
+    /// <summary>
+    /// Метод обновит ФИО пользователя.
+    /// </summary>
+    /// <param name="firstName">Аккаунт.</param>
+    /// <param name="lastName">Аккаунт.</param>
+    /// <param name="secondName">Аккаунт.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Измененные данные.</returns>
+    Task<MentorProfileInfoOutput> UpdateUserFioAsync(string firstName, string lastName, string secondName, string account);
 }

@@ -1,6 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Core.Filters;
+using Leoka.Elementary.Platform.Models.Profile.Input;
 using Leoka.Elementary.Platform.Models.Profile.Output;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -199,6 +200,25 @@ public class ProfileController : BaseController
     public async Task<FileContentAvatarOutput> UpdateAvatarAsync([FromForm] IFormCollection avatar)
     {
         var result = await _profileService.UpdateAvatarAsync(avatar, GetUserName());
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод обновит ФИО пользователя.
+    /// </summary>
+    /// <param name="mentorProfileInfoInput">Входная модель.</param>
+    /// <returns>Измененные данные.</returns>
+    [HttpPatch]
+    [Route("fio")]
+    [ProducesResponseType(200, Type = typeof(MentorProfileInfoOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<MentorProfileInfoOutput> UpdateUserFioAsync([FromBody] MentorProfileInfoInput mentorProfileInfoInput)
+    {
+        var result = await _profileService.UpdateUserFioAsync(mentorProfileInfoInput.FirstName, mentorProfileInfoInput.LastName, mentorProfileInfoInput.SecondName, GetUserName());
 
         return result;
     }
