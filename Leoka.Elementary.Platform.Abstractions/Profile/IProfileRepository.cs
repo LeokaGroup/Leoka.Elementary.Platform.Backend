@@ -103,4 +103,15 @@ public interface IProfileRepository
     /// <param name="roleId">Роль пользователя.</param>
     /// <returns>Измененные данные.</returns>
     Task<MentorProfileInfoOutput> UpdateUserFioAsync(string firstName, string lastName, string secondName, long userId, int roleId);
+    
+    /// <summary>
+    /// Метод обновит контактные данные пользователя.
+    /// </summary>
+    /// <param name="isVisibleContacts">Флаг видимости контактов.</param>
+    /// <param name="phoneNumber">Номер телефона.</param>
+    /// <param name="email">Почта.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Роль пользователя.</param>
+    /// <returns>Измененные данные.</returns>
+    Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber, string email, long userId, int roleId);
 }

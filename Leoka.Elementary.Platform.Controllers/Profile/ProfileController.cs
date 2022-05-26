@@ -222,4 +222,23 @@ public class ProfileController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод обновит контактные данные пользователя.
+    /// </summary>
+    /// <param name="mentorProfileInfoInput">Входная модель.</param>
+    /// <returns>Измененные данные.</returns>
+    [HttpPatch]
+    [Route("contacts")]
+    [ProducesResponseType(200, Type = typeof(MentorProfileInfoOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<MentorProfileInfoOutput> UpdateUserContactsAsync([FromBody] MentorProfileInfoInput mentorProfileInfoInput)
+    {
+        var result = await _profileService.UpdateUserContactsAsync(mentorProfileInfoInput.IsVisibleAllContact, mentorProfileInfoInput.PhoneNumber, mentorProfileInfoInput.Email, GetUserName());
+
+        return result;
+    }
 }

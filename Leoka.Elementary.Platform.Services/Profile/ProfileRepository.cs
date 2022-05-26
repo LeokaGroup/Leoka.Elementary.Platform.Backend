@@ -750,4 +750,53 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод обновит контактные данные пользователя.
+    /// </summary>
+    /// <param name="isVisibleContacts">Флаг видимости контактов.</param>
+    /// <param name="phoneNumber">Номер телефона.</param>
+    /// <param name="email">Почта.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Роль пользователя.</param>
+    /// <returns>Измененные данные.</returns>
+    public async Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber, string email, long userId, int roleId)
+    {
+        try
+        {
+            var result = new MentorProfileInfoOutput();
+            
+            // Если нужно обновить контактные данные преподавателя.
+            if (roleId == 2)
+            {
+                var info = await _dbContext.MentorProfileInfo
+                    .Where(i => i.UserId == userId)
+                    .FirstOrDefaultAsync();
+
+                if (info is not null)
+                {
+                    info.Email = email;
+                    info.IsVisibleAllContact = isVisibleContacts;
+                    info.PhoneNumber = phoneNumber;
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                result = new MentorProfileInfoOutput
+                {
+                    Email = email,
+                    PhoneNumber = phoneNumber,
+                    IsVisibleAllContact = isVisibleContacts
+                };
+            }
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

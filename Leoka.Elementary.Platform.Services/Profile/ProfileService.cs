@@ -490,4 +490,48 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод обновит контактные данные пользователя.
+    /// </summary>
+    /// <param name="isVisibleContacts">Флаг видимости контактов.</param>
+    /// <param name="phoneNumber">Номер телефона.</param>
+    /// <param name="email">Почта.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Измененные данные.</returns>
+    public async Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber, string email, string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            if (string.IsNullOrEmpty(phoneNumber) || string.IsNullOrEmpty(email))
+            {
+                throw new EmptyContactUserInfoException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
+
+            var result = await _profileRepository.UpdateUserContactsAsync(isVisibleContacts, phoneNumber, email, user.UserId, roleId);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

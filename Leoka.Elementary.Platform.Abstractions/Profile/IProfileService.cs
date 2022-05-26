@@ -91,4 +91,14 @@ public interface IProfileService
     /// <param name="account">Аккаунт.</param>
     /// <returns>Измененные данные.</returns>
     Task<MentorProfileInfoOutput> UpdateUserFioAsync(string firstName, string lastName, string secondName, string account);
+
+    /// <summary>
+    /// Метод обновит контактные данные пользователя.
+    /// </summary>
+    /// <param name="isVisibleContacts">Флаг видимости контактов.</param>
+    /// <param name="phoneNumber">Номер телефона.</param>
+    /// <param name="email">Почта.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Измененные данные.</returns>
+    Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber, string email, string account);
 }
