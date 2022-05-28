@@ -133,12 +133,12 @@ public sealed class ProfileRepository : IProfileRepository
         try
         {
             var result = await _dbContext.ProfileItems
-                .Select(pi => new ProfileItemOutput
+                .Select(i => new ProfileItemOutput
                 {
-                    ItemName = pi.ItemName,
-                    ItemSysName = pi.ItemSysName,
-                    ItemNumber = pi.ItemNumber,
-                    Position = pi.Position
+                    ItemName = i.ItemName,
+                    ItemSysName = i.ItemSysName,
+                    ItemNumber = i.ItemNumber,
+                    Position = i.Position
                 })
                 .OrderBy(o => o.Position)
                 .ToListAsync();
@@ -257,10 +257,16 @@ public sealed class ProfileRepository : IProfileRepository
                 item.Position = i;
                 
                 // Запишет название предмета.
-                item.ItemName = await _dbContext.ProfileItems
-                    .Where(p => p.ItemSysName.Equals(item.ItemSysName))
-                    .Select(p => p.ItemName)
-                    .FirstOrDefaultAsync();
+                // item.ItemName = await _dbContext.ProfileItems
+                //     .Where(p => p.ItemNumber == item.ItemNumber)
+                //     .Select(p => p.ItemName)
+                //     .FirstOrDefaultAsync();
+                
+                // Получит номер предмета.
+                // item.ItemNumber = await _dbContext.ProfileItems
+                //     .Where(p => p.ItemSysName.Equals(item.ItemSysName))
+                //     .Select(p => p.ItemNumber)
+                //     .FirstOrDefaultAsync();
                 
                 i++;
             }
@@ -499,14 +505,18 @@ public sealed class ProfileRepository : IProfileRepository
                 }
 
                 // Получит предметы преподавателя.
-                var mentorProfileItems = await _dbContext.MentorProfileItems
-                    .Where(i => i.UserId == userId)
-                    .Select(i => new ProfileItemOutput
-                    {
-                        ItemName = i.ItemName,
-                        ItemSysName = i.ItemSysName,
-                        Position = i.Position
-                    })
+                var mentorProfileItems = await (from mpi in _dbContext.MentorProfileItems
+                        join pi in _dbContext.ProfileItems
+                            on mpi.ItemNumber
+                            equals pi.ItemNumber
+                        where mpi.UserId == userId
+                        select new ProfileItemOutput
+                        {
+                            ItemName = pi.ItemName,
+                            ItemSysName = pi.ItemSysName,
+                            Position = pi.Position,
+                            ItemNumber = pi.ItemNumber
+                        })
                     .ToArrayAsync();
 
                 // Если есть предметы преподавателя.
@@ -790,6 +800,61 @@ public sealed class ProfileRepository : IProfileRepository
             }
 
             return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит список предметов преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список предметов.</returns>
+    public async Task<WorksheetOutput> GetMentorItemsAsync(long userId)
+    {
+        try
+        {
+            var items = await _dbContext.MentorProfileItems
+                .Where(i => i.UserId == userId)
+                .Select(i => new ProfileItemOutput
+                {
+                    ItemId = (int)i.ItemId,
+                    ItemNumber = i.ItemNumber,
+                    Position = i.Position
+                })
+                .ToListAsync();
+
+            var result = new WorksheetOutput();
+            result.MentorItems.AddRange(items);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит список предметов преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateItems">Список предметов для обновления.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    public async Task UpdateMentorItemsAsync(List<MentorProfileItemEntity> updateItems, long userId)
+    {
+        try
+        {
+            _dbContext.MentorProfileItems.UpdateRange(updateItems);
+            await _dbContext.SaveChangesAsync();
         }
         
         // TODO: добавить логирование ошибок.

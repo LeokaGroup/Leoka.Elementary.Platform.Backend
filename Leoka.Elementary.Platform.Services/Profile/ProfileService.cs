@@ -1,8 +1,10 @@
-﻿using Leoka.Elementary.Platform.Abstractions.Profile;
+﻿using AutoMapper;
+using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Abstractions.User;
 using Leoka.Elementary.Platform.Access.Abstraction;
 using Leoka.Elementary.Platform.Core.Exceptions;
 using Leoka.Elementary.Platform.FTP.Abstractions;
+using Leoka.Elementary.Platform.Models.Entities.Profile;
 using Leoka.Elementary.Platform.Models.Profile.Input;
 using Leoka.Elementary.Platform.Models.Profile.Output;
 using Microsoft.AspNetCore.Http;
@@ -19,16 +21,19 @@ public sealed class ProfileService : IProfileService
     private readonly IRoleRepository _roleRepository;
     private readonly IUserRepository _userRepository;
     private readonly IFtpService _ftpService;
+    private readonly IMapper _mapper;
 
     public ProfileService(IProfileRepository profileRepository,
         IRoleRepository roleRepository,
         IUserRepository userRepository,
-        IFtpService ftpService)
+        IFtpService ftpService,
+        IMapper mapper)
     {
         _profileRepository = profileRepository;
         _roleRepository = roleRepository;
         _userRepository = userRepository;
         _ftpService = ftpService;
+        _mapper = mapper;
     }
 
     public async Task<ProfileInfoOutput> GetProfileInfoAsync()
@@ -523,6 +528,77 @@ public sealed class ProfileService : IProfileService
             var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
 
             var result = await _profileRepository.UpdateUserContactsAsync(isVisibleContacts, phoneNumber, email, user.UserId, roleId);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит список предметов преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateItems">Список предметов для обновления.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    public async Task<WorksheetOutput> UpdateMentorItemsAsync(List<ProfileItemOutput> updateItems, string account)
+    {
+        try
+        {
+            // Если нет предметов.
+            if (!updateItems.Any())
+            {
+                throw new EmptyMentorItemsException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            var oldItems = await _profileRepository.GetMentorItemsAsync(user.UserId);
+
+            // Если нет предметов у преподавателя.
+            if (!oldItems.MentorItems.Any())
+            {
+                return new WorksheetOutput();
+            }
+
+            // Проходит по старым предметам.
+            for (var i = 0; i < oldItems.MentorItems.Count; i++)
+            {
+                // Проходит по новым предметам.
+                for (var j = 0; j < updateItems.Count; j++)
+                {
+                    // Если номер предмета не совпадает, значит нужно менять предмет.
+                    if (oldItems.MentorItems[i].ItemNumber != updateItems[j].ItemNumber)
+                    {
+                        oldItems.MentorItems[i].ItemNumber = updateItems[j].ItemNumber;
+                    }
+
+                    i++;
+                }
+            }
+
+            var items = _mapper.Map<List<MentorProfileItemEntity>>(oldItems.MentorItems);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorItemsAsync(items, user.UserId);
+
+            var result = await GetProfileWorkSheetAsync(account);
 
             return result;
         }

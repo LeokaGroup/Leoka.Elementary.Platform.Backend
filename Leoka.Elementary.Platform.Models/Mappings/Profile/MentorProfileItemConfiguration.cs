@@ -15,17 +15,7 @@ public partial class MentorProfileItemConfiguration : IEntityTypeConfiguration<M
         entity.Property(e => e.ItemId)
             .HasColumnName("ItemId")
             .HasColumnType("bigserial");
-        
-        entity.Property(e => e.ItemName)
-            .HasColumnName("ItemName")
-            .HasColumnType("varchar(200)")
-            .IsRequired();
-        
-        entity.Property(e => e.ItemSysName)
-            .HasColumnName("ItemSysName")
-            .HasColumnType("varchar(200)")
-            .IsRequired();
-        
+
         entity.Property(e => e.Position)
             .HasColumnName("Position")
             .HasColumnType("int")
@@ -34,6 +24,11 @@ public partial class MentorProfileItemConfiguration : IEntityTypeConfiguration<M
         entity.Property(e => e.UserId)
             .HasColumnName("UserId")
             .HasColumnType("bigint")
+            .IsRequired();
+        
+        entity.Property(e => e.ItemNumber)
+            .HasColumnName("ItemNumber")
+            .HasColumnType("int4")
             .IsRequired();
 
         entity.HasIndex(u => u.ItemId)

@@ -1,4 +1,5 @@
-﻿using Leoka.Elementary.Platform.Models.Profile.Output;
+﻿using Leoka.Elementary.Platform.Models.Profile.Input;
+using Leoka.Elementary.Platform.Models.Profile.Output;
 using Microsoft.AspNetCore.Http;
 
 namespace Leoka.Elementary.Platform.Abstractions.Profile;
@@ -101,4 +102,12 @@ public interface IProfileService
     /// <param name="account">Аккаунт.</param>
     /// <returns>Измененные данные.</returns>
     Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber, string email, string account);
+
+    /// <summary>
+    /// Метод обновит список предметов преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateItems">Список предметов для обновления.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    Task<WorksheetOutput> UpdateMentorItemsAsync(List<ProfileItemOutput> updateItems, string account);
 }

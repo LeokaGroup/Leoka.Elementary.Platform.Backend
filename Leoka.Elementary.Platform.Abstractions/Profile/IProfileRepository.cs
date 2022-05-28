@@ -1,4 +1,5 @@
-﻿using Leoka.Elementary.Platform.Models.Profile.Input;
+﻿using Leoka.Elementary.Platform.Models.Entities.Profile;
+using Leoka.Elementary.Platform.Models.Profile.Input;
 using Leoka.Elementary.Platform.Models.Profile.Output;
 
 namespace Leoka.Elementary.Platform.Abstractions.Profile;
@@ -114,4 +115,19 @@ public interface IProfileRepository
     /// <param name="roleId">Роль пользователя.</param>
     /// <returns>Измененные данные.</returns>
     Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber, string email, long userId, int roleId);
+    
+    /// <summary>
+    /// Метод получит список предметов преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список предметов.</returns>
+    Task<WorksheetOutput> GetMentorItemsAsync(long userId);
+
+    /// <summary>
+    /// Метод обновит список предметов преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateItems">Список предметов для обновления.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    Task UpdateMentorItemsAsync( List<MentorProfileItemEntity> updateItems, long userId);
 }

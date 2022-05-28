@@ -180,7 +180,7 @@ public class FtpService : IFtpService
     /// Метод получит массив байт из потока.
     /// </summary>
     /// <param name="input">Поток.</param>
-    /// <returns>Масив байт.</returns>
+    /// <returns>Массив байт.</returns>
     private async Task<byte[]> GetByteArrayAsync(Stream input)
     {
         var buffer = new byte[16 * 1024];
