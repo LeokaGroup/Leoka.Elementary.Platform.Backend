@@ -596,7 +596,78 @@ public sealed class ProfileService : IProfileService
             
             items.ForEach(i => i.UserId = user.UserId);
             
-            await _profileRepository.UpdateMentorItemsAsync(items, user.UserId);
+            await _profileRepository.UpdateMentorItemsAsync(items);
+
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит список предметов преподавателя в анкете.
+    /// </summary>
+    /// <param name="updatePrices">Список цен для обновления.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    public async Task<WorksheetOutput> UpdateMentorPricesAsync(List<MentorProfilePrices> updatePrices, string account)
+    {
+        try
+        {
+            // Если нет цен.
+            if (!updatePrices.Any())
+            {
+                throw new EmptyPricesException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            var oldPrices = await _profileRepository.GetMentorPricesAsync(user.UserId);
+            
+            // Если нет цен у преподавателя.
+            if (!oldPrices.MentorPrices.Any())
+            {
+                return new WorksheetOutput();
+            }
+            
+            // Проходит по старым ценам.
+            for (var i = 0; i < oldPrices.MentorPrices.Count; i++)
+            {
+                // Проходит по новым ценам.
+                for (var j = 0; j < updatePrices.Count; j++)
+                {
+                    // Если цены не совпадает, значит нужно менять цену.
+                    if (oldPrices.MentorPrices[i].Price != updatePrices[j].Price)
+                    {
+                        oldPrices.MentorPrices[i].Price = updatePrices[j].Price;
+                    }
+
+                    i++;
+                }
+            }
+            
+            var items = _mapper.Map<List<MentorLessonPriceEntity>>(oldPrices.MentorPrices);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorPricesAsync(items);
 
             var result = await GetProfileWorkSheetAsync(account);
 

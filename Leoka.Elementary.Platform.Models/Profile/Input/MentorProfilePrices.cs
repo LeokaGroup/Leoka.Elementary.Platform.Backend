@@ -5,6 +5,8 @@
 /// </summary>
 public class MentorProfilePrices
 {
+    public long PriceId { get; set; }
+    
     /// <summary>
     /// Цена.
     /// </summary>
@@ -16,7 +18,7 @@ public class MentorProfilePrices
     public string Unit { get; set; }
 
     /// <summary>
-    /// Цена с измерением.
+    /// Полная цена.
     /// </summary>
-    public string FullPrice => Price + " " + Unit;
+    public string FullPrice => $"{Price:0,0}" + " " + Unit;
 }

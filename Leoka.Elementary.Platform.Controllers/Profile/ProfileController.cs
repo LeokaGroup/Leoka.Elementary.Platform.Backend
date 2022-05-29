@@ -260,4 +260,23 @@ public class ProfileController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод обновит список цен преподавателя в анкете.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Обновленный список цен.</returns>
+    [HttpPatch]
+    [Route("mentor-prices")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> UpdateMentorPricesAsync([FromBody] WorksheetInput worksheetInput)
+    {
+        var result = await _profileService.UpdateMentorPricesAsync(worksheetInput.MentorPrices, GetUserName());
+
+        return result;
+    }
 }

@@ -4,7 +4,6 @@ using Leoka.Elementary.Platform.Abstractions.User;
 using Leoka.Elementary.Platform.Core.Exceptions;
 using Leoka.Elementary.Platform.FTP.Abstractions;
 using Leoka.Elementary.Platform.Models.Profile.Output;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Leoka.Elementary.Platform.Services.Document;
 

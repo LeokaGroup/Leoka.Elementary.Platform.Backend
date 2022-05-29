@@ -819,18 +819,18 @@ public sealed class ProfileRepository : IProfileRepository
     {
         try
         {
-            var items = await _dbContext.MentorProfileItems
-                .Where(i => i.UserId == userId)
-                .Select(i => new ProfileItemOutput
-                {
-                    ItemId = (int)i.ItemId,
-                    ItemNumber = i.ItemNumber,
-                    Position = i.Position
-                })
-                .ToListAsync();
-
-            var result = new WorksheetOutput();
-            result.MentorItems.AddRange(items);
+            var result = new WorksheetOutput
+            {
+                MentorItems = await _dbContext.MentorProfileItems
+                    .Where(i => i.UserId == userId)
+                    .Select(i => new ProfileItemOutput
+                    {
+                        ItemId = (int)i.ItemId,
+                        ItemNumber = i.ItemNumber,
+                        Position = i.Position
+                    })
+                    .ToListAsync()
+            };
 
             return result;
         }
@@ -847,14 +847,67 @@ public sealed class ProfileRepository : IProfileRepository
     /// Метод обновит список предметов преподавателя в анкете.
     /// </summary>
     /// <param name="updateItems">Список предметов для обновления.</param>
-    /// <param name="userId">Id пользователя.</param>
     /// <returns>Обновленный список предметов.</returns>
-    public async Task UpdateMentorItemsAsync(List<MentorProfileItemEntity> updateItems, long userId)
+    public async Task UpdateMentorItemsAsync(List<MentorProfileItemEntity> updateItems)
     {
         try
         {
             _dbContext.MentorProfileItems.UpdateRange(updateItems);
             await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит список цен преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateItems">Список предметов для обновления.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    public async Task UpdateMentorPricesAsync(List<MentorLessonPriceEntity> updateItems)
+    {
+        try
+        {
+            _dbContext.MentorLessonPrices.UpdateRange(updateItems);
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит список цен преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список цен.</returns>
+    public async Task<WorksheetOutput> GetMentorPricesAsync(long userId)
+    {
+        try
+        {
+            var result = new WorksheetOutput
+            {
+                MentorPrices = await _dbContext.MentorLessonPrices
+                    .Where(p => p.UserId == userId)
+                    .Select(p => new MentorProfilePrices
+                    {
+                        Price = p.Price,
+                        Unit = p.Unit,
+                        PriceId = p.PriceId
+                    })
+                    .ToListAsync()
+            };
+
+            return result;
         }
         
         // TODO: добавить логирование ошибок.

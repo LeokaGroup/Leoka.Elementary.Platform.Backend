@@ -127,7 +127,20 @@ public interface IProfileRepository
     /// Метод обновит список предметов преподавателя в анкете.
     /// </summary>
     /// <param name="updateItems">Список предметов для обновления.</param>
-    /// <param name="userId">Id пользователя.</param>
     /// <returns>Обновленный список предметов.</returns>
-    Task UpdateMentorItemsAsync( List<MentorProfileItemEntity> updateItems, long userId);
+    Task UpdateMentorItemsAsync(List<MentorProfileItemEntity> updateItems);
+    
+    /// <summary>
+    /// Метод обновит список цен преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateItems">Список предметов для обновления.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    Task UpdateMentorPricesAsync(List<MentorLessonPriceEntity> updateItems);
+    
+    /// <summary>
+    /// Метод получит список цен преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список цен.</returns>
+    Task<WorksheetOutput> GetMentorPricesAsync(long userId);
 }
