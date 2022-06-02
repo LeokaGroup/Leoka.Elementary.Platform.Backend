@@ -186,17 +186,18 @@ public sealed class ProfileRepository : IProfileRepository
     /// <summary>
     /// Метод получит список целей подготовки.
     /// </summary>
+    /// <param name="userId">Id пользователя.</param>
     /// <returns>Список целей подготовки.</returns>
-    public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync()
+    public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync(long userId)
     {
         try
         {
             var result = await _dbContext.PurposeTrainings
-                .Select(p => new PurposeTrainingOutput
+                .Select(pt => new PurposeTrainingOutput
                 {
-                    PurposeId = p.PurposeId,
-                    PurposeSysName = p.PurposeSysName,
-                    PurposeName = p.PurposeName
+                    PurposeId = pt.PurposeId,
+                    PurposeSysName = pt.PurposeSysName,
+                    PurposeName = pt.PurposeName
                 })
                 .ToListAsync();
 
@@ -574,13 +575,14 @@ public sealed class ProfileRepository : IProfileRepository
                     result.MentorTimes.AddRange(times);
                 }
                 
-                // Получит цели подготовки.
-                var mentorTrainings = await _dbContext.MentorTrainings
-                    .Where(t => t.UserId == userId)
-                    .Select(t => new PurposeTrainingOutput
+                // Получит цели подготовки с подсвеченными (выбранными ранее).
+                var mentorTrainings = await _dbContext.PurposeTrainings
+                    .Select(pt => new PurposeTrainingOutput
                     {
-                        PurposeName = t.TrainingName,
-                        PurposeSysName = t.TrainingSysName
+                        PurposeName = pt.PurposeName,
+                        PurposeSysName = pt.PurposeSysName,
+                        PurposeId = pt.PurposeId,
+                        IsSelected = _dbContext.MentorTrainings.Any(mt => mt.PurposeId == pt.PurposeId)
                     })
                     .ToArrayAsync();
                 

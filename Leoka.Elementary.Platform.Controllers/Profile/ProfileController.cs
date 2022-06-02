@@ -107,7 +107,7 @@ public class ProfileController : BaseController
     [ProducesResponseType(404)]
     public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync()
     {
-        var result = await _profileService.GetPurposeTrainingsAsync();
+        var result = await _profileService.GetPurposeTrainingsAsync(GetUserName());
 
         return result;
     }

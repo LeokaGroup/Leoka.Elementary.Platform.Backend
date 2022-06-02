@@ -10,7 +10,7 @@ public class GetPurposeTrainingsTest : BaseServiceTest
     [Test]
     public async Task GetPurposeTrainingsAsyncTest()
     {
-        var result = await ProfileService.GetPurposeTrainingsAsync();
+        var result = await ProfileService.GetPurposeTrainingsAsync("skyexx@mail.ru");
 
         Assert.IsTrue(result.Any());
     } 

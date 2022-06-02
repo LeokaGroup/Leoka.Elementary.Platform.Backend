@@ -19,4 +19,9 @@ public class PurposeTrainingOutput
     /// Название цели.
     /// </summary>
     public string PurposeName { get; set; }
+
+    /// <summary>
+    /// Флаг подсвеченных выбранных целей.
+    /// </summary>
+    public bool IsSelected { get; set; }
 }

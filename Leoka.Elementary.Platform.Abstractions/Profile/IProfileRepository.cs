@@ -37,8 +37,9 @@ public interface IProfileRepository
     /// <summary>
     /// Метод получит список целей подготовки.
     /// </summary>
+    /// <param name="userId">Id пользователя.</param>
     /// <returns>Список целей подготовки.</returns>
-    Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync();
+    Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync(long userId);
     
     /// <summary>
     /// Метод сохранит данные анкеты пользователя.

@@ -34,6 +34,11 @@ public partial class MentorTrainingConfiguration : IEntityTypeConfiguration<Ment
         entity.HasIndex(u => u.TrainingId)
             .HasName("PK_MentorTrainingsTrainingId")
             .IsUnique();
+        
+        entity.HasOne(p => p.PurposeTraining)
+            .WithMany(b => b.MentorTrainings)
+            .HasForeignKey(p => p.PurposeId)
+            .HasConstraintName("FK_PurposeTrainingsPurposeId");
 
         OnConfigurePartial(entity);
     }

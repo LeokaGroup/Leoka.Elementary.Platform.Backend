@@ -24,4 +24,11 @@ public class MentorTrainingEntity
     /// Id пользователя.
     /// </summary>
     public long UserId { get; set; }
+
+    /// <summary>
+    /// Id цели подготовки.
+    /// </summary>
+    public int PurposeId { get; set; }
+
+    public PurposeTrainingEntity PurposeTraining { get; set; }
 }

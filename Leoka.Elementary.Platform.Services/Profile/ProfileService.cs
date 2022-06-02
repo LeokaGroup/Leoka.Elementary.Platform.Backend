@@ -137,12 +137,26 @@ public sealed class ProfileService : IProfileService
     /// <summary>
     /// Метод получит список целей подготовки.
     /// </summary>
+    /// <param name="account">Аккаунт пользователя.</param>
     /// <returns>Список целей подготовки.</returns>
-    public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync()
+    public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync(string account)
     {
         try
         {
-            var result = await _profileRepository.GetPurposeTrainingsAsync();
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            // Проверит существование пользователя.
+            var user = await _userRepository.GetUserByEmailAsync(account);
+
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var result = await _profileRepository.GetPurposeTrainingsAsync(user.UserId);
 
             return result;
         }

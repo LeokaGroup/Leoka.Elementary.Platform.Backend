@@ -37,8 +37,9 @@ public interface IProfileService
     /// <summary>
     /// Метод получит список целей подготовки.
     /// </summary>
+    /// <param name="account">Аккаунт пользователя.</param>
     /// <returns>Список целей подготовки.</returns>
-    Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync();
+    Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync(string account);
 
     /// <summary>
     /// Метод сохранит данные анкеты пользователя.
