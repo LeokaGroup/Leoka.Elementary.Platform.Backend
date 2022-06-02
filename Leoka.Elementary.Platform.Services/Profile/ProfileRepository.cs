@@ -315,10 +315,10 @@ public sealed class ProfileRepository : IProfileRepository
             {
                 item.UserId = userId;
                 
-                // Запишет название цели подготовки.
-                item.TrainingName = await _dbContext.PurposeTrainings
-                    .Where(p => p.PurposeSysName.Equals(item.TrainingSysName))
-                    .Select(p => p.PurposeName)
+                // Запишет Id цели подготовки.
+                item.PurposeId = await _dbContext.PurposeTrainings
+                    .Where(p => p.PurposeId == item.PurposeId)
+                    .Select(p => p.PurposeId)
                     .FirstOrDefaultAsync();
             }
             

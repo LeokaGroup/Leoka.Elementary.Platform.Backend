@@ -15,17 +15,7 @@ public partial class MentorTrainingConfiguration : IEntityTypeConfiguration<Ment
         entity.Property(e => e.TrainingId)
             .HasColumnName("TrainingId")
             .HasColumnType("bigserial");
-        
-        entity.Property(e => e.TrainingName)
-            .HasColumnName("TrainingName")
-            .HasColumnType("varchar(150)")
-            .IsRequired();
-        
-        entity.Property(e => e.TrainingSysName)
-            .HasColumnName("TrainingSysName")
-            .HasColumnType("varchar(150)")
-            .IsRequired();
-        
+
         entity.Property(e => e.UserId)
             .HasColumnName("UserId")
             .HasColumnType("bigint")
