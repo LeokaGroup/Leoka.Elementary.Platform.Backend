@@ -917,4 +917,58 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит список длительностей преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список длительностей.</returns>
+    public async Task<WorksheetOutput> GetMentorDurationsAsync(long userId)
+    {
+        try
+        {
+            var result = new WorksheetOutput
+            {
+                MentorDurations = await _dbContext.MentorLessonDurations
+                    .Where(d => d.UserId == userId)
+                    .Select(d => new MentorProfileDurations
+                    {
+                        Time = d.Time,
+                        Unit = d.Unit,
+                        DurationId = d.DurationId
+                    })
+                    .ToListAsync()
+            };
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит список длительностей преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateItems">Список длительностей для обновления.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    public async Task UpdateMentorDurationsAsync(List<MentorLessonDurationEntity> updateDurations)
+    {
+        try
+        {
+            _dbContext.MentorLessonDurations.UpdateRange(updateDurations);
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

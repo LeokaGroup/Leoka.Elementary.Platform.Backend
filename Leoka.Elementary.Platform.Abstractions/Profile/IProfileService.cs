@@ -118,4 +118,12 @@ public interface IProfileService
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список предметов.</returns>
     Task<WorksheetOutput> UpdateMentorPricesAsync(List<MentorProfilePrices> updatePrices, string account);
+    
+    /// <summary>
+    /// Метод обновит список длительностей преподавателя в анкете.
+    /// </summary>
+    /// <param name="updatePrices">Список длительностей для обновления.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    Task<WorksheetOutput> UpdateMentorDurationsAsync(List<MentorProfileDurations> updateDurations, string account);
 }

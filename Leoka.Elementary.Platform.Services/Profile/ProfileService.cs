@@ -587,7 +587,7 @@ public sealed class ProfileService : IProfileService
                     {
                         oldItems.MentorItems[i].ItemNumber = updateItems[j].ItemNumber;
                     }
-
+            
                     i++;
                 }
             }
@@ -646,7 +646,7 @@ public sealed class ProfileService : IProfileService
             {
                 return new WorksheetOutput();
             }
-            
+
             // Проходит по старым ценам.
             for (var i = 0; i < oldPrices.MentorPrices.Count; i++)
             {
@@ -658,7 +658,7 @@ public sealed class ProfileService : IProfileService
                     {
                         oldPrices.MentorPrices[i].Price = updatePrices[j].Price;
                     }
-
+            
                     i++;
                 }
             }
@@ -669,6 +669,77 @@ public sealed class ProfileService : IProfileService
             
             await _profileRepository.UpdateMentorPricesAsync(items);
 
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит список длительностей преподавателя в анкете.
+    /// </summary>
+    /// <param name="updatePrices">Список длительностей для обновления.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    public async Task<WorksheetOutput> UpdateMentorDurationsAsync(List<MentorProfileDurations> updateDurations, string account)
+    {
+        try
+        {
+            // Если нет длительностей.
+            if (!updateDurations.Any())
+            {
+                throw new EmptyDurationException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            var oldDurations = await _profileRepository.GetMentorDurationsAsync(user.UserId);
+            
+            // Если нет длительностей у преподавателя.
+            if (!oldDurations.MentorDurations.Any())
+            {
+                return new WorksheetOutput();
+            }
+
+            // Проходит по старым длительностям.
+            for (var i = 0; i < oldDurations.MentorDurations.Count; i++)
+            {
+                // Проходит по новым длительностям.
+                for (var j = 0; j < updateDurations.Count; j++)
+                {
+                    // Если номер предмета не совпадает, значит нужно менять предмет.
+                    if (oldDurations.MentorDurations[i].Time != updateDurations[j].Time)
+                    {
+                        oldDurations.MentorDurations[i].Time = updateDurations[j].Time;
+                    }
+            
+                    i++;
+                }
+            }
+
+            var items = _mapper.Map<List<MentorLessonDurationEntity>>(oldDurations.MentorDurations);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorDurationsAsync(items);
+            
             var result = await GetProfileWorkSheetAsync(account);
 
             return result;

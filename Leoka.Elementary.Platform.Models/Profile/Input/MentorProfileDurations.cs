@@ -6,6 +6,11 @@
 public class MentorProfileDurations
 {
     /// <summary>
+    /// PK.
+    /// </summary>
+    public long DurationId { get; set; }
+    
+    /// <summary>
     /// Длительность урока.
     /// </summary>
     public int Time { get; set; }

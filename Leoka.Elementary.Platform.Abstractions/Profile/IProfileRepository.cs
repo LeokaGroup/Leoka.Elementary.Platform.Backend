@@ -143,4 +143,18 @@ public interface IProfileRepository
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список цен.</returns>
     Task<WorksheetOutput> GetMentorPricesAsync(long userId);
+    
+    /// <summary>
+    /// Метод получит список длительностей преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список длительностей.</returns>
+    Task<WorksheetOutput> GetMentorDurationsAsync(long userId);
+    
+    /// <summary>
+    /// Метод обновит список длительностей преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateItems">Список длительностей для обновления.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    Task UpdateMentorDurationsAsync(List<MentorLessonDurationEntity> updateDurations);
 }
