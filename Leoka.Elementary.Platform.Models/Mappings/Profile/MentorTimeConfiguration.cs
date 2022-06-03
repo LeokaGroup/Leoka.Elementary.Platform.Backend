@@ -26,9 +26,9 @@ public partial class MentorTimeConfiguration : IEntityTypeConfiguration<MentorTi
             .HasColumnType("time")
             .IsRequired();
         
-        entity.Property(e => e.Day)
-            .HasColumnName("Day")
-            .HasColumnType("varchar(100)")
+        entity.Property(e => e.DayId)
+            .HasColumnName("DayId")
+            .HasColumnType("int4")
             .IsRequired();
 
         entity.Property(e => e.UserId)

@@ -256,19 +256,6 @@ public sealed class ProfileRepository : IProfileRepository
                 
                 item.UserId = userId;
                 item.Position = i;
-                
-                // Запишет название предмета.
-                // item.ItemName = await _dbContext.ProfileItems
-                //     .Where(p => p.ItemNumber == item.ItemNumber)
-                //     .Select(p => p.ItemName)
-                //     .FirstOrDefaultAsync();
-                
-                // Получит номер предмета.
-                // item.ItemNumber = await _dbContext.ProfileItems
-                //     .Where(p => p.ItemSysName.Equals(item.ItemSysName))
-                //     .Select(p => p.ItemNumber)
-                //     .FirstOrDefaultAsync();
-                
                 i++;
             }
             
@@ -303,6 +290,9 @@ public sealed class ProfileRepository : IProfileRepository
             foreach (var item in mentorTimes)
             {
                 item.UserId = userId;
+                
+                // TODO: доработать!
+                // Получит Id дня.
             }
             
             await _dbContext.MentorTimes.AddRangeAsync(mentorTimes);
@@ -563,9 +553,13 @@ public sealed class ProfileRepository : IProfileRepository
                     .Where(t => t.UserId == userId)
                     .Select(t => new MentorTimes
                     {
-                        Day = t.Day,
+                        DayId = t.DayId,
                         TimeStart = t.TimeStart,
-                        TimeEnd = t.TimeEnd
+                        TimeEnd = t.TimeEnd,
+                        DayName = _dbContext.DaysWeek
+                            .Where(d => d.DayId == t.DayId)
+                            .Select(d => d.DayName)
+                            .FirstOrDefault()
                     })
                     .ToArrayAsync();
                 
