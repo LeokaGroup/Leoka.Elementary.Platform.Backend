@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Leoka.Elementary.Platform.Core.Extensions;
 
 /// <summary>
-/// Класс настройки конфигураций маппингов во всем проекте. Они лежат в сборке Leoka.Elementary.Platform.Models.
+/// Класс настройки конфигураций маппингов.
 /// </summary>
 public static class MappingsExtensions
 {

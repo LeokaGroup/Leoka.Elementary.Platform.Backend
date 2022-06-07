@@ -158,4 +158,18 @@ public interface IProfileRepository
     /// <param name="updateItems">Список длительностей для обновления.</param>
     /// <returns>Обновленный список длительностей.</returns>
     Task UpdateMentorDurationsAsync(List<MentorLessonDurationEntity> updateDurations);
+    
+    /// <summary>
+    /// Метод получит список времен преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список времен.</returns>
+    Task<WorksheetOutput> GetMentorTimesAsync(long userId);
+    
+    /// <summary>
+    /// Метод обновит время преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateTimes">Список времени для обновления.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    Task UpdateMentorTimesAsync(List<MentorTimeEntity> updateTimes);
 }

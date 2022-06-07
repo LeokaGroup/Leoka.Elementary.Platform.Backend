@@ -127,4 +127,11 @@ public interface IProfileService
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список длительностей.</returns>
     Task<WorksheetOutput> UpdateMentorDurationsAsync(List<MentorProfileDurations> updateDurations, string account);
+    
+    /// <summary>
+    /// Метод обновит список времени преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateTimes">Входная модель.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    Task<WorksheetOutput> UpdateMentorTimesAsync(List<MentorTimes> updateTimes, string account);
 }

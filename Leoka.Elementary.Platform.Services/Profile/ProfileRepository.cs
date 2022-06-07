@@ -553,7 +553,6 @@ public sealed class ProfileRepository : IProfileRepository
                     .Where(t => t.UserId == userId)
                     .Select(t => new MentorTimes
                     {
-                        DayId = t.DayId,
                         TimeStart = t.TimeStart,
                         TimeEnd = t.TimeEnd,
                         DayName = _dbContext.DaysWeek
@@ -957,6 +956,64 @@ public sealed class ProfileRepository : IProfileRepository
         try
         {
             _dbContext.MentorLessonDurations.UpdateRange(updateDurations);
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит список времен преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Список времен.</returns>
+    public async Task<WorksheetOutput> GetMentorTimesAsync(long userId)
+    {
+        try
+        {
+            var result = new WorksheetOutput
+            {
+                MentorTimes = await _dbContext.MentorTimes
+                    .Where(d => d.UserId == userId)
+                    .Select(d => new MentorTimes
+                    {
+                        TimeStart = d.TimeStart,
+                        TimeEnd = d.TimeEnd,
+                        DaySysName = _dbContext.DaysWeek
+                            .Where(dw => dw.DayId == d.DayId)
+                            .Select(dw => dw.DaySysName)
+                            .FirstOrDefault(),
+                        TimeId = d.TimeId
+                    })
+                    .ToListAsync()
+            };
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит время преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateTimes">Список времени для обновления.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    public async Task UpdateMentorTimesAsync(List<MentorTimeEntity> updateTimes)
+    {
+        try
+        {
+            _dbContext.MentorTimes.UpdateRange(updateTimes);
             await _dbContext.SaveChangesAsync();
         }
         

@@ -766,4 +766,76 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод обновит список времени преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateTimes">Входная модель.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    public async Task<WorksheetOutput> UpdateMentorTimesAsync(List<MentorTimes> updateTimes, string account)
+    {
+        try
+        {
+            // Если нет времени.
+            if (!updateTimes.Any())
+            {
+                throw new EmptyTimeException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var oldTimes = await _profileRepository.GetMentorTimesAsync(user.UserId);
+            
+            // Если нет времени у преподавателя.
+            if (!oldTimes.MentorTimes.Any())
+            {
+                return new WorksheetOutput();
+            }
+
+            // Проходит по старым временам.
+            for (var i = 0; i < oldTimes.MentorTimes.Count; i++)
+            {
+                // Проходит по новым временам.
+                for (var j = 0; j < updateTimes.Count; j++)
+                {
+                    // Если системное название времени не совпадает, значит нужно менять время.
+                    if (!oldTimes.MentorTimes[i].DaySysName.Equals(updateTimes[j].DaySysName))
+                    {
+                        oldTimes.MentorTimes[i].DaySysName = updateTimes[j].DaySysName;
+
+                        // TODO: тут получать DayId по системному имени
+                    }
+            
+                    i++;
+                }
+            }
+
+            var items = _mapper.Map<List<MentorTimeEntity>>(oldTimes.MentorTimes);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorTimesAsync(items);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

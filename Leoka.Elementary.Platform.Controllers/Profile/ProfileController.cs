@@ -298,4 +298,23 @@ public class ProfileController : BaseController
         
         return result;
     }
+
+    /// <summary>
+    /// Метод обновит список времени преподавателя в анкете.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    [HttpPatch]
+    [Route("mentor-times")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> UpdateMentorTimesAsync([FromBody] WorksheetInput worksheetInput)
+    {
+        var result = await _profileService.UpdateMentorTimesAsync(worksheetInput.MentorTimes, GetUserName());
+
+        return result;
+    }
 }
