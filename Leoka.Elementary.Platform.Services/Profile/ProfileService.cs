@@ -812,8 +812,7 @@ public sealed class ProfileService : IProfileService
                     if (!oldTimes.MentorTimes[i].DaySysName.Equals(updateTimes[j].DaySysName))
                     {
                         oldTimes.MentorTimes[i].DaySysName = updateTimes[j].DaySysName;
-
-                        // TODO: тут получать DayId по системному имени
+                        oldTimes.MentorTimes[i].DayId = await _profileRepository.GetDayIdBySysNameAsync(updateTimes[j].DaySysName);
                     }
             
                     i++;
@@ -825,6 +824,76 @@ public sealed class ProfileService : IProfileService
             items.ForEach(i => i.UserId = user.UserId);
             
             await _profileRepository.UpdateMentorTimesAsync(items);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит данные о себе преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации о себе для обновления.</param>
+    /// <returns>Обновленный данные о себе.</returns>
+    public async Task<WorksheetOutput> UpdateMentorAboutAsync(List<MentorAboutInfo> updateAboutInfo, string account)
+    {
+        try
+        {
+            // Если нет данных о себе.
+            if (!updateAboutInfo.Any())
+            {
+                throw new EmptyAboutInfoException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var oldAboutInfo = await _profileRepository.GetMentorAboutInfoAsync(user.UserId);
+            
+            // Если нет данных о себе у преподавателя.
+            if (!oldAboutInfo.MentorAboutInfo.Any())
+            {
+                return new WorksheetOutput();
+            }
+
+            // Проходит по данным о себе.
+            for (var i = 0; i < oldAboutInfo.MentorAboutInfo.Count; i++)
+            {
+                // Проходит по новым данным о себе.
+                for (var j = 0; j < updateAboutInfo.Count; j++)
+                {
+                    // Если системное данные о себе не совпадает, значит нужно менять данные о себе.
+                    if (!oldAboutInfo.MentorAboutInfo[i].AboutInfoText.Equals(updateAboutInfo[j].AboutInfoText))
+                    {
+                        oldAboutInfo.MentorAboutInfo[i].AboutInfoText = updateAboutInfo[j].AboutInfoText;
+                    }
+            
+                    i++;
+                }
+            }
+
+            var items = _mapper.Map<List<MentorAboutInfoEntity>>(oldAboutInfo.MentorAboutInfo);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorAboutAsync(items);
             
             var result = await GetProfileWorkSheetAsync(account);
 

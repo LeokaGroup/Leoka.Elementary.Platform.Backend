@@ -317,4 +317,23 @@ public class ProfileController : BaseController
 
         return result;
     }
+    
+    /// <summary>
+    /// Метод обновит данные о себе преподавателя в анкете.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Обновленный данные о себе.</returns>
+    [HttpPatch]
+    [Route("mentor-about")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> UpdateMentorAboutAsync([FromBody] WorksheetInput worksheetInput)
+    {
+        var result = await _profileService.UpdateMentorAboutAsync(worksheetInput.MentorAboutInfo, GetUserName());
+
+        return result;
+    }
 }

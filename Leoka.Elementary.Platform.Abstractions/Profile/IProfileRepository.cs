@@ -172,4 +172,25 @@ public interface IProfileRepository
     /// <param name="updateTimes">Список времени для обновления.</param>
     /// <returns>Обновленный список длительностей.</returns>
     Task UpdateMentorTimesAsync(List<MentorTimeEntity> updateTimes);
+
+    /// <summary>
+    /// Метод обновит данные о себе преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации о себе для обновления.</param>
+    /// <returns>Обновленный данные о себе.</returns>
+    Task UpdateMentorAboutAsync(List<MentorAboutInfoEntity> updateAboutInfo);
+
+    /// <summary>
+    /// Метод получит Id дня по его системному названию.
+    /// </summary>
+    /// <param name="sysName">Системное название.</param>
+    /// <returns>Id дня</returns>
+    Task<int> GetDayIdBySysNameAsync(string sysName);
+    
+    /// <summary>
+    /// Метод получит данные о себе преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные о себе.</returns>
+    Task<WorksheetOutput> GetMentorAboutInfoAsync(long userId);
 }

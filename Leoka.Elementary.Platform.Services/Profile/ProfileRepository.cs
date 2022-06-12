@@ -15,7 +15,7 @@ namespace Leoka.Elementary.Platform.Services.Profile;
 public sealed class ProfileRepository : IProfileRepository
 {
     private readonly PostgreDbContext _dbContext;
-    
+
     public ProfileRepository(PostgreDbContext dbContext)
     {
         _dbContext = dbContext;
@@ -1015,6 +1015,83 @@ public sealed class ProfileRepository : IProfileRepository
         {
             _dbContext.MentorTimes.UpdateRange(updateTimes);
             await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит данные о себе преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации о себе для обновления.</param>
+    /// <returns>Обновленный данные о себе.</returns>
+    public async Task UpdateMentorAboutAsync(List<MentorAboutInfoEntity> updateAboutInfo)
+    {
+        try
+        {
+            _dbContext.UpdateRange(updateAboutInfo);
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит Id дня по его системному названию.
+    /// </summary>
+    /// <param name="sysName">Системное название.</param>
+    /// <returns>Id дня.</returns>
+    public async Task<int> GetDayIdBySysNameAsync(string sysName)
+    {
+        try
+        {
+            var result = await _dbContext.DaysWeek
+                .Where(d => d.DaySysName.Equals(sysName))
+                .Select(d => d.DayId)
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит данные о себе преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные о себе.</returns>
+    public async Task<WorksheetOutput> GetMentorAboutInfoAsync(long userId)
+    {
+        try
+        {
+            var result = new WorksheetOutput
+            {
+                MentorAboutInfo = await _dbContext.MentorAboutInfos
+                    .Where(a => a.UserId == userId)
+                    .Select(a => new MentorAboutInfo
+                    {
+                        AboutInfoText = a.AboutInfoText
+                    })
+                    .ToListAsync()
+            };
+
+            return result;
         }
         
         // TODO: добавить логирование ошибок.
