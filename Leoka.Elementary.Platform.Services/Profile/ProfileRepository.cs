@@ -1086,7 +1086,8 @@ public sealed class ProfileRepository : IProfileRepository
                     .Where(a => a.UserId == userId)
                     .Select(a => new MentorAboutInfo
                     {
-                        AboutInfoText = a.AboutInfoText
+                        AboutInfoText = a.AboutInfoText,
+                        AboutInfoId = a.AboutInfoId
                     })
                     .ToListAsync()
             };

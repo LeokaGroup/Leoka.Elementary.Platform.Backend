@@ -9,4 +9,9 @@ public class MentorAboutInfo
     /// Описание информации о преподавателе.
     /// </summary>
     public string AboutInfoText { get; set; }
+    
+    /// <summary>
+    /// PK.
+    /// </summary>
+    public long AboutInfoId { get; set; }
 }
