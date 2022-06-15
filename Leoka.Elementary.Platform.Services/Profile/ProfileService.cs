@@ -907,4 +907,74 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод обновит данные о себе преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации об образовании преподавателя для обновления.</param>
+    /// <returns>Обновленный список об образовании преподавателя.</returns>
+    public async Task<WorksheetOutput> UpdateMentorEducationsAsync(List<MentorEducations> updateEducations, string account)
+    {
+        try
+        {
+            // Если нет данных об образовании.
+            if (!updateEducations.Any())
+            {
+                throw new EmptyEducationsException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var oldEducations = await _profileRepository.GetMentorEducationsAsync(user.UserId);
+            
+            // Если нет данных об образовании у преподавателя.
+            if (!oldEducations.MentorEducations.Any())
+            {
+                return new WorksheetOutput();
+            }
+
+            // Проходит по данным об образовании у преподавателя.
+            for (var i = 0; i < oldEducations.MentorEducations.Count; i++)
+            {
+                // Проходит по новым данным об образовании у преподавателя.
+                for (var j = 0; j < updateEducations.Count; j++)
+                {
+                    // Если системное данные об образовании не совпадает, значит нужно менять данные об образовании.
+                    if (!oldEducations.MentorEducations[i].EducationText.Equals(updateEducations[j].EducationText))
+                    {
+                        oldEducations.MentorEducations[i].EducationText = updateEducations[j].EducationText;
+                    }
+            
+                    i++;
+                }
+            }
+
+            var items = _mapper.Map<List<MentorEducationEntity>>(oldEducations.MentorEducations);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorEducationsAsync(items);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

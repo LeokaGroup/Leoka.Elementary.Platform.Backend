@@ -193,4 +193,18 @@ public interface IProfileRepository
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Данные о себе.</returns>
     Task<WorksheetOutput> GetMentorAboutInfoAsync(long userId);
+    
+    /// <summary>
+    /// Метод получит данные об образовании преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные об образовании.</returns>
+    Task<WorksheetOutput> GetMentorEducationsAsync(long userId);
+    
+    /// <summary>
+    /// Метод обновит данные об образовании преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации об образовании для обновления.</param>
+    /// <returns>Обновленные данные об образовании.</returns>
+    Task UpdateMentorEducationsAsync(List<MentorEducationEntity> updateEducations);
 }

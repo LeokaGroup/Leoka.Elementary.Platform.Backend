@@ -141,4 +141,11 @@ public interface IProfileService
     /// <param name="updateAboutInfo">Список информации о себе для обновления.</param>
     /// <returns>Обновленный данные о себе.</returns>
     Task<WorksheetOutput> UpdateMentorAboutAsync(List<MentorAboutInfo> updateAboutInfo, string account);
+
+    /// <summary>
+    /// Метод обновит данные о себе преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации об образовании преподавателя для обновления.</param>
+    /// <returns>Обновленный список об образовании преподавателя.</returns>
+    Task<WorksheetOutput> UpdateMentorEducationsAsync(List<MentorEducations> updateEducations, string account);
 }

@@ -1034,7 +1034,7 @@ public sealed class ProfileRepository : IProfileRepository
     {
         try
         {
-            _dbContext.UpdateRange(updateAboutInfo);
+            _dbContext.MentorAboutInfos.UpdateRange(updateAboutInfo);
             await _dbContext.SaveChangesAsync();
         }
         
@@ -1093,6 +1093,59 @@ public sealed class ProfileRepository : IProfileRepository
             };
 
             return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит данные об образовании преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные об образовании.</returns>
+    public async Task<WorksheetOutput> GetMentorEducationsAsync(long userId)
+    {
+        try
+        {
+            var result = new WorksheetOutput
+            {
+                MentorEducations = await _dbContext.MentorEducations
+                    .Where(e => e.UserId == userId)
+                    .Select(e => new MentorEducations
+                    {
+                        EducationText = e.EducationText,
+                        EducationId = e.EducationId
+                    })
+                    .ToListAsync()
+            };
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит данные об образовании преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации об образовании для обновления.</param>
+    /// <returns>Обновленные данные об образовании.</returns>
+    public async Task UpdateMentorEducationsAsync(List<MentorEducationEntity> updateEducations)
+    {
+        try
+        {
+            _dbContext.MentorEducations.UpdateRange(updateEducations);
+            await _dbContext.SaveChangesAsync();
         }
         
         // TODO: добавить логирование ошибок.

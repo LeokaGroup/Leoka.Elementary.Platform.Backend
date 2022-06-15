@@ -336,4 +336,23 @@ public class ProfileController : BaseController
 
         return result;
     }
+    
+    /// <summary>
+    /// Метод обновит данные об образовании преподавателя в анкете.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Обновленный список об образовании.</returns>
+    [HttpPatch]
+    [Route("mentor-educations")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> UpdateMentorEducationsAsync([FromBody] WorksheetInput worksheetInput)
+    {
+        var result = await _profileService.UpdateMentorEducationsAsync(worksheetInput.MentorEducations, GetUserName());
+
+        return result;
+    }
 }

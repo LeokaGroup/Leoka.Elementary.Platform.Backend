@@ -35,6 +35,7 @@ public class MappingProfile : Profile
         CreateMap<MentorEducations, MentorEducationEntity>();
         CreateMap<MentorAboutInfo, MentorAboutInfoEntity>();
         CreateMap<MentorAboutInfoEntity, MentorAboutInfo>();
+        CreateMap<MentorEducationEntity, MentorEducations>();
         
         CreateMap<MentorProfileInfoInput, MentorProfileInfoOutput>();
         CreateMap<ProfileItemOutput, MentorProfileItemEntity>();
