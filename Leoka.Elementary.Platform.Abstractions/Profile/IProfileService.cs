@@ -155,4 +155,11 @@ public interface IProfileService
     /// <param name="updateAboutInfo">Список информации об опыте преподавателя для обновления.</param>
     /// <returns>Обновленный список об опыте преподавателя.</returns>
     Task<WorksheetOutput> UpdateMentorExperienceAsync(List<MentorExperience> updateExperience, string account);
+    
+    /// <summary>
+    /// Метод получит список сертификатов для профиля пользователя.
+    /// </summary>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Список сертификатов.</returns>
+    Task<IEnumerable<FileContentResultOutput>> GetProfileCertsAsync(string account);
 }

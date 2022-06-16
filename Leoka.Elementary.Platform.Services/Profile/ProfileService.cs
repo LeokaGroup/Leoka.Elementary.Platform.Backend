@@ -1047,4 +1047,41 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+    
+    /// <summary>
+    /// Метод получит список сертификатов для профиля пользователя.
+    /// </summary>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Список сертификатов.</returns>
+    public async Task<IEnumerable<FileContentResultOutput>> GetProfileCertsAsync(string account)
+    {
+        try
+        {
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            IEnumerable<FileContentResultOutput> result = null;
+
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            // Получит список сертификатов пользователя.
+            var certsNames = await GetUserCertsAsync(user.UserId);
+
+            if (certsNames.Any())
+            {
+                // Получит список файлов сертификатов с сервера.
+                result = await _ftpService.GetUserCertsFilesAsync(user.UserId, certsNames);
+            }
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

@@ -21,9 +21,27 @@ public class FtpService : IFtpService
     // Путь к изображениям.
     private const string PathImages = "/images";
 
+    /// <summary>
+    /// Логин.
+    /// </summary>
+    private readonly string _login;
+
+    /// <summary>
+    /// Хост.
+    /// </summary>
+    private readonly string _host;
+
+    /// <summary>
+    /// Пароль.
+    /// </summary>
+    private readonly string _password;
+
     public FtpService(IConfiguration configuration)
     {
         _configuration = configuration;
+        _login = _configuration["FtpSettings:Login"];
+        _host = _configuration["FtpSettings:Host"];
+        _password = _configuration["FtpSettings:Password"];
     }
 
     /// <summary>
@@ -40,13 +58,10 @@ public class FtpService : IFtpService
 
             if (files.Count > 0)
             {
-                var host = _configuration.GetSection("FtpSettings:Host").Value;
-                var login = _configuration.GetSection("FtpSettings:Login").Value;
-                var password = _configuration.GetSection("FtpSettings:Password").Value;
                 var ftp = new FtpClient
                 {
-                    Host = host,
-                    Credentials = new NetworkCredential(login, password)
+                    Host = _host,
+                    Credentials = new NetworkCredential(_login, _password)
                 };
 
                 ftp.Connect();
@@ -107,7 +122,7 @@ public class FtpService : IFtpService
                     }
 
                     // Добавит файл на сервер проставляя имя файла учитывая Id пользователя.
-                    await using var remote =ftp.OpenWrite(string.Concat(userId, "_") + file.FileName, FtpDataType.Binary);
+                    await using var remote = ftp.OpenWrite(string.Concat(userId, "_") + file.FileName, FtpDataType.Binary);
                     await file.CopyToAsync(remote);
                 }
 
@@ -135,13 +150,10 @@ public class FtpService : IFtpService
         {
             // Путь к файлам пользователя.
             var userFolderPath = "/" + userId;
-            var host = _configuration.GetSection("FtpSettings:Host").Value;
-            var login = _configuration.GetSection("FtpSettings:Login").Value;
-            var password = _configuration.GetSection("FtpSettings:Password").Value;
             var ftp = new FtpClient
             {
-                Host = host,
-                Credentials = new NetworkCredential(login, password)
+                Host = _host,
+                Credentials = new NetworkCredential(_login, _password)
             };
 
             var files = new List<FileContentResultOutput>();
@@ -207,13 +219,10 @@ public class FtpService : IFtpService
         {
             // Путь к файлам пользователя.
             var userFolderPath = "/" + userId;
-            var host = _configuration.GetSection("FtpSettings:Host").Value;
-            var login = _configuration.GetSection("FtpSettings:Login").Value;
-            var password = _configuration.GetSection("FtpSettings:Password").Value;
             var ftp = new FtpClient
             {
-                Host = host,
-                Credentials = new NetworkCredential(login, password)
+                Host = _host,
+                Credentials = new NetworkCredential(_login, _password)
             };
             var result = new FileContentAvatarOutput();
 
@@ -275,14 +284,10 @@ public class FtpService : IFtpService
             }
 
             var fileName = newFile.Files.FirstOrDefault()?.FileName;
-
-            var host = _configuration.GetSection("FtpSettings:Host").Value;
-            var login = _configuration.GetSection("FtpSettings:Login").Value;
-            var password = _configuration.GetSection("FtpSettings:Password").Value;
             var ftp = new FtpClient
             {
-                Host = host,
-                Credentials = new NetworkCredential(login, password)
+                Host = _host,
+                Credentials = new NetworkCredential(_login, _password)
             };
 
             ftp.Connect();

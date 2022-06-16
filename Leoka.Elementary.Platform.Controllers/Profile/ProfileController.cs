@@ -374,4 +374,22 @@ public class ProfileController : BaseController
 
         return result;
     }
+    
+    /// <summary>
+    /// Метод получит список сертификатов для профиля пользователя.
+    /// </summary>
+    /// <returns>Список сертификатов.</returns>
+    [HttpGet]
+    [Route("certs")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<FileContentResultOutput>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<IEnumerable<FileContentResultOutput>> GetProfileCertsAsync()
+    {
+        var result = await _profileService.GetProfileCertsAsync(GetUserName());
+
+        return result;
+    }
 }
