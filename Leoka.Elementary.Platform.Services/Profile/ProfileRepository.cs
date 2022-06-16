@@ -1155,4 +1155,57 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получит данные об опыте преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные об опыте.</returns>
+    public async Task<WorksheetOutput> GetMentorExperienceAsync(long userId)
+    {
+        try
+        {
+            var result = new WorksheetOutput
+            {
+                MentorExperience = await _dbContext.MentorExperience
+                    .Where(e => e.UserId == userId)
+                    .Select(e => new MentorExperience
+                    {
+                        ExperienceText = e.ExperienceText,
+                        ExperienceId = e.ExperienceId
+                    })
+                    .ToListAsync()
+            };
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит данные об опыте преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации об опыте для обновления.</param>
+    /// <returns>Обновленные данные об опыте.</returns>
+    public async Task UpdateMentorExperienceAsync(List<MentorExperienceEntity> updateExperience)
+    {
+        try
+        {
+            _dbContext.MentorExperience.UpdateRange(updateExperience);
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

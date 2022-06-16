@@ -977,4 +977,74 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод обновит данные об опыте преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации об опыте преподавателя для обновления.</param>
+    /// <returns>Обновленный список об опыте преподавателя.</returns>
+    public async Task<WorksheetOutput> UpdateMentorExperienceAsync(List<MentorExperience> updateExperience, string account)
+    {
+        try
+        {
+            // Если нет данных об опыте.
+            if (!updateExperience.Any())
+            {
+                throw new EmptyExperienceException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var oldExperience = await _profileRepository.GetMentorExperienceAsync(user.UserId);
+            
+            // Если нет данных об опыте у преподавателя.
+            if (!oldExperience.MentorExperience.Any())
+            {
+                return new WorksheetOutput();
+            }
+            
+            // Проходит по данным об образовании у преподавателя.
+            for (var i = 0; i < oldExperience.MentorExperience.Count; i++)
+            {
+                // Проходит по новым данным об образовании у преподавателя.
+                for (var j = 0; j < updateExperience.Count; j++)
+                {
+                    // Если системное данные об образовании не совпадает, значит нужно менять данные об образовании.
+                    if (!oldExperience.MentorExperience[i].ExperienceText.Equals(updateExperience[j].ExperienceText))
+                    {
+                        oldExperience.MentorExperience[i].ExperienceText = updateExperience[j].ExperienceText;
+                    }
+            
+                    i++;
+                }
+            }
+            
+            var items = _mapper.Map<List<MentorExperienceEntity>>(oldExperience.MentorExperience);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorExperienceAsync(items);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

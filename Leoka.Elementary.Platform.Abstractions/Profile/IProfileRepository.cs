@@ -207,4 +207,18 @@ public interface IProfileRepository
     /// <param name="updateAboutInfo">Список информации об образовании для обновления.</param>
     /// <returns>Обновленные данные об образовании.</returns>
     Task UpdateMentorEducationsAsync(List<MentorEducationEntity> updateEducations);
+    
+    /// <summary>
+    /// Метод получит данные об опыте преподавателя в анкете.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные об опыте.</returns>
+    Task<WorksheetOutput> GetMentorExperienceAsync(long userId);
+    
+    /// <summary>
+    /// Метод обновит данные об опыте преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации об опыте для обновления.</param>
+    /// <returns>Обновленные данные об опыте.</returns>
+    Task UpdateMentorExperienceAsync(List<MentorExperienceEntity> updateExperience);
 }
