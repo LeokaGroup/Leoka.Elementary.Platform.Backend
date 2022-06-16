@@ -1208,4 +1208,29 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод добавляет изображения сертификатов пользователя.
+    /// </summary>
+    /// <param name="fileNames">Список названий изображений.</param>
+    /// <param name="userId">Id пользователя.</param>
+    public async Task AddProfileUserCertsAsync(string[] fileNames, long userId)
+    {
+        try
+        {
+            await _dbContext.MentorCertificates.AddRangeAsync(fileNames.Select(x => new MentorCertificateEntity
+            {
+                CertificateName = x,
+                UserId = userId
+            }));
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

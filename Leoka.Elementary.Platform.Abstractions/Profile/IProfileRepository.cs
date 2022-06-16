@@ -221,4 +221,11 @@ public interface IProfileRepository
     /// <param name="updateAboutInfo">Список информации об опыте для обновления.</param>
     /// <returns>Обновленные данные об опыте.</returns>
     Task UpdateMentorExperienceAsync(List<MentorExperienceEntity> updateExperience);
+
+    /// <summary>
+    /// Метод добавляет изображения сертификатов пользователя.
+    /// </summary>
+    /// <param name="fileNames">Список названий изображений.</param>
+    /// <param name="userId">Id пользователя.</param>
+    Task AddProfileUserCertsAsync(string[] fileNames, long userId);
 }

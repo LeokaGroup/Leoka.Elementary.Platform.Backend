@@ -162,4 +162,10 @@ public interface IProfileService
     /// <param name="account">Аккаунт.</param>
     /// <returns>Список сертификатов.</returns>
     Task<IEnumerable<FileContentResultOutput>> GetProfileCertsAsync(string account);
+
+    /// <summary>
+    /// Метод добавляет новые изображения сертификатов на сервер и в БД, если они ранее не были добавлены. 
+    /// </summary>
+    /// <param name="files">Список изображений сертификатов.</param>
+    Task CreateCertsAsync(IFormCollection files, string account);
 }

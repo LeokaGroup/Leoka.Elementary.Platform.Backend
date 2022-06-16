@@ -1084,4 +1084,45 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод добавляет новые изображения сертификатов на сервер и в БД, если они ранее не были добавлены. 
+    /// </summary>
+    /// <param name="files">Список изображений сертификатов.</param>
+    public async Task CreateCertsAsync(IFormCollection files, string account)
+    {
+        try
+        {
+            if (!files.Files.Any())
+            {
+                throw new EmptyFilesException();
+            }
+
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            // Проверит существование пользователя.
+            var user = await _userRepository.GetUserByEmailAsync(account);
+
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            // Загружает изображения сертификатов пользователя на сервер.
+            await _ftpService.UploadProfileFilesFtpAsync(files.Files, user.UserId);
+            
+            // Добавляет изображения в БД.
+            await _profileRepository.AddProfileUserCertsAsync(files.Files.Select(x => x.FileName).ToArray(), user.UserId);
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

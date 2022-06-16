@@ -13,8 +13,6 @@ namespace Leoka.Elementary.Platform.FTP.Services;
 /// </summary>
 public class FtpService : IFtpService
 {
-    private readonly IConfiguration _configuration;
-
     // Путь к документам.
     private const string PathDocs = "/docs";
 
@@ -38,10 +36,9 @@ public class FtpService : IFtpService
 
     public FtpService(IConfiguration configuration)
     {
-        _configuration = configuration;
-        _login = _configuration["FtpSettings:Login"];
-        _host = _configuration["FtpSettings:Host"];
-        _password = _configuration["FtpSettings:Password"];
+        _login = configuration["FtpSettings:Login"];
+        _host = configuration["FtpSettings:Host"];
+        _password = configuration["FtpSettings:Password"];
     }
 
     /// <summary>

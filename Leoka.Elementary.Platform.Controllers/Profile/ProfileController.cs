@@ -392,4 +392,20 @@ public class ProfileController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод добавляет новые изображения сертификатов на сервер и в БД, если они ранее не были добавлены. 
+    /// </summary>
+    /// <param name="files">Список изображений сертификатов.</param>
+    [HttpPost]
+    [Route("certs")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task CreateCertsAsync([FromForm] IFormCollection files)
+    {
+        await _profileService.CreateCertsAsync(files, GetUserName());
+    }
 }
