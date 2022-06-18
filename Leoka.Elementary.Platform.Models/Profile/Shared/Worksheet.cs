@@ -74,4 +74,84 @@ public class Worksheet
     /// Список информации о преподавателе.
     /// </summary>
     public List<MentorAboutInfo> MentorAboutInfo { get; set; } = new();
+
+    // /// <summary>
+    // /// Флаг видимости кнопки сохранения предметов.
+    // /// </summary>
+    // public bool IsVisibleButtonSaveItems
+    // {
+    //     get => MentorItems.Any();
+    //
+    //     set => IsVisibleButtonSaveItems = value;
+    // }
+    //
+    // /// <summary>
+    // /// Флаг видимости кнопки сохранения цен.
+    // /// </summary>
+    // public bool IsVisibleButtonSavePrices
+    // {
+    //     get => MentorPrices.Any();
+    //
+    //     set => IsVisibleButtonSavePrices = value;
+    // }
+    //
+    // /// <summary>
+    // /// Флаг видимости кнопки сохранения длительностей.
+    // /// </summary>
+    // public bool IsVisibleButtonSaveDurations
+    // {
+    //     get => MentorDurations.Any();
+    //
+    //     set => IsVisibleButtonSaveDurations = value;
+    // }
+    //
+    // /// <summary>
+    // /// Флаг видимости кнопки сохранения целей тренировок.
+    // /// </summary>
+    // public bool IsVisibleButtonSaveTrainings
+    // {
+    //     get => MentorTrainings.Any();
+    //
+    //     set => IsVisibleButtonSaveTrainings = value;
+    // }
+    //
+    // /// <summary>
+    // /// Флаг видимости кнопки сохранения времени.
+    // /// </summary>
+    // public bool IsVisibleButtonSaveTimes
+    // {
+    //     get => MentorTimes.Any();
+    //
+    //     set => IsVisibleButtonSaveTimes = value;
+    // }
+    //
+    // /// <summary>
+    // /// Флаг видимости кнопки сохранения информации обо мне.
+    // /// </summary>
+    // public bool IsVisibleButtonSaveAboutInfo
+    // {
+    //     get => MentorAboutInfo.Any();
+    //
+    //     set => IsVisibleButtonSaveAboutInfo = value;
+    // }
+    //
+    // /// <summary>
+    // /// Флаг видимости кнопки сохранения образования.
+    // /// </summary>
+    // public bool IsVisibleButtonSaveEducations
+    // {
+    //     get => MentorEducations.Any();
+    //
+    //     set => IsVisibleButtonSaveEducations = value;
+    // }
+    //
+    // /// <summary>
+    // /// Флаг видимости кнопки сохранения опыта.
+    // /// </summary>
+    // public bool IsVisibleButtonSaveExperience
+    // {
+    //     get => MentorExperience.Any();
+    //
+    //     set => IsVisibleButtonSaveExperience = value;
+    // }
 }

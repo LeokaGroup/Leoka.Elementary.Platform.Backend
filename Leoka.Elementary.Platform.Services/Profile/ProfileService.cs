@@ -396,6 +396,29 @@ public sealed class ProfileService : IProfileService
             var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
 
             var result = await _profileRepository.GetProfileWorkSheetAsync(user.UserId, roleId);
+            
+            // Запишет ФИО пользователя, если из данных анкеты его нет.
+            if (string.IsNullOrEmpty(result.FirstName) 
+                && string.IsNullOrEmpty(result.LastName)
+                && string.IsNullOrEmpty(result.SecondName))
+            {
+                var fio = user.FirstName.Split(" ");
+                result.FirstName = fio[0];
+                result.LastName = fio[1];
+                result.SecondName = fio[2];
+            }
+            
+            // Запишет Email, если из данных анкеты его нет.
+            if (string.IsNullOrEmpty(result.Email))
+            {
+                result.Email = user.Email;
+            }
+            
+            // Запишет номер телефона, если из данных анкеты его нет.
+            if (string.IsNullOrEmpty(result.PhoneNumber))
+            {
+                result.PhoneNumber = user.PhoneNumber;
+            }
 
             return result;
         }

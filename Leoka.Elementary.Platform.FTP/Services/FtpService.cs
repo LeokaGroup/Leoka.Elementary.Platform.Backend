@@ -224,6 +224,15 @@ public class FtpService : IFtpService
             var result = new FileContentAvatarOutput();
 
             ftp.Connect();
+            
+            // Проверит существование папки изображений пользователя.
+            var checkUserImegesFolder = ftp.GetListing().Where(f => f.FullName.Equals(PathImages + userFolderPath));
+
+            if (!checkUserImegesFolder.Any())
+            {
+                ftp.CreateDirectory(PathImages + userFolderPath);
+            }
+            
             ftp.SetWorkingDirectory(PathImages + userFolderPath);
             
             // Получит список файлов пользователя.
