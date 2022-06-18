@@ -1089,7 +1089,7 @@ public sealed class ProfileService : IProfileService
     /// Метод добавляет новые изображения сертификатов на сервер и в БД, если они ранее не были добавлены. 
     /// </summary>
     /// <param name="files">Список изображений сертификатов.</param>
-    public async Task CreateCertsAsync(IFormCollection files, string account)
+    public async Task<WorksheetOutput> CreateCertsAsync(IFormCollection files, string account)
     {
         try
         {
@@ -1116,6 +1116,10 @@ public sealed class ProfileService : IProfileService
             
             // Добавляет изображения в БД.
             await _profileRepository.AddProfileUserCertsAsync(files.Files.Select(x => x.FileName).ToArray(), user.UserId);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
         }
         
         // TODO: добавить логирование ошибок.

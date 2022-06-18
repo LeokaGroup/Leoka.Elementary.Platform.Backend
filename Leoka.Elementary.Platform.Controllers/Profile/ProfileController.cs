@@ -399,13 +399,15 @@ public class ProfileController : BaseController
     /// <param name="files">Список изображений сертификатов.</param>
     [HttpPost]
     [Route("certs")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task CreateCertsAsync([FromForm] IFormCollection files)
+    public async Task<WorksheetOutput> CreateCertsAsync([FromForm] IFormCollection files)
     {
-        await _profileService.CreateCertsAsync(files, GetUserName());
+        var result = await _profileService.CreateCertsAsync(files, GetUserName());
+
+        return result;
     }
 }

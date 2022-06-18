@@ -167,5 +167,5 @@ public interface IProfileService
     /// Метод добавляет новые изображения сертификатов на сервер и в БД, если они ранее не были добавлены. 
     /// </summary>
     /// <param name="files">Список изображений сертификатов.</param>
-    Task CreateCertsAsync(IFormCollection files, string account);
+    Task<WorksheetOutput> CreateCertsAsync(IFormCollection files, string account);
 }
