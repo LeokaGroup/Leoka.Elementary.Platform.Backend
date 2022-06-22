@@ -168,4 +168,11 @@ public interface IProfileService
     /// </summary>
     /// <param name="files">Список изображений сертификатов.</param>
     Task<WorksheetOutput> CreateCertsAsync(IFormCollection files, string account);
+
+    /// <summary>
+    /// Метод добавляет запись информации о преподавателе по дефолту.
+    /// </summary>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task<WorksheetOutput> AddDefaultMentorAboutInfoAsync(string account);
 }

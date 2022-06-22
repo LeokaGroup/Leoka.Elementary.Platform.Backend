@@ -339,10 +339,13 @@ public sealed class ProfileRepository : IProfileRepository
             
             // Добавит информацию о преподавателе.
             var mentorAboutInfo = mapper.Map<List<MentorAboutInfoEntity>>(mentorProfileInfoInput.MentorAboutInfo);
-            
+
+            var aboutIdx = 0;
             foreach (var item in mentorAboutInfo)
             {
                 item.UserId = userId;
+                item.Position = aboutIdx;
+                aboutIdx++;
             }
             
             await _dbContext.MentorAboutInfos.AddRangeAsync(mentorAboutInfo);
@@ -1224,6 +1227,49 @@ public sealed class ProfileRepository : IProfileRepository
                 UserId = userId
             }));
             await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет запись информации о преподавателе по дефолту.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task AddDefaultMentorAboutInfoAsync(long userId)
+    {
+        try
+        {
+            // Выбирает последние номера.
+            var lastNumbers = await _dbContext.MentorAboutInfos
+                .AsNoTracking()
+                .Where(i => i.UserId == userId)
+                .OrderByDescending(o => o.AboutInfoId)
+                .Select(i => new
+                {
+                    i.Position,
+                    i.UserId
+                })
+                .FirstOrDefaultAsync();
+
+            if (lastNumbers is not null)
+            {
+                var lastPosition = lastNumbers.Position;
+
+                await _dbContext.MentorAboutInfos.AddAsync(new MentorAboutInfoEntity
+                {
+                    Position = ++lastPosition,
+                    UserId = lastNumbers.UserId,
+                    AboutInfoText = string.Empty
+                });
+                await _dbContext.SaveChangesAsync();
+            }
         }
         
         // TODO: добавить логирование ошибок.

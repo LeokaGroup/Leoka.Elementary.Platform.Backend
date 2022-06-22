@@ -410,4 +410,22 @@ public class ProfileController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод добавляет запись информации о преподавателе по дефолту.
+    /// </summary>
+    /// <returns>Данные анкеты.</returns>
+    [HttpPost]
+    [Route("mentor-about")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> AddDefaultMentorAboutInfoAsync()
+    {
+        var result = await _profileService.AddDefaultMentorAboutInfoAsync(GetUserName());
+
+        return result;
+    }
 }

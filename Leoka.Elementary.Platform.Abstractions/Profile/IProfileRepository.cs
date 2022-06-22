@@ -228,4 +228,11 @@ public interface IProfileRepository
     /// <param name="fileNames">Список названий изображений.</param>
     /// <param name="userId">Id пользователя.</param>
     Task AddProfileUserCertsAsync(string[] fileNames, long userId);
+    
+    /// <summary>
+    /// Метод добавляет запись информации о преподавателе по дефолту.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task AddDefaultMentorAboutInfoAsync(long userId);
 }
