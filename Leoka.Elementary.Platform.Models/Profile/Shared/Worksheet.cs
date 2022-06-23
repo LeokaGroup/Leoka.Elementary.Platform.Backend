@@ -77,4 +77,9 @@ public class Worksheet
     /// Список информации о преподавателе.
     /// </summary>
     public List<MentorAboutInfo> MentorAboutInfo { get; set; } = new();
+
+    /// <summary>
+    /// Роль пользователя.
+    /// </summary>
+    public int UserRole { get; set; }
 }

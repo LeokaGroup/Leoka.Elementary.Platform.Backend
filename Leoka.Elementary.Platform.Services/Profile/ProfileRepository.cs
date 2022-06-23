@@ -79,7 +79,7 @@ public sealed class ProfileRepository : IProfileRepository
                         .OrderBy(o => o.Position)
                         .ToList(),
                     ProfileHeaderMenuItems = _dbContext.ProfileMenuItems
-                        .Where(b => b.MenuType == 2 && b.RoleId == roleId)
+                        .Where(b => b.MenuType == 2)
                         .Select(b => new ProfileMenuItemOutput
                         {
                             ProfileItemTitle = b.ProfileItemTitle,
@@ -95,7 +95,7 @@ public sealed class ProfileRepository : IProfileRepository
                         .OrderBy(o => o.Position)
                         .ToList(),
                     ProfileDropdownMenuItems = _dbContext.ProfileMenuItems
-                        .Where(c => c.MenuType == 3 && c.RoleId == roleId)
+                        .Where(c => c.MenuType == 3)
                         .Select(c => new ProfileMenuItemOutput
                         {
                             ProfileItemTitle = c.ProfileItemTitle,

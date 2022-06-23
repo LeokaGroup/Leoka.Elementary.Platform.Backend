@@ -420,6 +420,8 @@ public sealed class ProfileService : IProfileService
                 result.PhoneNumber = user.PhoneNumber;
             }
 
+            result.UserRole = roleId;
+
             return result;
         }
         

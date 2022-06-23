@@ -7,4 +7,5 @@ namespace Leoka.Elementary.Platform.Models.Profile.Output;
 /// </summary>
 public class WorksheetOutput : Worksheet
 {
+    
 }
