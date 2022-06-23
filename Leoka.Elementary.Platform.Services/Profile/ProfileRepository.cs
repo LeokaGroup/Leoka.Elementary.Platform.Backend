@@ -1279,4 +1279,82 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод добавляет запись информации об образовании по дефолту.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task AddDefaultMentorEducationAsync(long userId)
+    {
+        try
+        {
+            // Выбирает последние номера.
+            var lastNumbers = await _dbContext.MentorEducations
+                .AsNoTracking()
+                .Where(i => i.UserId == userId)
+                .OrderByDescending(o => o.EducationId)
+                .Select(i => new
+                {
+                    i.UserId
+                })
+                .FirstOrDefaultAsync();
+
+            if (lastNumbers is not null)
+            {
+                await _dbContext.MentorEducations.AddAsync(new MentorEducationEntity
+                {
+                    UserId = lastNumbers.UserId,
+                    EducationText = string.Empty
+                });
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет запись информации об опыте по дефолту.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task AddDefaultMentorExperienceAsync(long userId)
+    {
+        try
+        {
+            // Выбирает последние номера.
+            var lastNumbers = await _dbContext.MentorExperience
+                .AsNoTracking()
+                .Where(i => i.UserId == userId)
+                .OrderByDescending(o => o.ExperienceId)
+                .Select(i => new
+                {
+                    i.UserId
+                })
+                .FirstOrDefaultAsync();
+
+            if (lastNumbers is not null)
+            {
+                await _dbContext.MentorExperience.AddAsync(new MentorExperienceEntity
+                {
+                    UserId = lastNumbers.UserId,
+                    ExperienceText = string.Empty
+                });
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

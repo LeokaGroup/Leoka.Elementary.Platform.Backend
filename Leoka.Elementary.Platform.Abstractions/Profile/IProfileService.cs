@@ -175,4 +175,18 @@ public interface IProfileService
     /// <param name="account">Логин.</param>
     /// <returns>Данные анкеты.</returns>
     Task<WorksheetOutput> AddDefaultMentorAboutInfoAsync(string account);
+    
+    /// <summary>
+    /// Метод добавляет запись образования по дефолту.
+    /// </summary>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task<WorksheetOutput> AddDefaultMentorEducationAsync(string account);
+    
+    /// <summary>
+    /// Метод добавляет запись опыта по дефолту.
+    /// </summary>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task<WorksheetOutput> AddDefaultMentorExperienceAsync(string account);
 }

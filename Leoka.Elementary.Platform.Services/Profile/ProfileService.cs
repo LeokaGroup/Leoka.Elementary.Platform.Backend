@@ -1188,4 +1188,76 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод добавляет запись образования по дефолту.
+    /// </summary>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task<WorksheetOutput> AddDefaultMentorEducationAsync(string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            await _profileRepository.AddDefaultMentorEducationAsync(user.UserId);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет запись опыта по дефолту.
+    /// </summary>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task<WorksheetOutput> AddDefaultMentorExperienceAsync(string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            await _profileRepository.AddDefaultMentorExperienceAsync(user.UserId);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

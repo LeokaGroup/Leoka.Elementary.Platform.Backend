@@ -416,7 +416,7 @@ public class ProfileController : BaseController
     /// </summary>
     /// <returns>Данные анкеты.</returns>
     [HttpPost]
-    [Route("mentor-about")]
+    [Route("default-about")]
     [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
@@ -425,6 +425,42 @@ public class ProfileController : BaseController
     public async Task<WorksheetOutput> AddDefaultMentorAboutInfoAsync()
     {
         var result = await _profileService.AddDefaultMentorAboutInfoAsync(GetUserName());
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод добавляет запись образования по дефолту.
+    /// </summary>
+    /// <returns>Данные анкеты.</returns>
+    [HttpPost]
+    [Route("default-education")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> AddDefaultMentorEducationAsync()
+    {
+        var result = await _profileService.AddDefaultMentorEducationAsync(GetUserName());
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод добавляет запись опыта по дефолту.
+    /// </summary>
+    /// <returns>Данные анкеты.</returns>
+    [HttpPost]
+    [Route("default-experience")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> AddDefaultMentorExperienceAsync()
+    {
+        var result = await _profileService.AddDefaultMentorExperienceAsync(GetUserName());
 
         return result;
     }

@@ -235,4 +235,18 @@ public interface IProfileRepository
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Данные анкеты.</returns>
     Task AddDefaultMentorAboutInfoAsync(long userId);
+    
+    /// <summary>
+    /// Метод добавляет запись информации об образовании по дефолту.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task AddDefaultMentorEducationAsync(long userId);
+    
+    /// <summary>
+    /// Метод добавляет запись информации об опыте по дефолту.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task AddDefaultMentorExperienceAsync(long userId);
 }
