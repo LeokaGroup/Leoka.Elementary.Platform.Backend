@@ -207,7 +207,7 @@ public sealed class UserRepository : IUserRepository
     private ClaimsIdentity GetIdentityClaim(string email)
     {
         var claims = new List<Claim> {
-            new Claim(ClaimsIdentity.DefaultNameClaimType, email)
+            new(ClaimsIdentity.DefaultNameClaimType, email)
             //new Claim(JwtRegisteredClaimNames.UniqueName, username)
         };
 

@@ -207,4 +207,19 @@ public class PostgreDbContext : DbContext
     /// Таблица Profile.MentorAboutInfo.
     /// </summary>
     public DbSet<MentorAboutInfoEntity> MentorAboutInfos { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorAge.
+    /// </summary>
+    public DbSet<MentorAgeEntity> MentorAge { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorGender.
+    /// </summary>
+    public DbSet<MentorGenderEntity> MentorGender { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.StudentComments.
+    /// </summary>
+    public DbSet<StudentCommentEntity> StudentComments { get; set; }
 }
