@@ -9,4 +9,9 @@ public class MentorExperience
     /// Описание опыта преподавателя.
     /// </summary>
     public string ExperienceText { get; set; }
+    
+    /// <summary>
+    /// PK.
+    /// </summary>
+    public long ExperienceId { get; set; }
 }

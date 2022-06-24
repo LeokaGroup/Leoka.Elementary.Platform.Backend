@@ -5,6 +5,11 @@
 /// </summary>
 public class PurposeTrainingEntity
 {
+    public PurposeTrainingEntity()
+    {
+        MentorTrainings = new HashSet<MentorTrainingEntity>();
+    }
+
     /// <summary>
     /// PK.
     /// </summary>
@@ -19,4 +24,6 @@ public class PurposeTrainingEntity
     /// Название цели.
     /// </summary>
     public string PurposeName { get; set; }
+
+    public virtual ICollection<MentorTrainingEntity> MentorTrainings { get; set; }
 }

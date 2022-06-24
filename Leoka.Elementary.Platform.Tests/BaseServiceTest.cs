@@ -53,6 +53,6 @@ public class BaseServiceTest
 
         ProfileRepository = new ProfileRepository(PostgreDbContext);
         FtpService = new FtpService(null);
-        ProfileService = new ProfileService(ProfileRepository, RoleRepository, UserRepository, FtpService);
+        ProfileService = new ProfileService(ProfileRepository, RoleRepository, UserRepository, FtpService, null);
     }
 }

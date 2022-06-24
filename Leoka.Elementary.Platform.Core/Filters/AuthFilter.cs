@@ -7,7 +7,12 @@ public class AuthFilter : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        if (context.HttpContext.User.Identity is not null && !context.HttpContext.User.Identity.IsAuthenticated)
+        // Проверяет, авторизован ли пользователь.
+        // Также это не должен быть роут меню профиля.
+        // Потому что фильтр глобальный, а есть места, где он не нужен.
+        if (context.HttpContext.User.Identity is not null 
+            && !context.HttpContext.User.Identity.IsAuthenticated
+            && !new[] {"GetProfileMenuItems"}.Contains(context.RouteData.Values["action"]))
         {
             context.Result =  new ForbidResult();
         }

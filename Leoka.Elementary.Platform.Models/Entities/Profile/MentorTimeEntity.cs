@@ -21,9 +21,9 @@ public class MentorTimeEntity
     public TimeSpan TimeEnd { get; set; }
 
     /// <summary>
-    /// День недели.
+    /// Id дня.
     /// </summary>
-    public string Day { get; set; }
+    public int DayId { get; set; }
 
     /// <summary>
     /// Id пользователя.

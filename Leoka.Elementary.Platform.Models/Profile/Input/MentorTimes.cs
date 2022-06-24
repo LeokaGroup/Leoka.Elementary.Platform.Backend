@@ -16,7 +16,22 @@ public class MentorTimes
     public TimeSpan TimeEnd { get; set; }
 
     /// <summary>
-    /// День недели.
+    /// Название дня.
     /// </summary>
-    public string Day { get; set; }
+    public string DayName { get; set; }
+
+    /// <summary>
+    /// Id дня.
+    /// </summary>
+    public int DayId { get; set; }
+    
+    /// <summary>
+    /// Системное название дня.
+    /// </summary>
+    public string DaySysName { get; set; }
+
+    /// <summary>
+    /// Id времени.
+    /// </summary>
+    public long TimeId { get; set; }
 }

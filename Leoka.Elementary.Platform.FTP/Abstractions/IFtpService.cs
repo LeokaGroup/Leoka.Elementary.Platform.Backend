@@ -30,4 +30,13 @@ public interface IFtpService
     /// <param name="avatar">Изображение аватара.</param>
     /// <returns>Аватар профиля пользователя.</returns>
     Task<FileContentAvatarOutput> GetProfileAvatarAsync(long userId, string avatar);
+
+    /// <summary>
+    /// Метод удалит аватар пользователя с сервера и добавит новый.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="file">Файл для удаления.</param>
+    /// <param name="removeFileName">Название старого аватара.</param>
+    /// <returns>Статус удаления.</returns>
+    Task UpdateAvatarAsync(long userId, IFormCollection file, string removeFileName);
 }

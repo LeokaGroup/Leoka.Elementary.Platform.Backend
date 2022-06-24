@@ -1,6 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Core.Filters;
+using Leoka.Elementary.Platform.Models.Profile.Input;
 using Leoka.Elementary.Platform.Models.Profile.Output;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ public class ProfileController : BaseController
     }
 
     /// <summary>
-    /// Метод получит информацию для профиля пользователя при входе после регитсрации.
+    /// Метод получит информацию для профиля пользователя при входе после регистрации.
     /// </summary>
     /// <returns>Данные о профиле.</returns>
     [HttpGet]
@@ -106,7 +107,7 @@ public class ProfileController : BaseController
     [ProducesResponseType(404)]
     public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync()
     {
-        var result = await _profileService.GetPurposeTrainingsAsync();
+        var result = await _profileService.GetPurposeTrainingsAsync(GetUserName());
 
         return result;
     }
@@ -162,6 +163,304 @@ public class ProfileController : BaseController
     public async Task<FileContentAvatarOutput> GetProfileAvatarAsync()
     {
         var result = await _profileService.GetProfileAvatarAsync(GetUserName());
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод получит данные анкеты пользователя.
+    /// </summary>
+    /// <returns>Данные анкеты пользователя.</returns>
+    [HttpGet]
+    [Route("worksheet")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> GetProfileWorkSheetAsync()
+    {
+        var result = await _profileService.GetProfileWorkSheetAsync(GetUserName());
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод обновит аватар пользователя.
+    /// </summary>
+    /// <param name="avatar">Новое изображение аватара.</param>
+    /// <returns>Новый файл аватара.</returns>
+    [HttpPatch]
+    [Route("avatar")]
+    [ProducesResponseType(200, Type = typeof(FileContentAvatarOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<FileContentAvatarOutput> UpdateAvatarAsync([FromForm] IFormCollection avatar)
+    {
+        var result = await _profileService.UpdateAvatarAsync(avatar, GetUserName());
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод обновит ФИО пользователя.
+    /// </summary>
+    /// <param name="mentorProfileInfoInput">Входная модель.</param>
+    /// <returns>Измененные данные.</returns>
+    [HttpPatch]
+    [Route("fio")]
+    [ProducesResponseType(200, Type = typeof(MentorProfileInfoOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<MentorProfileInfoOutput> UpdateUserFioAsync([FromBody] MentorProfileInfoInput mentorProfileInfoInput)
+    {
+        var result = await _profileService.UpdateUserFioAsync(mentorProfileInfoInput.FirstName, mentorProfileInfoInput.LastName, mentorProfileInfoInput.SecondName, GetUserName());
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод обновит контактные данные пользователя.
+    /// </summary>
+    /// <param name="mentorProfileInfoInput">Входная модель.</param>
+    /// <returns>Измененные данные.</returns>
+    [HttpPatch]
+    [Route("contacts")]
+    [ProducesResponseType(200, Type = typeof(MentorProfileInfoOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<MentorProfileInfoOutput> UpdateUserContactsAsync([FromBody] MentorProfileInfoInput mentorProfileInfoInput)
+    {
+        var result = await _profileService.UpdateUserContactsAsync(mentorProfileInfoInput.IsVisibleAllContact, mentorProfileInfoInput.PhoneNumber, mentorProfileInfoInput.Email, GetUserName());
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод обновит список предметов преподавателя в анкете.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    [HttpPatch]
+    [Route("mentor-items")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> UpdateMentorItemsAsync([FromBody] WorksheetInput worksheetInput)
+    {
+        var result = await _profileService.UpdateMentorItemsAsync(worksheetInput.MentorItems, GetUserName());
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод обновит список цен преподавателя в анкете.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Обновленный список цен.</returns>
+    [HttpPatch]
+    [Route("mentor-prices")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> UpdateMentorPricesAsync([FromBody] WorksheetInput worksheetInput)
+    {
+        var result = await _profileService.UpdateMentorPricesAsync(worksheetInput.MentorPrices, GetUserName());
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод обновит список длительностей преподавателя в анкете.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    [HttpPatch]
+    [Route("mentor-durations")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> UpdateMentorDurationsAsync([FromBody] WorksheetInput worksheetInput)
+    {
+        var result = await _profileService.UpdateMentorDurationsAsync(worksheetInput.MentorDurations, GetUserName());
+        
+        return result;
+    }
+
+    /// <summary>
+    /// Метод обновит список времени преподавателя в анкете.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    [HttpPatch]
+    [Route("mentor-times")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> UpdateMentorTimesAsync([FromBody] WorksheetInput worksheetInput)
+    {
+        var result = await _profileService.UpdateMentorTimesAsync(worksheetInput.MentorTimes, GetUserName());
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод обновит данные о себе преподавателя в анкете.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Обновленный данные о себе.</returns>
+    [HttpPatch]
+    [Route("mentor-about")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> UpdateMentorAboutAsync([FromBody] WorksheetInput worksheetInput)
+    {
+        var result = await _profileService.UpdateMentorAboutAsync(worksheetInput.MentorAboutInfo, GetUserName());
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод обновит данные об образовании преподавателя в анкете.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Обновленный список об образовании.</returns>
+    [HttpPatch]
+    [Route("mentor-educations")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> UpdateMentorEducationsAsync([FromBody] WorksheetInput worksheetInput)
+    {
+        var result = await _profileService.UpdateMentorEducationsAsync(worksheetInput.MentorEducations, GetUserName());
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод обновит данные об опыте преподавателя в анкете.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Обновленный список об опыте.</returns>
+    [HttpPatch]
+    [Route("mentor-experience")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> UpdateMentorExperienceAsync([FromBody] WorksheetInput worksheetInput)
+    {
+        var result = await _profileService.UpdateMentorExperienceAsync(worksheetInput.MentorExperience, GetUserName());
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод получит список сертификатов для профиля пользователя.
+    /// </summary>
+    /// <returns>Список сертификатов.</returns>
+    [HttpGet]
+    [Route("certs")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<FileContentResultOutput>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<IEnumerable<FileContentResultOutput>> GetProfileCertsAsync()
+    {
+        var result = await _profileService.GetProfileCertsAsync(GetUserName());
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод добавляет новые изображения сертификатов на сервер и в БД, если они ранее не были добавлены. 
+    /// </summary>
+    /// <param name="files">Список изображений сертификатов.</param>
+    [HttpPost]
+    [Route("certs")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> CreateCertsAsync([FromForm] IFormCollection files)
+    {
+        var result = await _profileService.CreateCertsAsync(files, GetUserName());
+
+        return result;
+    }
+
+    /// <summary>
+    /// Метод добавляет запись информации о преподавателе по дефолту.
+    /// </summary>
+    /// <returns>Данные анкеты.</returns>
+    [HttpPost]
+    [Route("default-about")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> AddDefaultMentorAboutInfoAsync()
+    {
+        var result = await _profileService.AddDefaultMentorAboutInfoAsync(GetUserName());
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод добавляет запись образования по дефолту.
+    /// </summary>
+    /// <returns>Данные анкеты.</returns>
+    [HttpPost]
+    [Route("default-education")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> AddDefaultMentorEducationAsync()
+    {
+        var result = await _profileService.AddDefaultMentorEducationAsync(GetUserName());
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод добавляет запись опыта по дефолту.
+    /// </summary>
+    /// <returns>Данные анкеты.</returns>
+    [HttpPost]
+    [Route("default-experience")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> AddDefaultMentorExperienceAsync()
+    {
+        var result = await _profileService.AddDefaultMentorExperienceAsync(GetUserName());
 
         return result;
     }

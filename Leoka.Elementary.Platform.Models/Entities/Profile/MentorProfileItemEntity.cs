@@ -11,16 +11,6 @@ public class MentorProfileItemEntity
     public long ItemId { get; set; }
 
     /// <summary>
-    /// Название предмета.
-    /// </summary>
-    public string ItemName { get; set; }
-
-    /// <summary>
-    /// Системное название предмета.
-    /// </summary>
-    public string ItemSysName { get; set; }
-
-    /// <summary>
     /// Позиция.
     /// </summary>
     public int Position { get; set; }
@@ -29,4 +19,9 @@ public class MentorProfileItemEntity
     /// Id пользователя.
     /// </summary>
     public long UserId { get; set; }
+    
+    /// <summary>
+    /// Номер предмета.
+    /// </summary>
+    public int ItemNumber { get; set; }
 }

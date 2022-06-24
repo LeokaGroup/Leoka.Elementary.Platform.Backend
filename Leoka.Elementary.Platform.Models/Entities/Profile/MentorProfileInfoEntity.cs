@@ -49,4 +49,9 @@ public class MentorProfileInfoEntity
     /// Отчество.
     /// </summary>
     public string SecondName { get; set; }
+
+    /// <summary>
+    /// Id пользователя.
+    /// </summary>
+    public long UserId { get; set; }
 }

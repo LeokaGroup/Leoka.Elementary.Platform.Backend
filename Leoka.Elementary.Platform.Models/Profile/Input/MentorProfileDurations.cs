@@ -6,6 +6,11 @@
 public class MentorProfileDurations
 {
     /// <summary>
+    /// PK.
+    /// </summary>
+    public long DurationId { get; set; }
+    
+    /// <summary>
     /// Длительность урока.
     /// </summary>
     public int Time { get; set; }
@@ -14,4 +19,9 @@ public class MentorProfileDurations
     ///  В чем измеряется длительность.
     /// </summary>
     public string Unit { get; set; }
+
+    /// <summary>
+    /// Полная длительность.
+    /// </summary>
+    public string FullDuration => Time + " " + Unit;
 }

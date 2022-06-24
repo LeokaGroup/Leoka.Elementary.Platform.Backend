@@ -1,8 +1,10 @@
-﻿using Leoka.Elementary.Platform.Abstractions.Profile;
+﻿using AutoMapper;
+using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Abstractions.User;
 using Leoka.Elementary.Platform.Access.Abstraction;
 using Leoka.Elementary.Platform.Core.Exceptions;
 using Leoka.Elementary.Platform.FTP.Abstractions;
+using Leoka.Elementary.Platform.Models.Entities.Profile;
 using Leoka.Elementary.Platform.Models.Profile.Input;
 using Leoka.Elementary.Platform.Models.Profile.Output;
 using Microsoft.AspNetCore.Http;
@@ -19,16 +21,19 @@ public sealed class ProfileService : IProfileService
     private readonly IRoleRepository _roleRepository;
     private readonly IUserRepository _userRepository;
     private readonly IFtpService _ftpService;
+    private readonly IMapper _mapper;
 
     public ProfileService(IProfileRepository profileRepository,
         IRoleRepository roleRepository,
         IUserRepository userRepository,
-        IFtpService ftpService)
+        IFtpService ftpService,
+        IMapper mapper)
     {
         _profileRepository = profileRepository;
         _roleRepository = roleRepository;
         _userRepository = userRepository;
         _ftpService = ftpService;
+        _mapper = mapper;
     }
 
     public async Task<ProfileInfoOutput> GetProfileInfoAsync()
@@ -132,12 +137,26 @@ public sealed class ProfileService : IProfileService
     /// <summary>
     /// Метод получит список целей подготовки.
     /// </summary>
+    /// <param name="account">Аккаунт пользователя.</param>
     /// <returns>Список целей подготовки.</returns>
-    public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync()
+    public async Task<IEnumerable<PurposeTrainingOutput>> GetPurposeTrainingsAsync(string account)
     {
         try
         {
-            var result = await _profileRepository.GetPurposeTrainingsAsync();
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            // Проверит существование пользователя.
+            var user = await _userRepository.GetUserByEmailAsync(account);
+
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var result = await _profileRepository.GetPurposeTrainingsAsync(user.UserId);
 
             return result;
         }
@@ -340,6 +359,898 @@ public sealed class ProfileService : IProfileService
             var user = await _userRepository.GetUserByEmailAsync(account);
             var avatar = await _profileRepository.GetProfileAvatarAsync(account);
             var result = await _ftpService.GetProfileAvatarAsync(user.UserId, avatar);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получит данные анкеты пользователя.
+    /// </summary>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Данные анкеты пользователя.</returns>
+    public async Task<WorksheetOutput> GetProfileWorkSheetAsync(string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            var user = await _userRepository.GetUserByEmailAsync(account);
+
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            // Проверит роль пользователя.
+            var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
+
+            var result = await _profileRepository.GetProfileWorkSheetAsync(user.UserId, roleId);
+            
+            // Запишет ФИО пользователя, если из данных анкеты его нет.
+            if (string.IsNullOrEmpty(result.FirstName) 
+                && string.IsNullOrEmpty(result.LastName)
+                && string.IsNullOrEmpty(result.SecondName))
+            {
+                var fio = user.FirstName.Split(" ");
+                result.FirstName = fio[0];
+                result.LastName = fio[1];
+                result.SecondName = fio[2];
+            }
+            
+            // Запишет Email, если из данных анкеты его нет.
+            if (string.IsNullOrEmpty(result.Email))
+            {
+                result.Email = user.Email;
+            }
+            
+            // Запишет номер телефона, если из данных анкеты его нет.
+            if (string.IsNullOrEmpty(result.PhoneNumber))
+            {
+                result.PhoneNumber = user.PhoneNumber;
+            }
+
+            result.UserRole = roleId;
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит аватар пользователя.
+    /// </summary>
+    /// <param name="avatar">Новое изображение аватара.</param>
+    /// <returns>Новый файл аватара.</returns>
+    public async Task<FileContentAvatarOutput> UpdateAvatarAsync(IFormCollection avatar, string account)
+    {
+        try
+        {
+            var result = new FileContentAvatarOutput();
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            if (!avatar.Files.Any())
+            {
+                throw new EmptyAvatarException(account);
+            }
+
+            var user = await _userRepository.GetUserByEmailAsync(account);
+
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            // Получит старое название аватара пользователя.
+            var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
+            var oldAvatarName = await _profileRepository.GetOldAvatatName(user.UserId, roleId);
+
+            // Удалит старый аватар с сервера и добавит новый.
+            await _ftpService.UpdateAvatarAsync(user.UserId, avatar, oldAvatarName);
+
+            var file = avatar.Files.FirstOrDefault();
+
+            if (file is not null)
+            {
+                // Запишет новый аватар в БД.
+                await _profileRepository.UpdateAvatatName(user.UserId, roleId, file.FileName);
+            
+                // Получит новый файл.
+                result = await _ftpService.GetProfileAvatarAsync(user.UserId, file.FileName);
+            }
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит ФИО пользователя.
+    /// </summary>
+    /// <param name="firstName">Аккаунт.</param>
+    /// <param name="lastName">Аккаунт.</param>
+    /// <param name="secondName">Аккаунт.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Измененные данные.</returns>
+    public async Task<MentorProfileInfoOutput> UpdateUserFioAsync(string firstName, string lastName, string secondName, string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(secondName))
+            {
+                throw new EmptyUserFioException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
+            
+            // Обновит фио пользователя.
+            var result = await _profileRepository.UpdateUserFioAsync(firstName, lastName, secondName, user.UserId, roleId);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит контактные данные пользователя.
+    /// </summary>
+    /// <param name="isVisibleContacts">Флаг видимости контактов.</param>
+    /// <param name="phoneNumber">Номер телефона.</param>
+    /// <param name="email">Почта.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Измененные данные.</returns>
+    public async Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber, string email, string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            if (string.IsNullOrEmpty(phoneNumber) || string.IsNullOrEmpty(email))
+            {
+                throw new EmptyContactUserInfoException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
+
+            var result = await _profileRepository.UpdateUserContactsAsync(isVisibleContacts, phoneNumber, email, user.UserId, roleId);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит список предметов преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateItems">Список предметов для обновления.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    public async Task<WorksheetOutput> UpdateMentorItemsAsync(List<ProfileItemOutput> updateItems, string account)
+    {
+        try
+        {
+            // Если нет предметов.
+            if (!updateItems.Any())
+            {
+                throw new EmptyMentorItemsException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            var oldItems = await _profileRepository.GetMentorItemsAsync(user.UserId);
+
+            // Если нет предметов у преподавателя.
+            if (!oldItems.MentorItems.Any())
+            {
+                return new WorksheetOutput();
+            }
+
+            // Проходит по старым предметам.
+            for (var i = 0; i < oldItems.MentorItems.Count; i++)
+            {
+                // Проходит по новым предметам.
+                for (var j = 0; j < updateItems.Count; j++)
+                {
+                    // Если номер предмета не совпадает, значит нужно менять предмет.
+                    if (oldItems.MentorItems[i].ItemNumber != updateItems[j].ItemNumber)
+                    {
+                        oldItems.MentorItems[i].ItemNumber = updateItems[j].ItemNumber;
+                    }
+            
+                    i++;
+                }
+            }
+
+            var items = _mapper.Map<List<MentorProfileItemEntity>>(oldItems.MentorItems);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorItemsAsync(items);
+
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит список предметов преподавателя в анкете.
+    /// </summary>
+    /// <param name="updatePrices">Список цен для обновления.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    public async Task<WorksheetOutput> UpdateMentorPricesAsync(List<MentorProfilePrices> updatePrices, string account)
+    {
+        try
+        {
+            // Если нет цен.
+            if (!updatePrices.Any())
+            {
+                throw new EmptyPricesException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            var oldPrices = await _profileRepository.GetMentorPricesAsync(user.UserId);
+            
+            // Если нет цен у преподавателя.
+            if (!oldPrices.MentorPrices.Any())
+            {
+                return new WorksheetOutput();
+            }
+
+            // Проходит по старым ценам.
+            for (var i = 0; i < oldPrices.MentorPrices.Count; i++)
+            {
+                // Проходит по новым ценам.
+                for (var j = 0; j < updatePrices.Count; j++)
+                {
+                    // Если цены не совпадает, значит нужно менять цену.
+                    if (oldPrices.MentorPrices[i].Price != updatePrices[j].Price)
+                    {
+                        oldPrices.MentorPrices[i].Price = updatePrices[j].Price;
+                    }
+            
+                    i++;
+                }
+            }
+            
+            var items = _mapper.Map<List<MentorLessonPriceEntity>>(oldPrices.MentorPrices);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorPricesAsync(items);
+
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит список длительностей преподавателя в анкете.
+    /// </summary>
+    /// <param name="updatePrices">Список длительностей для обновления.</param>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    public async Task<WorksheetOutput> UpdateMentorDurationsAsync(List<MentorProfileDurations> updateDurations, string account)
+    {
+        try
+        {
+            // Если нет длительностей.
+            if (!updateDurations.Any())
+            {
+                throw new EmptyDurationException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            var oldDurations = await _profileRepository.GetMentorDurationsAsync(user.UserId);
+            
+            // Если нет длительностей у преподавателя.
+            if (!oldDurations.MentorDurations.Any())
+            {
+                return new WorksheetOutput();
+            }
+
+            // Проходит по старым длительностям.
+            for (var i = 0; i < oldDurations.MentorDurations.Count; i++)
+            {
+                // Проходит по новым длительностям.
+                for (var j = 0; j < updateDurations.Count; j++)
+                {
+                    // Если номер предмета не совпадает, значит нужно менять предмет.
+                    if (oldDurations.MentorDurations[i].Time != updateDurations[j].Time)
+                    {
+                        oldDurations.MentorDurations[i].Time = updateDurations[j].Time;
+                    }
+            
+                    i++;
+                }
+            }
+
+            var items = _mapper.Map<List<MentorLessonDurationEntity>>(oldDurations.MentorDurations);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorDurationsAsync(items);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит список времени преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateTimes">Входная модель.</param>
+    /// <returns>Обновленный список длительностей.</returns>
+    public async Task<WorksheetOutput> UpdateMentorTimesAsync(List<MentorTimes> updateTimes, string account)
+    {
+        try
+        {
+            // Если нет времени.
+            if (!updateTimes.Any())
+            {
+                throw new EmptyTimeException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var oldTimes = await _profileRepository.GetMentorTimesAsync(user.UserId);
+            
+            // Если нет времени у преподавателя.
+            if (!oldTimes.MentorTimes.Any())
+            {
+                return new WorksheetOutput();
+            }
+
+            // Проходит по старым временам.
+            for (var i = 0; i < oldTimes.MentorTimes.Count; i++)
+            {
+                // Проходит по новым временам.
+                for (var j = 0; j < updateTimes.Count; j++)
+                {
+                    // Если системное название времени не совпадает, значит нужно менять время.
+                    if (!oldTimes.MentorTimes[i].DaySysName.Equals(updateTimes[j].DaySysName))
+                    {
+                        oldTimes.MentorTimes[i].DaySysName = updateTimes[j].DaySysName;
+                        oldTimes.MentorTimes[i].DayId = await _profileRepository.GetDayIdBySysNameAsync(updateTimes[j].DaySysName);
+                    }
+            
+                    i++;
+                }
+            }
+
+            var items = _mapper.Map<List<MentorTimeEntity>>(oldTimes.MentorTimes);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorTimesAsync(items);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит данные о себе преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации о себе для обновления.</param>
+    /// <returns>Обновленный данные о себе.</returns>
+    public async Task<WorksheetOutput> UpdateMentorAboutAsync(List<MentorAboutInfo> updateAboutInfo, string account)
+    {
+        try
+        {
+            // Если нет данных о себе.
+            if (!updateAboutInfo.Any())
+            {
+                throw new EmptyAboutInfoException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var oldAboutInfo = await _profileRepository.GetMentorAboutInfoAsync(user.UserId);
+            
+            // Если нет данных о себе у преподавателя.
+            if (!oldAboutInfo.MentorAboutInfo.Any())
+            {
+                return new WorksheetOutput();
+            }
+
+            // Проходит по данным о себе.
+            for (var i = 0; i < oldAboutInfo.MentorAboutInfo.Count; i++)
+            {
+                // Проходит по новым данным о себе.
+                for (var j = 0; j < updateAboutInfo.Count; j++)
+                {
+                    // Если системное данные о себе не совпадает, значит нужно менять данные о себе.
+                    if (!oldAboutInfo.MentorAboutInfo[i].AboutInfoText.Equals(updateAboutInfo[j].AboutInfoText))
+                    {
+                        oldAboutInfo.MentorAboutInfo[i].AboutInfoText = updateAboutInfo[j].AboutInfoText;
+                    }
+            
+                    i++;
+                }
+            }
+
+            var items = _mapper.Map<List<MentorAboutInfoEntity>>(oldAboutInfo.MentorAboutInfo);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorAboutAsync(items);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит данные о себе преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации об образовании преподавателя для обновления.</param>
+    /// <returns>Обновленный список об образовании преподавателя.</returns>
+    public async Task<WorksheetOutput> UpdateMentorEducationsAsync(List<MentorEducations> updateEducations, string account)
+    {
+        try
+        {
+            // Если нет данных об образовании.
+            if (!updateEducations.Any())
+            {
+                throw new EmptyEducationsException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var oldEducations = await _profileRepository.GetMentorEducationsAsync(user.UserId);
+            
+            // Если нет данных об образовании у преподавателя.
+            if (!oldEducations.MentorEducations.Any())
+            {
+                return new WorksheetOutput();
+            }
+
+            // Проходит по данным об образовании у преподавателя.
+            for (var i = 0; i < oldEducations.MentorEducations.Count; i++)
+            {
+                // Проходит по новым данным об образовании у преподавателя.
+                for (var j = 0; j < updateEducations.Count; j++)
+                {
+                    // Если системное данные об образовании не совпадает, значит нужно менять данные об образовании.
+                    if (!oldEducations.MentorEducations[i].EducationText.Equals(updateEducations[j].EducationText))
+                    {
+                        oldEducations.MentorEducations[i].EducationText = updateEducations[j].EducationText;
+                    }
+            
+                    i++;
+                }
+            }
+
+            var items = _mapper.Map<List<MentorEducationEntity>>(oldEducations.MentorEducations);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorEducationsAsync(items);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит данные об опыте преподавателя в анкете.
+    /// </summary>
+    /// <param name="updateAboutInfo">Список информации об опыте преподавателя для обновления.</param>
+    /// <returns>Обновленный список об опыте преподавателя.</returns>
+    public async Task<WorksheetOutput> UpdateMentorExperienceAsync(List<MentorExperience> updateExperience, string account)
+    {
+        try
+        {
+            // Если нет данных об опыте.
+            if (!updateExperience.Any())
+            {
+                throw new EmptyExperienceException();
+            }
+            
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var oldExperience = await _profileRepository.GetMentorExperienceAsync(user.UserId);
+            
+            // Если нет данных об опыте у преподавателя.
+            if (!oldExperience.MentorExperience.Any())
+            {
+                return new WorksheetOutput();
+            }
+            
+            // Проходит по данным об образовании у преподавателя.
+            for (var i = 0; i < oldExperience.MentorExperience.Count; i++)
+            {
+                // Проходит по новым данным об образовании у преподавателя.
+                for (var j = 0; j < updateExperience.Count; j++)
+                {
+                    // Если системное данные об образовании не совпадает, значит нужно менять данные об образовании.
+                    if (!oldExperience.MentorExperience[i].ExperienceText.Equals(updateExperience[j].ExperienceText))
+                    {
+                        oldExperience.MentorExperience[i].ExperienceText = updateExperience[j].ExperienceText;
+                    }
+            
+                    i++;
+                }
+            }
+            
+            var items = _mapper.Map<List<MentorExperienceEntity>>(oldExperience.MentorExperience);
+            
+            items.ForEach(i => i.UserId = user.UserId);
+            
+            await _profileRepository.UpdateMentorExperienceAsync(items);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+    
+    /// <summary>
+    /// Метод получит список сертификатов для профиля пользователя.
+    /// </summary>
+    /// <param name="account">Аккаунт.</param>
+    /// <returns>Список сертификатов.</returns>
+    public async Task<IEnumerable<FileContentResultOutput>> GetProfileCertsAsync(string account)
+    {
+        try
+        {
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            IEnumerable<FileContentResultOutput> result = null;
+
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            // Получит список сертификатов пользователя.
+            var certsNames = await GetUserCertsAsync(user.UserId);
+
+            if (certsNames.Any())
+            {
+                // Получит список файлов сертификатов с сервера.
+                result = await _ftpService.GetUserCertsFilesAsync(user.UserId, certsNames);
+            }
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет новые изображения сертификатов на сервер и в БД, если они ранее не были добавлены. 
+    /// </summary>
+    /// <param name="files">Список изображений сертификатов.</param>
+    public async Task<WorksheetOutput> CreateCertsAsync(IFormCollection files, string account)
+    {
+        try
+        {
+            if (!files.Files.Any())
+            {
+                throw new EmptyFilesException();
+            }
+
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            // Проверит существование пользователя.
+            var user = await _userRepository.GetUserByEmailAsync(account);
+
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            // Загружает изображения сертификатов пользователя на сервер.
+            await _ftpService.UploadProfileFilesFtpAsync(files.Files, user.UserId);
+            
+            // Добавляет изображения в БД.
+            await _profileRepository.AddProfileUserCertsAsync(files.Files.Select(x => x.FileName).ToArray(), user.UserId);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет запись информации о преподавателе по дефолту.
+    /// </summary>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task<WorksheetOutput> AddDefaultMentorAboutInfoAsync(string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            await _profileRepository.AddDefaultMentorAboutInfoAsync(user.UserId);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет запись образования по дефолту.
+    /// </summary>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task<WorksheetOutput> AddDefaultMentorEducationAsync(string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            await _profileRepository.AddDefaultMentorEducationAsync(user.UserId);
+            
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет запись опыта по дефолту.
+    /// </summary>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task<WorksheetOutput> AddDefaultMentorExperienceAsync(string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            await _profileRepository.AddDefaultMentorExperienceAsync(user.UserId);
+            
+            var result = await GetProfileWorkSheetAsync(account);
 
             return result;
         }

@@ -9,4 +9,9 @@ public class MentorEducations
     /// Описание образования преподавателя.
     /// </summary>
     public string EducationText { get; set; }
+    
+    /// <summary>
+    /// PK.
+    /// </summary>
+    public long EducationId { get; set; }
 }
