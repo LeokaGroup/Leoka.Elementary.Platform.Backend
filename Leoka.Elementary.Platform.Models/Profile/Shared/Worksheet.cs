@@ -82,4 +82,19 @@ public class Worksheet
     /// Роль пользователя.
     /// </summary>
     public int UserRole { get; set; }
+
+    /// <summary>
+    /// Данные возрастов преподавателя для выбора.
+    /// </summary>
+    public MentorAgeOutput MentorAge { get; set; }
+
+    /// <summary>
+    /// Данные пола преподавателя для выбора.
+    /// </summary>
+    public MentorGenderOutput MentorGender { get; set; }
+
+    /// <summary>
+    /// Данные комментария студента.
+    /// </summary>
+    public StudentCommentsOutput StudentComments { get; set; }
 }

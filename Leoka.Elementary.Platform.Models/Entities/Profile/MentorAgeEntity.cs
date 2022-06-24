@@ -13,10 +13,10 @@ public class MentorAgeEntity
     /// <summary>
     /// Возраст от.
     /// </summary>
-    public int StartAge { get; set; }
+    public string StartAge { get; set; }
     
     /// <summary>
     /// Возраст до.
     /// </summary>
-    public int EndAge { get; set; }
+    public string EndAge { get; set; }
 }

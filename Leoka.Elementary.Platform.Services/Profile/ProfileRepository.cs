@@ -634,6 +634,57 @@ public sealed class ProfileRepository : IProfileRepository
                 }
             }
 
+            // Если учащийся.
+            if (roleId == 1)
+            {
+                // Выбираем возрасты преподавателя для выбора.
+                var mentorAge = await _dbContext.MentorAge
+                    .Select(a => new MentorAgeOutput
+                    {
+                        AgeId = a.AgeId,
+                        StartAge = a.StartAge,
+                        EndAge = a.EndAge
+                    })
+                    .FirstOrDefaultAsync();
+
+                // Если возраст есть.
+                if (mentorAge is not null)
+                {
+                    result.MentorAge = mentorAge;
+                }
+                
+                // Выбираем пол преподавателей для выбора.
+                var mentorGender = await _dbContext.MentorGender
+                    .Select(g => new MentorGenderOutput
+                    {
+                        GenderId = g.GenderId,
+                        GenderName = g.GenderName
+                    })
+                    .FirstOrDefaultAsync();
+
+                // Если пол есть.
+                if (mentorGender is not null)
+                {
+                    result.MentorGender = mentorGender;
+                }
+                
+                // Выбираем комментарии студента.
+                var studentComments = await _dbContext.StudentComments
+                    .Select(c => new StudentCommentsOutput
+                    {
+                        CommentId = c.CommentId,
+                        UserId = c.UserId,
+                        CommentText = c.CommentText
+                    })
+                    .FirstOrDefaultAsync();
+
+                // Если есть комментарии
+                if (studentComments is not null)
+                {
+                    result.StudentComments = studentComments;
+                }
+            }
+
             return result;
         }
         

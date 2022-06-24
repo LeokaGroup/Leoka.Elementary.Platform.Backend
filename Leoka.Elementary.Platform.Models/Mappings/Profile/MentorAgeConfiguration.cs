@@ -16,17 +16,15 @@ public partial class MentorAgeConfiguration : IEntityTypeConfiguration<MentorAge
             .HasColumnName("AgeId")
             .HasColumnType("serial")
             .ValueGeneratedNever();
-        
+
         entity.Property(e => e.StartAge)
             .HasColumnName("StartAge")
-            .HasColumnType("int")
-            .IsRequired();
-        
+            .HasColumnType("varchar(50)");
+
         entity.Property(e => e.EndAge)
             .HasColumnName("EndAge")
-            .HasColumnType("int")
-            .IsRequired();
-        
+            .HasColumnType("varchar(50)");
+
         OnConfigurePartial(entity);
     }
 

@@ -1,9 +1,9 @@
-﻿namespace Leoka.Elementary.Platform.Models.Entities.Profile;
+﻿namespace Leoka.Elementary.Platform.Models.Profile.Output;
 
 /// <summary>
-/// Класс сопоставляется с таблицей Profile.StudentComments.
+/// Класс выходной модели комментариев студента.
 /// </summary>
-public class StudentCommentEntity
+public class StudentCommentsOutput
 {
     /// <summary>
     /// PK.

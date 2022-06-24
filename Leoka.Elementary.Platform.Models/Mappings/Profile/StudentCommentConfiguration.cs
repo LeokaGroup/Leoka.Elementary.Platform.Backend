@@ -17,8 +17,8 @@ public partial class StudentCommentConfiguration : IEntityTypeConfiguration<Stud
             .HasColumnType("bigserial")
             .ValueGeneratedNever();
 
-        entity.Property(e => e.CommentTexr)
-            .HasColumnName("CommentTexr")
+        entity.Property(e => e.CommentText)
+            .HasColumnName("CommentText")
             .HasColumnType("text");
         
         entity.Property(e => e.UserId)
