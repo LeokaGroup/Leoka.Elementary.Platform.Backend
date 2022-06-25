@@ -27,7 +27,7 @@ public partial class StudentAgeMentorConfiguration : IEntityTypeConfiguration<St
         
         entity.HasOne(p => p.MentorAge)
             .WithMany(b => b.StudentAgeMentors)
-            .HasForeignKey(p => p.MentorAge)
+            .HasForeignKey(p => p.StudentAgeMentorId)
             .HasConstraintName("FK_MentorAgeAgeId");
 
         OnConfigurePartial(entity);

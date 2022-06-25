@@ -683,6 +683,30 @@ public sealed class ProfileRepository : IProfileRepository
                 {
                     result.StudentComments = studentComments;
                 }
+                
+                // Получаем выбранный возраст преподавателя.
+                var selectedMentorAge = await (from sam in _dbContext.StudentAgeMentor
+                        join ma in _dbContext.MentorAge
+                            on sam.MentorAge.AgeId
+                            equals ma.AgeId
+                        select new StudentAgeMentorOutput
+                        {
+                            MentorAge = new MentorAgeOutput
+                            {
+                                AgeId = sam.MentorAge.AgeId,
+                                EndAge = ma.EndAge,
+                                StartAge = ma.StartAge
+                            },
+                            StudentAgeMentorId = sam.StudentAgeMentorId,
+                            UserId = sam.UserId
+                        })
+                    .FirstOrDefaultAsync();
+
+                // Если студент выбирал возраст преподавателя.
+                if (selectedMentorAge is not null)
+                {
+                    result.StudentAgeMentor = selectedMentorAge;
+                }
             }
 
             return result;

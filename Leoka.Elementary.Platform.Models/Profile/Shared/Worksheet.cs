@@ -97,4 +97,9 @@ public class Worksheet
     /// Данные комментария студента.
     /// </summary>
     public StudentCommentsOutput StudentComments { get; set; }
+
+    /// <summary>
+    /// Данные выбранных возрастов преподавателя.
+    /// </summary>
+    public StudentAgeMentorOutput StudentAgeMentor { get; set; }
 }
