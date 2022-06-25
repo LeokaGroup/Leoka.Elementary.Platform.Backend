@@ -13,5 +13,5 @@ public class MentorGenderOutput
     /// <summary>
     /// Пол преподавателя.
     /// </summary>
-    public char GenderName { get; set; }
+    public string GenderName { get; set; }
 }

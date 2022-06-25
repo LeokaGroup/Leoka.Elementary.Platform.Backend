@@ -645,27 +645,27 @@ public sealed class ProfileRepository : IProfileRepository
                         StartAge = a.StartAge,
                         EndAge = a.EndAge
                     })
-                    .FirstOrDefaultAsync();
+                    .ToArrayAsync();
 
                 // Если возраст есть.
-                if (mentorAge is not null)
+                if (mentorAge.Any())
                 {
-                    result.MentorAge = mentorAge;
+                    result.MentorAge.AddRange(mentorAge);
                 }
                 
                 // Выбираем пол преподавателей для выбора.
-                var mentorGender = await _dbContext.MentorGender
+                var mentorGenders = await _dbContext.MentorGender
                     .Select(g => new MentorGenderOutput
                     {
                         GenderId = g.GenderId,
                         GenderName = g.GenderName
                     })
-                    .FirstOrDefaultAsync();
+                    .ToArrayAsync();
 
                 // Если пол есть.
-                if (mentorGender is not null)
+                if (mentorGenders.Any())
                 {
-                    result.MentorGender = mentorGender;
+                    result.MentorGenders.AddRange(mentorGenders);
                 }
                 
                 // Выбираем комментарии студента.

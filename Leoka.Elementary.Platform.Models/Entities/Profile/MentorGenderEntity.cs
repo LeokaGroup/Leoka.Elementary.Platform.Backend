@@ -5,6 +5,11 @@
 /// </summary>
 public class MentorGenderEntity
 {
+    public MentorGenderEntity()
+    {
+        StudentGenderMentors = new HashSet<StudentGenderMentorEntity>();
+    }
+
     /// <summary>
     /// PK.
     /// </summary>
@@ -13,5 +18,7 @@ public class MentorGenderEntity
     /// <summary>
     /// Пол преподавателя.
     /// </summary>
-    public char GenderName { get; set; }
+    public string GenderName { get; set; }
+    
+    public virtual ICollection<StudentGenderMentorEntity> StudentGenderMentors { get; set; }
 }

@@ -23,5 +23,5 @@ public class MentorAgeOutput
     /// <summary>
     /// Объединенный диапазон возраста разделяя дефисом.
     /// </summary>
-    public string FullAge => StartAge + "-" + EndAge;
+    public string FullAge => EndAge is not null ? StartAge + "-" + EndAge : StartAge;
 }

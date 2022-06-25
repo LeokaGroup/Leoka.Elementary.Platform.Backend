@@ -19,8 +19,8 @@ public partial class MentorGenderConfigurartion : IEntityTypeConfiguration<Mento
         
         entity.Property(e => e.GenderName)
             .HasColumnName("GenderName")
-            .HasColumnType("char")
-            .HasMaxLength(1)
+            .HasColumnType("varchar(50)")
+            .HasMaxLength(50)
             .IsRequired();
 
         OnConfigurePartial(entity);

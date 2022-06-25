@@ -86,12 +86,12 @@ public class Worksheet
     /// <summary>
     /// Данные возрастов преподавателя для выбора.
     /// </summary>
-    public MentorAgeOutput MentorAge { get; set; }
+    public List<MentorAgeOutput> MentorAge { get; set; } = new();
 
     /// <summary>
     /// Данные пола преподавателя для выбора.
     /// </summary>
-    public MentorGenderOutput MentorGender { get; set; }
+    public List<MentorGenderOutput> MentorGenders { get; set; } = new();
 
     /// <summary>
     /// Данные комментария студента.

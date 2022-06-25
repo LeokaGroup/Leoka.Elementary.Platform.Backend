@@ -5,6 +5,11 @@
 /// </summary>
 public class MentorAgeEntity
 {
+    public MentorAgeEntity()
+    {
+        StudentAgeMentors = new HashSet<StudentAgeMentorEntity>();
+    }
+
     /// <summary>
     /// PK.
     /// </summary>
@@ -19,4 +24,6 @@ public class MentorAgeEntity
     /// Возраст до.
     /// </summary>
     public string EndAge { get; set; }
+    
+    public ICollection<StudentAgeMentorEntity> StudentAgeMentors { get; set; }
 }

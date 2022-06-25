@@ -222,4 +222,14 @@ public class PostgreDbContext : DbContext
     /// Таблица Profile.StudentComments.
     /// </summary>
     public DbSet<StudentCommentEntity> StudentComments { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.StudentAgeMentor.
+    /// </summary>
+    public DbSet<StudentAgeMentorEntity> StudentAgeMentor { get; set; }
+    
+    /// <summary>
+    /// Таблица Profile.StudentGenderMentor.
+    /// </summary>
+    public DbSet<StudentGenderMentorEntity> StudentGenderMentor { get; set; }
 }
