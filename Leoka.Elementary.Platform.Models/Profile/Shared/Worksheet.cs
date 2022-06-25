@@ -99,7 +99,12 @@ public class Worksheet
     public StudentCommentsOutput StudentComments { get; set; }
 
     /// <summary>
-    /// Данные выбранных возрастов преподавателя.
+    /// Данные выбранных возрастов преподавателя студентом.
     /// </summary>
     public StudentAgeMentorOutput StudentAgeMentor { get; set; }
+
+    /// <summary>
+    /// Данные выбранного пола преподавателя студентом.
+    /// </summary>
+    public StudentGenderMentorOutput StudentGenderMentor { get; set; }
 }

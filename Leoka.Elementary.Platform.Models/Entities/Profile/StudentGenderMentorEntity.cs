@@ -15,5 +15,7 @@ public class StudentGenderMentorEntity
     /// </summary>
     public long UserId { get; set; }
 
+    public int GenderId { get; set; }
+
     public MentorGenderEntity MentorGender { get; set; }
 }

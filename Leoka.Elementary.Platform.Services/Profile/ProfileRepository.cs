@@ -702,10 +702,33 @@ public sealed class ProfileRepository : IProfileRepository
                         })
                     .FirstOrDefaultAsync();
 
-                // Если студент выбирал возраст преподавателя.
+                // Если студент выбирал возраст преподавателя ранее.
                 if (selectedMentorAge is not null)
                 {
                     result.StudentAgeMentor = selectedMentorAge;
+                }
+                
+                // Получаем выбранный пол преподавателя.
+                var selectedMentorGender = await (from sg in _dbContext.StudentGenderMentor
+                        join mg in _dbContext.MentorGender
+                            on sg.MentorGender.GenderId
+                            equals mg.GenderId
+                        select new StudentGenderMentorOutput
+                        {
+                            MentorGender = new MentorGenderOutput
+                            {
+                                GenderId = mg.GenderId,
+                                GenderName = mg.GenderName
+                            },
+                            StudentGenderMentorId = sg.StudentGenderMentorId,
+                            UserId = sg.UserId
+                        })
+                    .FirstOrDefaultAsync();
+                
+                // Если студент выбирал пол преподавателя ранее.
+                if (selectedMentorGender is not null)
+                {
+                    result.StudentGenderMentor = selectedMentorGender;
                 }
             }
 

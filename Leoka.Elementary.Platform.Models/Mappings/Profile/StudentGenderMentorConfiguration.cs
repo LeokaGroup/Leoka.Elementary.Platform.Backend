@@ -22,13 +22,18 @@ public partial class StudentGenderMentorConfiguration : IEntityTypeConfiguration
             .HasColumnType("bigint")
             .IsRequired();
         
+        entity.Property(e => e.GenderId)
+            .HasColumnName("GenderId")
+            .HasColumnType("int4")
+            .IsRequired();
+        
         entity.HasIndex(u => u.StudentGenderMentorId)
             .HasName("PK_StudentGenderMentorId")
             .IsUnique();
         
         entity.HasOne(p => p.MentorGender)
             .WithMany(b => b.StudentGenderMentors)
-            .HasForeignKey(p => p.StudentGenderMentorId)
+            .HasForeignKey(p => p.GenderId)
             .HasConstraintName("FK_MentorGenderGenderId");
 
         OnConfigurePartial(entity);
