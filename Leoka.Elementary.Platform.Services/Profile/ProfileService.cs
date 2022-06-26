@@ -610,45 +610,94 @@ public sealed class ProfileService : IProfileService
             // Получаем роль пользователя.
             var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
 
+            List<ProfileItemOutput> addItems;
+
             // Если преподаватель.
             if (roleId == 2)
             {
                 // Получаем список предметов преподавателя.
-                var oldItems = await _profileRepository.GetMentorItemsAsync(user.UserId);
+                var oldItems = await _profileRepository.GetUserItemsAsync(user.UserId, roleId);
 
-                // Если нет предметов у преподавателя.
-                if (!oldItems.MentorItems.Any())
+                // Если нет предметов у преподавателя, то добавляем из входного списка.
+                if (!oldItems.UserItems.Any())
                 {
-                    return new WorksheetOutput();
+                    addItems = updateItems;
+                    
+                    // Предметов еще не было, добавляем их.
+                    await _profileRepository.AddMentorItemsAsync(addItems, user.UserId);
                 }
 
-                // Проходит по старым предметам.
-                for (var i = 0; i < oldItems.MentorItems.Count; i++)
+                // Обновляем предметы преподавателя.
+                else
                 {
-                    // Проходит по новым предметам.
-                    for (var j = 0; j < updateItems.Count; j++)
+                    // Проходит по старым предметам.
+                    for (var i = 0; i < oldItems.UserItems.Count; i++)
                     {
-                        // Если номер предмета не совпадает, значит нужно менять предмет.
-                        if (oldItems.MentorItems[i].ItemNumber != updateItems[j].ItemNumber)
+                        // Проходит по новым предметам.
+                        for (var j = 0; j < updateItems.Count; j++)
                         {
-                            oldItems.MentorItems[i].ItemNumber = updateItems[j].ItemNumber;
+                            // Если номер предмета не совпадает, значит нужно менять предмет.
+                            if (oldItems.UserItems[i].ItemNumber != updateItems[j].ItemNumber)
+                            {
+                                oldItems.UserItems[i].ItemNumber = updateItems[j].ItemNumber;
+                            }
+            
+                            i++;
                         }
-            
-                        i++;
                     }
-                }
 
-                var items = _mapper.Map<List<MentorProfileItemEntity>>(oldItems.MentorItems);
+                    addItems = oldItems.UserItems;
+
+                    var items = _mapper.Map<List<MentorProfileItemEntity>>(addItems);
             
-                items.ForEach(i => i.UserId = user.UserId);
+                    items.ForEach(i => i.UserId = user.UserId);
             
-                await _profileRepository.UpdateMentorItemsAsync(items);
+                    await _profileRepository.UpdateMentorItemsAsync(items);
+                }
             }
 
             // Если ученик.
             if (roleId == 1)
             {
                 // Получаем список предметов ученика.
+                var studentItems = await _profileRepository.GetUserItemsAsync(user.UserId, roleId);
+                
+                // Если нет предметов у преподавателя.
+                if (!studentItems.UserItems.Any())
+                {
+                    addItems = updateItems;
+                    
+                    // Предметов еще не было, добавляем их.
+                    await _profileRepository.AddStudentItemsAsync(addItems, user.UserId);
+                }
+
+                // Обновляем предметы ученика.
+                else
+                {
+                    // Проходит по старым предметам.
+                    for (var i = 0; i < studentItems.UserItems.Count; i++)
+                    {
+                        // Проходит по новым предметам.
+                        for (var j = 0; j < updateItems.Count; j++)
+                        {
+                            // Если номер предмета не совпадает, значит нужно менять предмет.
+                            if (studentItems.UserItems[i].ItemNumber != updateItems[j].ItemNumber)
+                            {
+                                studentItems.UserItems[i].ItemNumber = updateItems[j].ItemNumber;
+                            }
+            
+                            i++;
+                        }
+                    }
+
+                    addItems = studentItems.UserItems;
+
+                    var items = _mapper.Map<List<StudentProfileItemEntity>>(addItems);
+            
+                    items.ForEach(i => i.UserId = user.UserId);
+            
+                    await _profileRepository.UpdateStudentItemsAsync(items);
+                }
             }
 
             var result = await GetProfileWorkSheetAsync(account);

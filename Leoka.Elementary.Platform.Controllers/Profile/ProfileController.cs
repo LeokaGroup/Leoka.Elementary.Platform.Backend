@@ -256,7 +256,7 @@ public class ProfileController : BaseController
     [ProducesResponseType(404)]
     public async Task<WorksheetOutput> SaveItemsAsync([FromBody] WorksheetInput worksheetInput)
     {
-        var result = await _profileService.SaveItemsAsync(worksheetInput.MentorItems, GetUserName());
+        var result = await _profileService.SaveItemsAsync(worksheetInput.UserItems, GetUserName());
 
         return result;
     }

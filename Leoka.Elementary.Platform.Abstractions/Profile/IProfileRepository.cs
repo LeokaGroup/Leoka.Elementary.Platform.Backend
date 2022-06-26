@@ -118,11 +118,12 @@ public interface IProfileRepository
     Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber, string email, long userId, int roleId);
     
     /// <summary>
-    /// Метод получит список предметов преподавателя в анкете.
+    /// Метод получит список предметов пользователя в анкете.
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Id роли пользователя.</param>
     /// <returns>Список предметов.</returns>
-    Task<WorksheetOutput> GetMentorItemsAsync(long userId);
+    Task<WorksheetOutput> GetUserItemsAsync(long userId, int roleId);
 
     /// <summary>
     /// Метод обновит список предметов преподавателя в анкете.
@@ -249,4 +250,25 @@ public interface IProfileRepository
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Данные анкеты.</returns>
     Task AddDefaultMentorExperienceAsync(long userId);
+
+    /// <summary>
+    /// Метод добавляет новые предметы преподавателю.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="addItems">Список предметов для добавления.</param>
+    Task AddMentorItemsAsync(List<ProfileItemOutput> addItems, long userId);
+    
+    /// <summary>
+    /// Метод добавляет новые предметы ученика.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="addItems">Список предметов для добавления.</param>
+    Task AddStudentItemsAsync(List<ProfileItemOutput> addItems, long userId);
+    
+    /// <summary>
+    /// Метод обновит список предметов ученика в анкете.
+    /// </summary>
+    /// <param name="updateItems">Список предметов для обновления.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    Task UpdateStudentItemsAsync(List<StudentProfileItemEntity> updateItems);
 }
