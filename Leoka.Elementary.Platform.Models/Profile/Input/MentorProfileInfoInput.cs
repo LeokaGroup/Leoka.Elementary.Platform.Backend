@@ -56,9 +56,9 @@ public class MentorProfileInfoInput
     public List<MentorTimes> MentorTimes { get; set; } = new();
 
     /// <summary>
-    /// Список целей подготовки преподавателя.
+    /// Список целей подготовки пользователя.
     /// </summary>
-    public List<MentorTrainings> MentorTrainings { get; set; } = new();
+    public List<UserTrainings> UserTrainings { get; set; } = new();
 
     /// <summary>
     /// Список опыта преподавателя.

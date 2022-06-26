@@ -243,20 +243,20 @@ public class ProfileController : BaseController
     }
 
     /// <summary>
-    /// Метод обновит список предметов преподавателя в анкете.
+    /// Метод обновит или добавит список предметов в анкете.
     /// </summary>
     /// <param name="worksheetInput">Входная модель.</param>
     /// <returns>Обновленный список предметов.</returns>
     [HttpPatch]
-    [Route("mentor-items")]
+    [Route("items")]
     [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<WorksheetOutput> UpdateMentorItemsAsync([FromBody] WorksheetInput worksheetInput)
+    public async Task<WorksheetOutput> SaveItemsAsync([FromBody] WorksheetInput worksheetInput)
     {
-        var result = await _profileService.UpdateMentorItemsAsync(worksheetInput.MentorItems, GetUserName());
+        var result = await _profileService.SaveItemsAsync(worksheetInput.MentorItems, GetUserName());
 
         return result;
     }

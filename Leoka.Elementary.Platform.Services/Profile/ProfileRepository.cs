@@ -299,7 +299,7 @@ public sealed class ProfileRepository : IProfileRepository
             await _dbContext.SaveChangesAsync();
             
             // Добавит цели подготовки.
-            var mentorTrainings = mapper.Map<List<MentorTrainingEntity>>(mentorProfileInfoInput.MentorTrainings);
+            var mentorTrainings = mapper.Map<List<UserTrainingEntity>>(mentorProfileInfoInput.UserTrainings);
             
             foreach (var item in mentorTrainings)
             {
@@ -312,7 +312,7 @@ public sealed class ProfileRepository : IProfileRepository
                     .FirstOrDefaultAsync();
             }
             
-            await _dbContext.MentorTrainings.AddRangeAsync(mentorTrainings);
+            await _dbContext.UserTrainings.AddRangeAsync(mentorTrainings);
             await _dbContext.SaveChangesAsync();
             
             // Добавит опыт преподавателя.
@@ -572,20 +572,20 @@ public sealed class ProfileRepository : IProfileRepository
                 }
                 
                 // Получит цели подготовки с подсвеченными (выбранными ранее).
-                var mentorTrainings = await _dbContext.PurposeTrainings
+                var userTrainings = await _dbContext.PurposeTrainings
                     .Select(pt => new PurposeTrainingOutput
                     {
                         PurposeName = pt.PurposeName,
                         PurposeSysName = pt.PurposeSysName,
                         PurposeId = pt.PurposeId,
-                        IsSelected = _dbContext.MentorTrainings.Any(mt => mt.PurposeId == pt.PurposeId)
+                        IsSelected = _dbContext.UserTrainings.Any(mt => mt.PurposeId == pt.PurposeId)
                     })
                     .ToArrayAsync();
                 
                 // Если есть цели.
-                if (mentorTrainings.Any())
+                if (userTrainings.Any())
                 {
-                    result.MentorTrainings.AddRange(mentorTrainings);
+                    result.UserTrainings.AddRange(userTrainings);
                 }
                 
                 // Получит опыт.

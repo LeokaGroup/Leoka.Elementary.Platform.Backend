@@ -105,12 +105,12 @@ public interface IProfileService
     Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber, string email, string account);
 
     /// <summary>
-    /// Метод обновит список предметов преподавателя в анкете.
+    /// Метод обновит или добавит список предметов в анкете.
     /// </summary>
     /// <param name="updateItems">Список предметов для обновления.</param>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список предметов.</returns>
-    Task<WorksheetOutput> UpdateMentorItemsAsync(List<ProfileItemOutput> updateItems, string account);
+    Task<WorksheetOutput> SaveItemsAsync(List<ProfileItemOutput> updateItems, string account);
     
     /// <summary>
     /// Метод обновит список предметов преподавателя в анкете.

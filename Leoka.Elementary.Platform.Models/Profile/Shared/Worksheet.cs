@@ -61,7 +61,7 @@ public class Worksheet
     /// <summary>
     /// Список целей подготовки преподавателя.
     /// </summary>
-    public List<PurposeTrainingOutput> MentorTrainings { get; set; } = new();
+    public List<PurposeTrainingOutput> UserTrainings { get; set; } = new();
 
     /// <summary>
     /// Список опыта преподавателя.
@@ -107,4 +107,9 @@ public class Worksheet
     /// Данные выбранного пола преподавателя студентом.
     /// </summary>
     public StudentGenderMentorOutput StudentGenderMentor { get; set; }
+
+    /// <summary>
+    /// Список предметов студента.
+    /// </summary>
+    public List<StudentProfileItemOutput> StudentProfileItems { get; set; } = new();
 }

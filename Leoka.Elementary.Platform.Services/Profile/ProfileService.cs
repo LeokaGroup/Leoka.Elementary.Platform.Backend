@@ -295,7 +295,7 @@ public sealed class ProfileService : IProfileService
         }
 
         // Проверит цели подготовки.
-        if (!mentorProfileInfo.MentorTrainings.Any())
+        if (!mentorProfileInfo.UserTrainings.Any())
         {
             throw new EmptyTrainingException();
         }
@@ -580,12 +580,12 @@ public sealed class ProfileService : IProfileService
     }
 
     /// <summary>
-    /// Метод обновит список предметов преподавателя в анкете.
+    /// Метод обновит или добавит список предметов в анкете.
     /// </summary>
     /// <param name="updateItems">Список предметов для обновления.</param>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список предметов.</returns>
-    public async Task<WorksheetOutput> UpdateMentorItemsAsync(List<ProfileItemOutput> updateItems, string account)
+    public async Task<WorksheetOutput> SaveItemsAsync(List<ProfileItemOutput> updateItems, string account)
     {
         try
         {
@@ -606,36 +606,50 @@ public sealed class ProfileService : IProfileService
             {
                 throw new NotFoundUserException(account);
             }
+            
+            // Получаем роль пользователя.
+            var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
 
-            var oldItems = await _profileRepository.GetMentorItemsAsync(user.UserId);
-
-            // Если нет предметов у преподавателя.
-            if (!oldItems.MentorItems.Any())
+            // Если преподаватель.
+            if (roleId == 2)
             {
-                return new WorksheetOutput();
-            }
+                // Получаем список предметов преподавателя.
+                var oldItems = await _profileRepository.GetMentorItemsAsync(user.UserId);
 
-            // Проходит по старым предметам.
-            for (var i = 0; i < oldItems.MentorItems.Count; i++)
-            {
-                // Проходит по новым предметам.
-                for (var j = 0; j < updateItems.Count; j++)
+                // Если нет предметов у преподавателя.
+                if (!oldItems.MentorItems.Any())
                 {
-                    // Если номер предмета не совпадает, значит нужно менять предмет.
-                    if (oldItems.MentorItems[i].ItemNumber != updateItems[j].ItemNumber)
-                    {
-                        oldItems.MentorItems[i].ItemNumber = updateItems[j].ItemNumber;
-                    }
-            
-                    i++;
+                    return new WorksheetOutput();
                 }
+
+                // Проходит по старым предметам.
+                for (var i = 0; i < oldItems.MentorItems.Count; i++)
+                {
+                    // Проходит по новым предметам.
+                    for (var j = 0; j < updateItems.Count; j++)
+                    {
+                        // Если номер предмета не совпадает, значит нужно менять предмет.
+                        if (oldItems.MentorItems[i].ItemNumber != updateItems[j].ItemNumber)
+                        {
+                            oldItems.MentorItems[i].ItemNumber = updateItems[j].ItemNumber;
+                        }
+            
+                        i++;
+                    }
+                }
+
+                var items = _mapper.Map<List<MentorProfileItemEntity>>(oldItems.MentorItems);
+            
+                items.ForEach(i => i.UserId = user.UserId);
+            
+                await _profileRepository.UpdateMentorItemsAsync(items);
             }
 
-            var items = _mapper.Map<List<MentorProfileItemEntity>>(oldItems.MentorItems);
-            
-            items.ForEach(i => i.UserId = user.UserId);
-            
-            await _profileRepository.UpdateMentorItemsAsync(items);
+            // Если ученик.
+            if (roleId == 1)
+            {
+                // Получаем список предметов ученика.
+            }
 
             var result = await GetProfileWorkSheetAsync(account);
 

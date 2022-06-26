@@ -1,9 +1,9 @@
 ﻿namespace Leoka.Elementary.Platform.Models.Entities.Profile;
 
 /// <summary>
-/// Класс сопоставляется с таблицей целей подготовки преподавателя Profile.MentorTrainings.
+/// Класс сопоставляется с таблицей целей подготовки пользователя Profile.UserTrainings.
 /// </summary>
-public class MentorTrainingEntity
+public class UserTrainingEntity
 {
     /// <summary>
     /// PK.

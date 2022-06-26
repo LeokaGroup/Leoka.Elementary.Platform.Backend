@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Leoka.Elementary.Platform.Models.Mappings.Profile;
 
-public partial class MentorTrainingConfiguration : IEntityTypeConfiguration<MentorTrainingEntity>
+public partial class MentorTrainingConfiguration : IEntityTypeConfiguration<UserTrainingEntity>
 {
-    public void Configure(EntityTypeBuilder<MentorTrainingEntity> entity)
+    public void Configure(EntityTypeBuilder<UserTrainingEntity> entity)
     {
         entity.ToTable("MentorTrainings", "Profile");
 
@@ -26,12 +26,12 @@ public partial class MentorTrainingConfiguration : IEntityTypeConfiguration<Ment
             .IsUnique();
         
         entity.HasOne(p => p.PurposeTraining)
-            .WithMany(b => b.MentorTrainings)
+            .WithMany(b => b.UserTrainings)
             .HasForeignKey(p => p.PurposeId)
             .HasConstraintName("FK_PurposeTrainingsPurposeId");
 
         OnConfigurePartial(entity);
     }
 
-    partial void OnConfigurePartial(EntityTypeBuilder<MentorTrainingEntity> entity);
+    partial void OnConfigurePartial(EntityTypeBuilder<UserTrainingEntity> entity);
 }
