@@ -133,7 +133,7 @@ public interface IProfileService
     /// </summary>
     /// <param name="updateTimes">Список времени для обновления.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    Task<WorksheetOutput> UpdateMentorTimesAsync(List<MentorTimes> updateTimes, string account);
+    Task<WorksheetOutput> UpdateUserTimesAsync(List<UserTimes> updateTimes, string account);
     
     /// <summary>
     /// Метод обновит данные о себе преподавателя в анкете.

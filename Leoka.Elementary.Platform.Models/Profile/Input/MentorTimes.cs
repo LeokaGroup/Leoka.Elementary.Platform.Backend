@@ -1,9 +1,9 @@
 ﻿namespace Leoka.Elementary.Platform.Models.Profile.Input;
 
 /// <summary>
-/// Класс описывает свободное время преподавателя.
+/// Класс описывает свободное время пользователя.
 /// </summary>
-public class MentorTimes
+public class UserTimes
 {
     /// <summary>
     /// Время начала.

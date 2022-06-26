@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Leoka.Elementary.Platform.Models.Mappings.Profile;
 
-public partial class MentorTrainingConfiguration : IEntityTypeConfiguration<UserTrainingEntity>
+public partial class UserTrainingConfiguration : IEntityTypeConfiguration<UserTrainingEntity>
 {
     public void Configure(EntityTypeBuilder<UserTrainingEntity> entity)
     {
-        entity.ToTable("MentorTrainings", "Profile");
+        entity.ToTable("UserTrainings", "Profile");
 
         entity.HasKey(e => e.TrainingId);
         

@@ -194,9 +194,9 @@ public class PostgreDbContext : DbContext
     public DbSet<MentorCertificateEntity> MentorCertificates { get; set; }
 
     /// <summary>
-    /// Таблица Profile.MentorTimes.
+    /// Таблица Profile.UserTimes.
     /// </summary>
-    public DbSet<MentorTimeEntity> MentorTimes { get; set; }
+    public DbSet<UserTimeEntity> UserTimes { get; set; }
 
     /// <summary>
     /// Таблица Profile.DaysWeek.

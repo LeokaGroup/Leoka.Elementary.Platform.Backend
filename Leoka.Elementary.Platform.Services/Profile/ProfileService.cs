@@ -289,7 +289,7 @@ public sealed class ProfileService : IProfileService
         }
 
         // Проверит время занятий преподавателя.
-        if (!mentorProfileInfo.MentorTimes.Any())
+        if (!mentorProfileInfo.UserTimes.Any())
         {
             throw new EmptyTimeException();
         }
@@ -811,7 +811,7 @@ public sealed class ProfileService : IProfileService
     /// </summary>
     /// <param name="updateTimes">Входная модель.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    public async Task<WorksheetOutput> UpdateMentorTimesAsync(List<MentorTimes> updateTimes, string account)
+    public async Task<WorksheetOutput> UpdateUserTimesAsync(List<UserTimes> updateTimes, string account)
     {
         try
         {
@@ -833,32 +833,32 @@ public sealed class ProfileService : IProfileService
                 throw new NotFoundUserException(account);
             }
             
-            var oldTimes = await _profileRepository.GetMentorTimesAsync(user.UserId);
+            var oldTimes = await _profileRepository.GetUserTimesAsync(user.UserId);
             
             // Если нет времени у преподавателя.
-            if (!oldTimes.MentorTimes.Any())
+            if (!oldTimes.UserTimes.Any())
             {
                 return new WorksheetOutput();
             }
 
             // Проходит по старым временам.
-            for (var i = 0; i < oldTimes.MentorTimes.Count; i++)
+            for (var i = 0; i < oldTimes.UserTimes.Count; i++)
             {
                 // Проходит по новым временам.
                 for (var j = 0; j < updateTimes.Count; j++)
                 {
                     // Если системное название времени не совпадает, значит нужно менять время.
-                    if (!oldTimes.MentorTimes[i].DaySysName.Equals(updateTimes[j].DaySysName))
+                    if (!oldTimes.UserTimes[i].DaySysName.Equals(updateTimes[j].DaySysName))
                     {
-                        oldTimes.MentorTimes[i].DaySysName = updateTimes[j].DaySysName;
-                        oldTimes.MentorTimes[i].DayId = await _profileRepository.GetDayIdBySysNameAsync(updateTimes[j].DaySysName);
+                        oldTimes.UserTimes[i].DaySysName = updateTimes[j].DaySysName;
+                        oldTimes.UserTimes[i].DayId = await _profileRepository.GetDayIdBySysNameAsync(updateTimes[j].DaySysName);
                     }
             
                     i++;
                 }
             }
 
-            var items = _mapper.Map<List<MentorTimeEntity>>(oldTimes.MentorTimes);
+            var items = _mapper.Map<List<UserTimeEntity>>(oldTimes.UserTimes);
             
             items.ForEach(i => i.UserId = user.UserId);
             

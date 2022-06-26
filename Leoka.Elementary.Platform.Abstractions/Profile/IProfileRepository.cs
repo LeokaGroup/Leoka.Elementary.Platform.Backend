@@ -160,18 +160,18 @@ public interface IProfileRepository
     Task UpdateMentorDurationsAsync(List<MentorLessonDurationEntity> updateDurations);
     
     /// <summary>
-    /// Метод получит список времен преподавателя в анкете.
+    /// Метод получит список времен пользователя в анкете.
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список времен.</returns>
-    Task<WorksheetOutput> GetMentorTimesAsync(long userId);
+    Task<WorksheetOutput> GetUserTimesAsync(long userId);
     
     /// <summary>
     /// Метод обновит время преподавателя в анкете.
     /// </summary>
     /// <param name="updateTimes">Список времени для обновления.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    Task UpdateMentorTimesAsync(List<MentorTimeEntity> updateTimes);
+    Task UpdateMentorTimesAsync(List<UserTimeEntity> updateTimes);
 
     /// <summary>
     /// Метод обновит данные о себе преподавателя в анкете.

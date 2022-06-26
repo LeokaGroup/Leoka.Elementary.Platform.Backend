@@ -305,15 +305,15 @@ public class ProfileController : BaseController
     /// <param name="worksheetInput">Входная модель.</param>
     /// <returns>Обновленный список длительностей.</returns>
     [HttpPatch]
-    [Route("mentor-times")]
+    [Route("user-times")]
     [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<WorksheetOutput> UpdateMentorTimesAsync([FromBody] WorksheetInput worksheetInput)
+    public async Task<WorksheetOutput> UpdateUserTimesAsync([FromBody] WorksheetInput worksheetInput)
     {
-        var result = await _profileService.UpdateMentorTimesAsync(worksheetInput.MentorTimes, GetUserName());
+        var result = await _profileService.UpdateUserTimesAsync(worksheetInput.UserTimes, GetUserName());
 
         return result;
     }

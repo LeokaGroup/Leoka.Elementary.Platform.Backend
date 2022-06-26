@@ -28,8 +28,8 @@ public class MappingProfile : Profile
         CreateMap<MentorProfilePrices, MentorLessonPriceEntity>();
         CreateMap<MentorLessonPriceEntity, MentorProfilePrices>();
         CreateMap<MentorProfileDurations, MentorLessonDurationEntity>();
-        CreateMap<MentorTimes, MentorTimeEntity>();
-        CreateMap<MentorTimeEntity, MentorTimes>();
+        CreateMap<UserTimes, UserTimeEntity>();
+        CreateMap<UserTimeEntity, UserTimes>();
         CreateMap<UserTrainings, UserTrainingEntity>();
         CreateMap<MentorExperience, MentorExperienceEntity>();
         CreateMap<MentorEducations, MentorEducationEntity>();

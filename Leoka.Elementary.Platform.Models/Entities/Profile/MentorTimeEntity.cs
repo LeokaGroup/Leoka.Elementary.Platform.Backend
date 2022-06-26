@@ -1,9 +1,9 @@
 ﻿namespace Leoka.Elementary.Platform.Models.Entities.Profile;
 
 /// <summary>
-/// Класс сопоставляется с таблицей свободного времени преподавателя.
+/// Класс сопоставляется с таблицей свободного времени пользователя Profile.UserTimes.
 /// </summary>
-public class MentorTimeEntity
+public class UserTimeEntity
 {
     /// <summary>
     /// PK.

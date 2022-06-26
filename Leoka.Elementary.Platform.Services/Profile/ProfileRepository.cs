@@ -285,9 +285,9 @@ public sealed class ProfileRepository : IProfileRepository
             await _dbContext.SaveChangesAsync();
             
             // Добавит время занятий преподавателя.
-            var mentorTimes = mapper.Map<List<MentorTimeEntity>>(mentorProfileInfoInput.MentorTimes);
+            var userTimes = mapper.Map<List<UserTimeEntity>>(mentorProfileInfoInput.UserTimes);
             
-            foreach (var item in mentorTimes)
+            foreach (var item in userTimes)
             {
                 item.UserId = userId;
                 
@@ -295,7 +295,7 @@ public sealed class ProfileRepository : IProfileRepository
                 // Получит Id дня.
             }
             
-            await _dbContext.MentorTimes.AddRangeAsync(mentorTimes);
+            await _dbContext.UserTimes.AddRangeAsync(userTimes);
             await _dbContext.SaveChangesAsync();
             
             // Добавит цели подготовки.
@@ -552,9 +552,9 @@ public sealed class ProfileRepository : IProfileRepository
                 }
                 
                 // Получит время.
-                var times = await _dbContext.MentorTimes
+                var times = await _dbContext.UserTimes
                     .Where(t => t.UserId == userId)
-                    .Select(t => new MentorTimes
+                    .Select(t => new UserTimes
                     {
                         TimeStart = t.TimeStart,
                         TimeEnd = t.TimeEnd,
@@ -568,7 +568,7 @@ public sealed class ProfileRepository : IProfileRepository
                 // Если есть время.
                 if (times.Any())
                 {
-                    result.MentorTimes.AddRange(times);
+                    result.UserTimes.AddRange(times);
                 }
                 
                 // Получит цели подготовки с подсвеченными (выбранными ранее).
@@ -1073,15 +1073,15 @@ public sealed class ProfileRepository : IProfileRepository
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список времен.</returns>
-    public async Task<WorksheetOutput> GetMentorTimesAsync(long userId)
+    public async Task<WorksheetOutput> GetUserTimesAsync(long userId)
     {
         try
         {
             var result = new WorksheetOutput
             {
-                MentorTimes = await _dbContext.MentorTimes
+                UserTimes = await _dbContext.UserTimes
                     .Where(d => d.UserId == userId)
-                    .Select(d => new MentorTimes
+                    .Select(d => new UserTimes
                     {
                         TimeStart = d.TimeStart,
                         TimeEnd = d.TimeEnd,
@@ -1110,11 +1110,11 @@ public sealed class ProfileRepository : IProfileRepository
     /// </summary>
     /// <param name="updateTimes">Список времени для обновления.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    public async Task UpdateMentorTimesAsync(List<MentorTimeEntity> updateTimes)
+    public async Task UpdateMentorTimesAsync(List<UserTimeEntity> updateTimes)
     {
         try
         {
-            _dbContext.MentorTimes.UpdateRange(updateTimes);
+            _dbContext.UserTimes.UpdateRange(updateTimes);
             await _dbContext.SaveChangesAsync();
         }
         

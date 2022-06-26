@@ -54,9 +54,9 @@ public class Worksheet
     public List<MentorProfileDurations> MentorDurations { get; set; } = new();
     
     /// <summary>
-    /// Список свободного времени преподавателя.
+    /// Список свободного времени пользователя.
     /// </summary>
-    public List<MentorTimes> MentorTimes { get; set; } = new();
+    public List<UserTimes> UserTimes { get; set; } = new();
 
     /// <summary>
     /// Список целей подготовки преподавателя.
