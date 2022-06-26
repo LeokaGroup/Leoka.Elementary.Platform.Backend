@@ -1524,14 +1524,18 @@ public sealed class ProfileRepository : IProfileRepository
         try
         {
             // i = 1 Позиция по дефолту ставим 1.
-            for (var i = 1; i < addItems.Count; i++)
+            var pos = 1;
+            
+            foreach (var _ in addItems)
             {
                 await _dbContext.StudentProfileItems.AddAsync(new StudentProfileItemEntity
                 {
                     UserId = userId,
-                    Position = i,
-                    ItemNumber = i
+                    Position = pos,
+                    ItemNumber = pos
                 });
+
+                pos++;
             }
 
             await _dbContext.SaveChangesAsync();

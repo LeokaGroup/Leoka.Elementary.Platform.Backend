@@ -14,8 +14,7 @@ public partial class StudentProfileItemConfiguration : IEntityTypeConfiguration<
         
         entity.Property(e => e.ItemId)
             .HasColumnName("ItemId")
-            .HasColumnType("bigserial")
-            .ValueGeneratedNever();
+            .HasColumnType("bigserial");
         
         entity.Property(e => e.UserId)
             .HasColumnName("UserId")
