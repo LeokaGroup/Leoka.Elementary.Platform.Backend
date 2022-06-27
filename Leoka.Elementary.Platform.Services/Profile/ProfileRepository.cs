@@ -731,6 +731,27 @@ public sealed class ProfileRepository : IProfileRepository
                 {
                     result.StudentGenderMentor = selectedMentorGender;
                 }
+                
+                // Выбираем список предметов студента.
+                var studentItems = await (from mpi in _dbContext.StudentProfileItems
+                        join pi in _dbContext.ProfileItems
+                            on mpi.ItemNumber
+                            equals pi.ItemNumber
+                        where mpi.UserId == userId
+                        select new ProfileItemOutput
+                        {
+                            ItemName = pi.ItemName,
+                            ItemSysName = pi.ItemSysName,
+                            Position = pi.Position,
+                            ItemNumber = pi.ItemNumber
+                        })
+                    .ToArrayAsync();
+                
+                // Если есть предметы преподавателя.
+                if (studentItems.Any())
+                {
+                    result.UserItems.AddRange(studentItems);
+                }
             }
 
             return result;
