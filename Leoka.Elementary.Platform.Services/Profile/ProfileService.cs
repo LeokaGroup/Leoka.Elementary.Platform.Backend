@@ -714,7 +714,7 @@ public sealed class ProfileService : IProfileService
     }
 
     /// <summary>
-    /// Метод обновит список предметов пользователя в анкете.
+    /// Метод сохранит список предметов пользователя в анкете.
     /// </summary>
     /// <param name="updatePrices">Список цен для обновления.</param>
     /// <param name="account">Аккаунт.</param>
@@ -741,35 +741,38 @@ public sealed class ProfileService : IProfileService
                 throw new NotFoundUserException(account);
             }
 
-            var oldPrices = await _profileRepository.GetMentorPricesAsync(user.UserId);
+            var oldPrices = await _profileRepository.GetUserPricesAsync(user.UserId);
             
-            // Если нет цен у преподавателя.
+            // Если нет цен у пользователя, то добавляем.
             if (!oldPrices.UserPrices.Any())
             {
-                return new WorksheetOutput();
+                await _profileRepository.AddUserPricesAsync(updatePrices, user.UserId);
             }
 
-            // Проходит по старым ценам.
-            for (var i = 0; i < oldPrices.UserPrices.Count; i++)
+            else
             {
-                // Проходит по новым ценам.
-                for (var j = 0; j < updatePrices.Count; j++)
+                // Проходит по старым ценам.
+                for (var i = 0; i < oldPrices.UserPrices.Count; i++)
                 {
-                    // Если цены не совпадает, значит нужно менять цену.
-                    if (oldPrices.UserPrices[i].Price != updatePrices[j].Price)
+                    // Проходит по новым ценам.
+                    for (var j = 0; j < updatePrices.Count; j++)
                     {
-                        oldPrices.UserPrices[i].Price = updatePrices[j].Price;
+                        // Если цены не совпадает, значит нужно менять цену.
+                        if (oldPrices.UserPrices[i].Price != updatePrices[j].Price)
+                        {
+                            oldPrices.UserPrices[i].Price = updatePrices[j].Price;
+                        }
+            
+                        i++;
                     }
-            
-                    i++;
                 }
+            
+                var items = _mapper.Map<List<UserLessonPriceEntity>>(oldPrices.UserPrices);
+            
+                items.ForEach(i => i.UserId = user.UserId);
+            
+                await _profileRepository.UpdateUserPricesAsync(items);
             }
-            
-            var items = _mapper.Map<List<UserLessonPriceEntity>>(oldPrices.UserPrices);
-            
-            items.ForEach(i => i.UserId = user.UserId);
-            
-            await _profileRepository.UpdateMentorPricesAsync(items);
 
             var result = await GetProfileWorkSheetAsync(account);
 

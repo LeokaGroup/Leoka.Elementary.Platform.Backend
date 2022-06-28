@@ -1,7 +1,7 @@
 ﻿namespace Leoka.Elementary.Platform.Models.Entities.Profile;
 
 /// <summary>
-/// Класс сопоставляется с таблицей цен пользователя Profile.MentorLessonPrices.
+/// Класс сопоставляется с таблицей цен пользователя Profile.UserLessonPrices.
 /// </summary>
 public class UserLessonPriceEntity
 {

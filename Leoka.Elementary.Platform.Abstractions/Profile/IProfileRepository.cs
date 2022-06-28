@@ -133,18 +133,18 @@ public interface IProfileRepository
     Task UpdateMentorItemsAsync(List<MentorProfileItemEntity> updateItems);
     
     /// <summary>
-    /// Метод обновит список цен преподавателя в анкете.
+    /// Метод обновит список цен пользователя в анкете.
     /// </summary>
     /// <param name="updateItems">Список предметов для обновления.</param>
     /// <returns>Обновленный список предметов.</returns>
-    Task UpdateMentorPricesAsync(List<UserLessonPriceEntity> updateItems);
+    Task UpdateUserPricesAsync(List<UserLessonPriceEntity> updateItems);
     
     /// <summary>
-    /// Метод получит список цен преподавателя в анкете.
+    /// Метод получит список цен пользователя в анкете.
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список цен.</returns>
-    Task<WorksheetOutput> GetMentorPricesAsync(long userId);
+    Task<WorksheetOutput> GetUserPricesAsync(long userId);
     
     /// <summary>
     /// Метод получит список длительностей преподавателя в анкете.
@@ -271,4 +271,11 @@ public interface IProfileRepository
     /// <param name="updateItems">Список предметов для обновления.</param>
     /// <returns>Обновленный список предметов.</returns>
     Task UpdateStudentItemsAsync(List<StudentProfileItemEntity> updateItems);
+
+    /// <summary>
+    /// Метод добавляет цены пользователя.
+    /// </summary>
+    /// <param name="updatePrices">Добавляемые цены.</param>
+    /// <param name="userId">Id пользователя.</param>
+    Task AddUserPricesAsync(List<UserProfilePrices> addPrices, long userId);
 }

@@ -8,7 +8,7 @@ public partial class MentorLessonPriceConfiguration : IEntityTypeConfiguration<U
 {
     public void Configure(EntityTypeBuilder<UserLessonPriceEntity> entity)
     {
-        entity.ToTable("MentorLessonPrices", "Profile");
+        entity.ToTable("UserLessonPrices", "Profile");
 
         entity.HasKey(e => e.PriceId);
         

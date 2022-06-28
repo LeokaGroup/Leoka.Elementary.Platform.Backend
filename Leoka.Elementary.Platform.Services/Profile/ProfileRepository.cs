@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Leoka.Elementary.Platform.Abstractions.Profile;
+using Leoka.Elementary.Platform.Core.Consts;
 using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.Models.Entities.Profile;
@@ -520,22 +521,6 @@ public sealed class ProfileRepository : IProfileRepository
                     result.UserItems.AddRange(mentorProfileItems);
                 }
 
-                // Получит цены преподавателя.
-                var mentorLessonPrices = _dbContext.UserLessonPrices
-                    .Where(p => p.UserId == userId)
-                    .Select(p => new UserProfilePrices
-                    {
-                        Price = p.Price,
-                        Unit = p.Unit
-                    })
-                    .AsQueryable();
-
-                // Если есть цены.
-                if (mentorLessonPrices.Any())
-                {
-                    result.UserPrices.AddRange(mentorLessonPrices);
-                }
-
                 // Получит длительности.
                 var mentorLessonDurations = _dbContext.MentorLessonDurations
                     .Where(d => d.UserId == userId)
@@ -752,6 +737,22 @@ public sealed class ProfileRepository : IProfileRepository
                 {
                     result.UserItems.AddRange(studentItems);
                 }
+            }
+            
+            // Получит цены пользователя.
+            var mentorLessonPrices = _dbContext.UserLessonPrices
+                .Where(p => p.UserId == userId)
+                .Select(p => new UserProfilePrices
+                {
+                    Price = p.Price,
+                    Unit = p.Unit
+                })
+                .AsQueryable();
+
+            // Если есть цены.
+            if (mentorLessonPrices.Any())
+            {
+                result.UserPrices.AddRange(mentorLessonPrices);
             }
 
             return result;
@@ -1009,11 +1010,11 @@ public sealed class ProfileRepository : IProfileRepository
     }
 
     /// <summary>
-    /// Метод обновит список цен преподавателя в анкете.
+    /// Метод обновит список цен пользователя в анкете.
     /// </summary>
     /// <param name="updateItems">Список предметов для обновления.</param>
     /// <returns>Обновленный список предметов.</returns>
-    public async Task UpdateMentorPricesAsync(List<UserLessonPriceEntity> updateItems)
+    public async Task UpdateUserPricesAsync(List<UserLessonPriceEntity> updateItems)
     {
         try
         {
@@ -1030,11 +1031,11 @@ public sealed class ProfileRepository : IProfileRepository
     }
 
     /// <summary>
-    /// Метод получит список цен преподавателя в анкете.
+    /// Метод получит список цен пользователя в анкете.
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список цен.</returns>
-    public async Task<WorksheetOutput> GetMentorPricesAsync(long userId)
+    public async Task<WorksheetOutput> GetUserPricesAsync(long userId)
     {
         try
         {
@@ -1580,6 +1581,36 @@ public sealed class ProfileRepository : IProfileRepository
         try
         {
             _dbContext.StudentProfileItems.UpdateRange(updateItems);
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет цены пользователя.
+    /// </summary>
+    /// <param name="updatePrices">Добавляемые цены.</param>
+    /// <param name="userId">Id пользователя.</param>
+    public async Task AddUserPricesAsync(List<UserProfilePrices> addPrices, long userId)
+    {
+        try
+        {
+            foreach (var item in addPrices)
+            {
+                await _dbContext.UserLessonPrices.AddAsync(new UserLessonPriceEntity
+                {
+                    UserId = userId,
+                    Price = item.Price,
+                    Unit = UnitPriceConst.UNIT_RUB
+                });
+            }
+
             await _dbContext.SaveChangesAsync();
         }
         
