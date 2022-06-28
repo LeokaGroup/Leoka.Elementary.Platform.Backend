@@ -286,7 +286,7 @@ public class ProfileController : BaseController
     /// <param name="worksheetInput">Входная модель.</param>
     /// <returns>Обновленный список длительностей.</returns>
     [HttpPatch]
-    [Route("mentor-durations")]
+    [Route("user-durations")]
     [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
@@ -294,7 +294,7 @@ public class ProfileController : BaseController
     [ProducesResponseType(404)]
     public async Task<WorksheetOutput> UpdateMentorDurationsAsync([FromBody] WorksheetInput worksheetInput)
     {
-        var result = await _profileService.UpdateMentorDurationsAsync(worksheetInput.MentorDurations, GetUserName());
+        var result = await _profileService.UpdateMentorDurationsAsync(worksheetInput.UserDurations, GetUserName());
         
         return result;
     }

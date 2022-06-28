@@ -27,7 +27,7 @@ public class MappingProfile : Profile
         CreateMap<MentorProfileItems, MentorProfileItemEntity>();
         CreateMap<UserProfilePrices, UserLessonPriceEntity>();
         CreateMap<UserLessonPriceEntity, UserProfilePrices>();
-        CreateMap<MentorProfileDurations, MentorLessonDurationEntity>();
+        CreateMap<UserProfileDurations, UserLessonDurationEntity>();
         CreateMap<UserTimes, UserTimeEntity>();
         CreateMap<UserTimeEntity, UserTimes>();
         CreateMap<UserTrainings, UserTrainingEntity>();

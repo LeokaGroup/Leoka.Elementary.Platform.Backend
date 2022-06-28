@@ -121,12 +121,12 @@ public interface IProfileService
     Task<WorksheetOutput> UpdateUserPricesAsync(List<UserProfilePrices> updatePrices, string account);
     
     /// <summary>
-    /// Метод обновит список длительностей преподавателя в анкете.
+    /// Метод обновит список длительностей пользователя в анкете.
     /// </summary>
     /// <param name="updatePrices">Список длительностей для обновления.</param>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    Task<WorksheetOutput> UpdateMentorDurationsAsync(List<MentorProfileDurations> updateDurations, string account);
+    Task<WorksheetOutput> UpdateMentorDurationsAsync(List<UserProfileDurations> updateDurations, string account);
     
     /// <summary>
     /// Метод обновит список времени преподавателя в анкете.

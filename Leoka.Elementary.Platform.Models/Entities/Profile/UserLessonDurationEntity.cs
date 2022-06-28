@@ -1,9 +1,9 @@
 ﻿namespace Leoka.Elementary.Platform.Models.Entities.Profile;
 
 /// <summary>
-/// Класс сопоставляется с таблицей Profile.StudentLessonDurations.
+/// Класс сопоставляется с таблицей длительностей урока преподавателя Profile.UserLessonDurations.
 /// </summary>
-public class StudentLessonDurationEntity
+public class UserLessonDurationEntity
 {
     /// <summary>
     /// PK.
@@ -11,12 +11,12 @@ public class StudentLessonDurationEntity
     public long DurationId { get; set; }
 
     /// <summary>
-    /// Длительность.
+    /// Длительность урока.
     /// </summary>
     public int Time { get; set; }
 
     /// <summary>
-    /// Часы или минуты.
+    /// В чем измеряется.
     /// </summary>
     public string Unit { get; set; }
 

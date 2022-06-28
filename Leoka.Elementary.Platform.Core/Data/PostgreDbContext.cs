@@ -169,9 +169,9 @@ public class PostgreDbContext : DbContext
     public DbSet<UserLessonPriceEntity> UserLessonPrices { get; set; }
 
     /// <summary>
-    /// Таблица Profile.MentorLessonDurations.
+    /// Таблица Profile.UserLessonDurations.
     /// </summary>
-    public DbSet<MentorLessonDurationEntity> MentorLessonDurations { get; set; }
+    public DbSet<UserLessonDurationEntity> UserLessonDurations { get; set; }
 
     /// <summary>
     /// Таблица Profile.UserTrainings.
@@ -237,9 +237,4 @@ public class PostgreDbContext : DbContext
     /// Таблица Profile.StudentProfileItems.
     /// </summary>
     public DbSet<StudentProfileItemEntity> StudentProfileItems { get; set; }
-
-    /// <summary>
-    /// Таблица Profile.StudentLessonPrices.
-    /// </summary>
-    public DbSet<StudentLessonPriceEntity> StudentLessonPrices { get; set; }
 }

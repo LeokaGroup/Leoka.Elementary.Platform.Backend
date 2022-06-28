@@ -275,15 +275,15 @@ public sealed class ProfileRepository : IProfileRepository
             await _dbContext.UserLessonPrices.AddRangeAsync(userPrices);
             await _dbContext.SaveChangesAsync();
 
-            // Добавит длительности занятий преподавателя.
-            var mentorDurations = mapper.Map<List<MentorLessonDurationEntity>>(mentorProfileInfoInput.MentorDurations);
+            // Добавит длительности занятий пользователя.
+            var mentorDurations = mapper.Map<List<UserLessonDurationEntity>>(mentorProfileInfoInput.UserDurations);
 
             foreach (var item in mentorDurations)
             {
                 item.UserId = userId;
             }
 
-            await _dbContext.MentorLessonDurations.AddRangeAsync(mentorDurations);
+            await _dbContext.UserLessonDurations.AddRangeAsync(mentorDurations);
             await _dbContext.SaveChangesAsync();
 
             // Добавит время занятий преподавателя.
@@ -521,22 +521,6 @@ public sealed class ProfileRepository : IProfileRepository
                     result.UserItems.AddRange(mentorProfileItems);
                 }
 
-                // Получит длительности.
-                var mentorLessonDurations = _dbContext.MentorLessonDurations
-                    .Where(d => d.UserId == userId)
-                    .Select(d => new MentorProfileDurations
-                    {
-                        Time = d.Time,
-                        Unit = d.Unit
-                    })
-                    .AsQueryable();
-
-                // Если есть длительности.
-                if (mentorLessonDurations.Any())
-                {
-                    result.MentorDurations.AddRange(mentorLessonDurations);
-                }
-
                 // Получит время.
                 var times = _dbContext.UserTimes
                     .Where(t => t.UserId == userId)
@@ -753,6 +737,22 @@ public sealed class ProfileRepository : IProfileRepository
             if (mentorLessonPrices.Any())
             {
                 result.UserPrices.AddRange(mentorLessonPrices);
+            }
+            
+            // Получит длительности.
+            var mentorLessonDurations = _dbContext.UserLessonDurations
+                .Where(d => d.UserId == userId)
+                .Select(d => new UserProfileDurations
+                {
+                    Time = d.Time,
+                    Unit = d.Unit
+                })
+                .AsQueryable();
+
+            // Если есть длительности.
+            if (mentorLessonDurations.Any())
+            {
+                result.UserDurations.AddRange(mentorLessonDurations);
             }
 
             return result;
@@ -1074,9 +1074,9 @@ public sealed class ProfileRepository : IProfileRepository
         {
             var result = new WorksheetOutput
             {
-                MentorDurations = await _dbContext.MentorLessonDurations
+                UserDurations = await _dbContext.UserLessonDurations
                     .Where(d => d.UserId == userId)
-                    .Select(d => new MentorProfileDurations
+                    .Select(d => new UserProfileDurations
                     {
                         Time = d.Time,
                         Unit = d.Unit,
@@ -1097,15 +1097,15 @@ public sealed class ProfileRepository : IProfileRepository
     }
 
     /// <summary>
-    /// Метод обновит список длительностей преподавателя в анкете.
+    /// Метод обновит список длительностей пользователя в анкете.
     /// </summary>
     /// <param name="updateItems">Список длительностей для обновления.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    public async Task UpdateMentorDurationsAsync(List<MentorLessonDurationEntity> updateDurations)
+    public async Task UpdateMentorDurationsAsync(List<UserLessonDurationEntity> updateDurations)
     {
         try
         {
-            _dbContext.MentorLessonDurations.UpdateRange(updateDurations);
+            _dbContext.UserLessonDurations.UpdateRange(updateDurations);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -1608,6 +1608,36 @@ public sealed class ProfileRepository : IProfileRepository
                     UserId = userId,
                     Price = item.Price,
                     Unit = UnitPriceConst.UNIT_RUB
+                });
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет длительности пользователя.
+    /// </summary>
+    /// <param name="addDurations">Добавляемые пользователя.</param>
+    /// <param name="userId">Id пользователя.</param>
+    public async Task AddUserDurationsAsync(List<UserProfileDurations> addDurations, long userId)
+    {
+        try
+        {
+            foreach (var item in addDurations)
+            {
+                await _dbContext.UserLessonDurations.AddAsync(new UserLessonDurationEntity
+                {
+                    UserId = userId,
+                    Time = item.Time,
+                    Unit = UnitTimeConst.DURATION_UNIT
                 });
             }
 

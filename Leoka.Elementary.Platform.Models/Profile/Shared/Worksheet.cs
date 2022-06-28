@@ -49,9 +49,9 @@ public class Worksheet
     public List<UserProfilePrices> UserPrices { get; set; } = new();
     
     /// <summary>
-    /// Список длительностей преподавателя.
+    /// Список длительностей пользователя.
     /// </summary>
-    public List<MentorProfileDurations> MentorDurations { get; set; } = new();
+    public List<UserProfileDurations> UserDurations { get; set; } = new();
     
     /// <summary>
     /// Список свободного времени пользователя.

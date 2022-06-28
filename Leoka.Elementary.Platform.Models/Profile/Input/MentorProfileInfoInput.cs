@@ -48,7 +48,7 @@ public class MentorProfileInfoInput
     /// <summary>
     /// Список длительностей преподавателя.
     /// </summary>
-    public List<MentorProfileDurations> MentorDurations { get; set; } = new();
+    public List<UserProfileDurations> UserDurations { get; set; } = new();
     
     /// <summary>
     /// Список свободного времени пользователя.

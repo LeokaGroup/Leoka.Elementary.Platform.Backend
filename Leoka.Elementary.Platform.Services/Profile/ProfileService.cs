@@ -283,7 +283,7 @@ public sealed class ProfileService : IProfileService
         }
 
         // Проверит длительности занятий преподавателя.
-        if (!mentorProfileInfo.MentorDurations.Any())
+        if (!mentorProfileInfo.UserDurations.Any())
         {
             throw new EmptyDurationException();
         }
@@ -788,12 +788,12 @@ public sealed class ProfileService : IProfileService
     }
 
     /// <summary>
-    /// Метод обновит список длительностей преподавателя в анкете.
+    /// Метод обновит список длительностей пользователя в анкете.
     /// </summary>
     /// <param name="updatePrices">Список длительностей для обновления.</param>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    public async Task<WorksheetOutput> UpdateMentorDurationsAsync(List<MentorProfileDurations> updateDurations, string account)
+    public async Task<WorksheetOutput> UpdateMentorDurationsAsync(List<UserProfileDurations> updateDurations, string account)
     {
         try
         {
@@ -817,34 +817,38 @@ public sealed class ProfileService : IProfileService
 
             var oldDurations = await _profileRepository.GetMentorDurationsAsync(user.UserId);
             
-            // Если нет длительностей у преподавателя.
-            if (!oldDurations.MentorDurations.Any())
+            // Если нет длительностей у пользователя, то добавляем их.
+            if (!oldDurations.UserDurations.Any())
             {
-                return new WorksheetOutput();
+                await _profileRepository.AddUserDurationsAsync(updateDurations, user.UserId);
             }
 
-            // Проходит по старым длительностям.
-            for (var i = 0; i < oldDurations.MentorDurations.Count; i++)
+            // Обновляем длительности.
+            else
             {
-                // Проходит по новым длительностям.
-                for (var j = 0; j < updateDurations.Count; j++)
+                // Проходит по старым длительностям.
+                for (var i = 0; i < oldDurations.UserDurations.Count; i++)
                 {
-                    // Если номер предмета не совпадает, значит нужно менять предмет.
-                    if (oldDurations.MentorDurations[i].Time != updateDurations[j].Time)
+                    // Проходит по новым длительностям.
+                    for (var j = 0; j < updateDurations.Count; j++)
                     {
-                        oldDurations.MentorDurations[i].Time = updateDurations[j].Time;
-                    }
+                        // Если номер предмета не совпадает, значит нужно менять предмет.
+                        if (oldDurations.UserDurations[i].Time != updateDurations[j].Time)
+                        {
+                            oldDurations.UserDurations[i].Time = updateDurations[j].Time;
+                        }
             
-                    i++;
+                        i++;
+                    }
                 }
+
+                var items = _mapper.Map<List<UserLessonDurationEntity>>(oldDurations.UserDurations);
+            
+                items.ForEach(i => i.UserId = user.UserId);
+            
+                await _profileRepository.UpdateMentorDurationsAsync(items);
             }
 
-            var items = _mapper.Map<List<MentorLessonDurationEntity>>(oldDurations.MentorDurations);
-            
-            items.ForEach(i => i.UserId = user.UserId);
-            
-            await _profileRepository.UpdateMentorDurationsAsync(items);
-            
             var result = await GetProfileWorkSheetAsync(account);
 
             return result;

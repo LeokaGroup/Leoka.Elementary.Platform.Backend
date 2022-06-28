@@ -154,11 +154,11 @@ public interface IProfileRepository
     Task<WorksheetOutput> GetMentorDurationsAsync(long userId);
     
     /// <summary>
-    /// Метод обновит список длительностей преподавателя в анкете.
+    /// Метод обновит список длительностей пользователя в анкете.
     /// </summary>
     /// <param name="updateItems">Список длительностей для обновления.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    Task UpdateMentorDurationsAsync(List<MentorLessonDurationEntity> updateDurations);
+    Task UpdateMentorDurationsAsync(List<UserLessonDurationEntity> updateDurations);
     
     /// <summary>
     /// Метод получит список времен пользователя в анкете.
@@ -278,4 +278,11 @@ public interface IProfileRepository
     /// <param name="updatePrices">Добавляемые цены.</param>
     /// <param name="userId">Id пользователя.</param>
     Task AddUserPricesAsync(List<UserProfilePrices> addPrices, long userId);
+
+    /// <summary>
+    /// Метод добавляет длительности пользователя.
+    /// </summary>
+    /// <param name="addDurations">Добавляемые пользователя.</param>
+    /// <param name="userId">Id пользователя.</param>
+    Task AddUserDurationsAsync(List<UserProfileDurations> addDurations, long userId);
 }
