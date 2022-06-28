@@ -263,15 +263,15 @@ public sealed class ProfileRepository : IProfileRepository
             await _dbContext.MentorProfileItems.AddRangeAsync(mentorItems);
             await _dbContext.SaveChangesAsync();
 
-            // Добавит список цен преподавателя.
-            var mentorPrices = mapper.Map<List<MentorLessonPriceEntity>>(mentorProfileInfoInput.MentorPrices);
+            // Добавит список цен пользователя.
+            var userPrices = mapper.Map<List<UserLessonPriceEntity>>(mentorProfileInfoInput.UserPrices);
 
-            foreach (var item in mentorPrices)
+            foreach (var item in userPrices)
             {
                 item.UserId = userId;
             }
 
-            await _dbContext.MentorLessonPrices.AddRangeAsync(mentorPrices);
+            await _dbContext.UserLessonPrices.AddRangeAsync(userPrices);
             await _dbContext.SaveChangesAsync();
 
             // Добавит длительности занятий преподавателя.
@@ -500,7 +500,7 @@ public sealed class ProfileRepository : IProfileRepository
                 }
 
                 // Получит предметы преподавателя.
-                var mentorProfileItems = await (from mpi in _dbContext.MentorProfileItems
+                var mentorProfileItems = (from mpi in _dbContext.MentorProfileItems
                         join pi in _dbContext.ProfileItems
                             on mpi.ItemNumber
                             equals pi.ItemNumber
@@ -512,7 +512,7 @@ public sealed class ProfileRepository : IProfileRepository
                             Position = pi.Position,
                             ItemNumber = pi.ItemNumber
                         })
-                    .ToArrayAsync();
+                    .AsQueryable();
 
                 // Если есть предметы преподавателя.
                 if (mentorProfileItems.Any())
@@ -521,30 +521,30 @@ public sealed class ProfileRepository : IProfileRepository
                 }
 
                 // Получит цены преподавателя.
-                var mentorLessonPrices = await _dbContext.MentorLessonPrices
+                var mentorLessonPrices = _dbContext.UserLessonPrices
                     .Where(p => p.UserId == userId)
-                    .Select(p => new MentorProfilePrices
+                    .Select(p => new UserProfilePrices
                     {
                         Price = p.Price,
                         Unit = p.Unit
                     })
-                    .ToArrayAsync();
+                    .AsQueryable();
 
                 // Если есть цены.
                 if (mentorLessonPrices.Any())
                 {
-                    result.MentorPrices.AddRange(mentorLessonPrices);
+                    result.UserPrices.AddRange(mentorLessonPrices);
                 }
 
                 // Получит длительности.
-                var mentorLessonDurations = await _dbContext.MentorLessonDurations
+                var mentorLessonDurations = _dbContext.MentorLessonDurations
                     .Where(d => d.UserId == userId)
                     .Select(d => new MentorProfileDurations
                     {
                         Time = d.Time,
                         Unit = d.Unit
                     })
-                    .ToArrayAsync();
+                    .AsQueryable();
 
                 // Если есть длительности.
                 if (mentorLessonDurations.Any())
@@ -553,7 +553,7 @@ public sealed class ProfileRepository : IProfileRepository
                 }
 
                 // Получит время.
-                var times = await _dbContext.UserTimes
+                var times = _dbContext.UserTimes
                     .Where(t => t.UserId == userId)
                     .Select(t => new UserTimes
                     {
@@ -564,7 +564,7 @@ public sealed class ProfileRepository : IProfileRepository
                             .Select(d => d.DayName)
                             .FirstOrDefault()
                     })
-                    .ToArrayAsync();
+                    .AsQueryable();
 
                 // Если есть время.
                 if (times.Any())
@@ -573,7 +573,7 @@ public sealed class ProfileRepository : IProfileRepository
                 }
 
                 // Получит цели подготовки с подсвеченными (выбранными ранее).
-                var userTrainings = await _dbContext.PurposeTrainings
+                var userTrainings = _dbContext.PurposeTrainings
                     .Select(pt => new PurposeTrainingOutput
                     {
                         PurposeName = pt.PurposeName,
@@ -581,7 +581,7 @@ public sealed class ProfileRepository : IProfileRepository
                         PurposeId = pt.PurposeId,
                         IsSelected = _dbContext.UserTrainings.Any(mt => mt.PurposeId == pt.PurposeId)
                     })
-                    .ToArrayAsync();
+                    .AsQueryable();
 
                 // Если есть цели.
                 if (userTrainings.Any())
@@ -590,13 +590,13 @@ public sealed class ProfileRepository : IProfileRepository
                 }
 
                 // Получит опыт.
-                var mentorExperience = await _dbContext.MentorExperience
+                var mentorExperience = _dbContext.MentorExperience
                     .Where(e => e.UserId == userId)
                     .Select(e => new MentorExperience
                     {
                         ExperienceText = e.ExperienceText
                     })
-                    .ToArrayAsync();
+                    .AsQueryable();
 
                 // Если есть опыт.
                 if (mentorExperience.Any())
@@ -605,13 +605,13 @@ public sealed class ProfileRepository : IProfileRepository
                 }
 
                 // Получит образование.
-                var mentorEducations = await _dbContext.MentorEducations
+                var mentorEducations = _dbContext.MentorEducations
                     .Where(e => e.UserId == userId)
                     .Select(e => new MentorEducations
                     {
                         EducationText = e.EducationText
                     })
-                    .ToArrayAsync();
+                    .AsQueryable();
 
                 // Если есть образование.
                 if (mentorEducations.Any())
@@ -620,13 +620,13 @@ public sealed class ProfileRepository : IProfileRepository
                 }
 
                 // Получит информацию.
-                var mentorAboutInfo = await _dbContext.MentorAboutInfos
+                var mentorAboutInfo = _dbContext.MentorAboutInfos
                     .Where(a => a.UserId == userId)
                     .Select(a => new MentorAboutInfo
                     {
                         AboutInfoText = a.AboutInfoText
                     })
-                    .ToArrayAsync();
+                    .AsQueryable();
 
                 // Если есть информация.
                 if (mentorAboutInfo.Any())
@@ -639,14 +639,14 @@ public sealed class ProfileRepository : IProfileRepository
             if (roleId == 1)
             {
                 // Выбираем возрасты преподавателя для выбора.
-                var mentorAge = await _dbContext.MentorAge
+                var mentorAge = _dbContext.MentorAge
                     .Select(a => new MentorAgeOutput
                     {
                         AgeId = a.AgeId,
                         StartAge = a.StartAge,
                         EndAge = a.EndAge
                     })
-                    .ToArrayAsync();
+                    .AsQueryable();
 
                 // Если возраст есть.
                 if (mentorAge.Any())
@@ -655,13 +655,13 @@ public sealed class ProfileRepository : IProfileRepository
                 }
 
                 // Выбираем пол преподавателей для выбора.
-                var mentorGenders = await _dbContext.MentorGender
+                var mentorGenders = _dbContext.MentorGender
                     .Select(g => new MentorGenderOutput
                     {
                         GenderId = g.GenderId,
                         GenderName = g.GenderName
                     })
-                    .ToArrayAsync();
+                    .AsQueryable();
 
                 // Если пол есть.
                 if (mentorGenders.Any())
@@ -733,7 +733,7 @@ public sealed class ProfileRepository : IProfileRepository
                 }
                 
                 // Выбираем список предметов студента.
-                var studentItems = await (from mpi in _dbContext.StudentProfileItems
+                var studentItems = (from mpi in _dbContext.StudentProfileItems
                         join pi in _dbContext.ProfileItems
                             on mpi.ItemNumber
                             equals pi.ItemNumber
@@ -745,7 +745,7 @@ public sealed class ProfileRepository : IProfileRepository
                             Position = pi.Position,
                             ItemNumber = pi.ItemNumber
                         })
-                    .ToArrayAsync();
+                    .AsQueryable();
                 
                 // Если есть предметы преподавателя.
                 if (studentItems.Any())
@@ -1013,11 +1013,11 @@ public sealed class ProfileRepository : IProfileRepository
     /// </summary>
     /// <param name="updateItems">Список предметов для обновления.</param>
     /// <returns>Обновленный список предметов.</returns>
-    public async Task UpdateMentorPricesAsync(List<MentorLessonPriceEntity> updateItems)
+    public async Task UpdateMentorPricesAsync(List<UserLessonPriceEntity> updateItems)
     {
         try
         {
-            _dbContext.MentorLessonPrices.UpdateRange(updateItems);
+            _dbContext.UserLessonPrices.UpdateRange(updateItems);
             await _dbContext.SaveChangesAsync();
         }
 
@@ -1040,9 +1040,9 @@ public sealed class ProfileRepository : IProfileRepository
         {
             var result = new WorksheetOutput
             {
-                MentorPrices = await _dbContext.MentorLessonPrices
+                UserPrices = await _dbContext.UserLessonPrices
                     .Where(p => p.UserId == userId)
-                    .Select(p => new MentorProfilePrices
+                    .Select(p => new UserProfilePrices
                     {
                         Price = p.Price,
                         Unit = p.Unit,

@@ -164,9 +164,9 @@ public class PostgreDbContext : DbContext
     public DbSet<MentorProfileItemEntity> MentorProfileItems { get; set; }
 
     /// <summary>
-    /// Таблица Profile.MentorLessonPrices.
+    /// Таблица Profile.UserLessonPrices.
     /// </summary>
-    public DbSet<MentorLessonPriceEntity> MentorLessonPrices { get; set; }
+    public DbSet<UserLessonPriceEntity> UserLessonPrices { get; set; }
 
     /// <summary>
     /// Таблица Profile.MentorLessonDurations.

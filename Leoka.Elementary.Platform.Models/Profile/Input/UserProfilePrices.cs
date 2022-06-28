@@ -1,9 +1,9 @@
 ﻿namespace Leoka.Elementary.Platform.Models.Profile.Input;
 
 /// <summary>
-/// Класс описывает цены преподавателя.
+/// Класс описывает цены пользователя.
 /// </summary>
-public class MentorProfilePrices
+public class UserProfilePrices
 {
     public long PriceId { get; set; }
     

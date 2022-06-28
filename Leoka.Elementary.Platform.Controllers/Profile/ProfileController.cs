@@ -267,15 +267,15 @@ public class ProfileController : BaseController
     /// <param name="worksheetInput">Входная модель.</param>
     /// <returns>Обновленный список цен.</returns>
     [HttpPatch]
-    [Route("mentor-prices")]
+    [Route("user-prices")]
     [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<WorksheetOutput> UpdateMentorPricesAsync([FromBody] WorksheetInput worksheetInput)
+    public async Task<WorksheetOutput> UpdateUserPricesAsync([FromBody] WorksheetInput worksheetInput)
     {
-        var result = await _profileService.UpdateMentorPricesAsync(worksheetInput.MentorPrices, GetUserName());
+        var result = await _profileService.UpdateUserPricesAsync(worksheetInput.UserPrices, GetUserName());
 
         return result;
     }

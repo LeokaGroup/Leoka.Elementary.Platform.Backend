@@ -277,7 +277,7 @@ public sealed class ProfileService : IProfileService
         }
 
         // Проверит список цен преподавателя.
-        if (!mentorProfileInfo.MentorPrices.Any())
+        if (!mentorProfileInfo.UserPrices.Any())
         {
             throw new EmptyPricesException();
         }
@@ -714,12 +714,12 @@ public sealed class ProfileService : IProfileService
     }
 
     /// <summary>
-    /// Метод обновит список предметов преподавателя в анкете.
+    /// Метод обновит список предметов пользователя в анкете.
     /// </summary>
     /// <param name="updatePrices">Список цен для обновления.</param>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список предметов.</returns>
-    public async Task<WorksheetOutput> UpdateMentorPricesAsync(List<MentorProfilePrices> updatePrices, string account)
+    public async Task<WorksheetOutput> UpdateUserPricesAsync(List<UserProfilePrices> updatePrices, string account)
     {
         try
         {
@@ -744,28 +744,28 @@ public sealed class ProfileService : IProfileService
             var oldPrices = await _profileRepository.GetMentorPricesAsync(user.UserId);
             
             // Если нет цен у преподавателя.
-            if (!oldPrices.MentorPrices.Any())
+            if (!oldPrices.UserPrices.Any())
             {
                 return new WorksheetOutput();
             }
 
             // Проходит по старым ценам.
-            for (var i = 0; i < oldPrices.MentorPrices.Count; i++)
+            for (var i = 0; i < oldPrices.UserPrices.Count; i++)
             {
                 // Проходит по новым ценам.
                 for (var j = 0; j < updatePrices.Count; j++)
                 {
                     // Если цены не совпадает, значит нужно менять цену.
-                    if (oldPrices.MentorPrices[i].Price != updatePrices[j].Price)
+                    if (oldPrices.UserPrices[i].Price != updatePrices[j].Price)
                     {
-                        oldPrices.MentorPrices[i].Price = updatePrices[j].Price;
+                        oldPrices.UserPrices[i].Price = updatePrices[j].Price;
                     }
             
                     i++;
                 }
             }
             
-            var items = _mapper.Map<List<MentorLessonPriceEntity>>(oldPrices.MentorPrices);
+            var items = _mapper.Map<List<UserLessonPriceEntity>>(oldPrices.UserPrices);
             
             items.ForEach(i => i.UserId = user.UserId);
             

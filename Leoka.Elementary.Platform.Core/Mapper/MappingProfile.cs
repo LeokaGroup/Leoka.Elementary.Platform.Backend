@@ -25,8 +25,8 @@ public class MappingProfile : Profile
         CreateMap<MainBestOptionEntity, OptionOutput>();
         
         CreateMap<MentorProfileItems, MentorProfileItemEntity>();
-        CreateMap<MentorProfilePrices, MentorLessonPriceEntity>();
-        CreateMap<MentorLessonPriceEntity, MentorProfilePrices>();
+        CreateMap<UserProfilePrices, UserLessonPriceEntity>();
+        CreateMap<UserLessonPriceEntity, UserProfilePrices>();
         CreateMap<MentorProfileDurations, MentorLessonDurationEntity>();
         CreateMap<UserTimes, UserTimeEntity>();
         CreateMap<UserTimeEntity, UserTimes>();

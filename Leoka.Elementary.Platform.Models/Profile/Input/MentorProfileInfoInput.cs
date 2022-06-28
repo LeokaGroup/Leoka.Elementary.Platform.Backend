@@ -43,7 +43,7 @@ public class MentorProfileInfoInput
     /// <summary>
     /// Список цен преподавателя.
     /// </summary>
-    public List<MentorProfilePrices> MentorPrices { get; set; } = new();
+    public List<UserProfilePrices> UserPrices { get; set; } = new();
     
     /// <summary>
     /// Список длительностей преподавателя.

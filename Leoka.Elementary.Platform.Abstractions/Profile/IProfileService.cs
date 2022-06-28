@@ -113,12 +113,12 @@ public interface IProfileService
     Task<WorksheetOutput> SaveItemsAsync(List<ProfileItemOutput> updateItems, string account);
     
     /// <summary>
-    /// Метод обновит список предметов преподавателя в анкете.
+    /// Метод обновит список предметов пользователя в анкете.
     /// </summary>
     /// <param name="updatePrices">Список цен для обновления.</param>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список предметов.</returns>
-    Task<WorksheetOutput> UpdateMentorPricesAsync(List<MentorProfilePrices> updatePrices, string account);
+    Task<WorksheetOutput> UpdateUserPricesAsync(List<UserProfilePrices> updatePrices, string account);
     
     /// <summary>
     /// Метод обновит список длительностей преподавателя в анкете.

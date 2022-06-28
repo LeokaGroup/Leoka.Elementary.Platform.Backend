@@ -44,9 +44,9 @@ public class Worksheet
     public List<ProfileItemOutput> UserItems { get; set; } = new();
     
     /// <summary>
-    /// Список цен преподавателя.
+    /// Список цен пользователя.
     /// </summary>
-    public List<MentorProfilePrices> MentorPrices { get; set; } = new();
+    public List<UserProfilePrices> UserPrices { get; set; } = new();
     
     /// <summary>
     /// Список длительностей преподавателя.

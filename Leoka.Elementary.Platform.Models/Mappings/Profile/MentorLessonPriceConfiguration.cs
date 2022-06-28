@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Leoka.Elementary.Platform.Models.Mappings.Profile;
 
-public partial class MentorLessonPriceConfiguration : IEntityTypeConfiguration<MentorLessonPriceEntity>
+public partial class MentorLessonPriceConfiguration : IEntityTypeConfiguration<UserLessonPriceEntity>
 {
-    public void Configure(EntityTypeBuilder<MentorLessonPriceEntity> entity)
+    public void Configure(EntityTypeBuilder<UserLessonPriceEntity> entity)
     {
         entity.ToTable("MentorLessonPrices", "Profile");
 
@@ -38,5 +38,5 @@ public partial class MentorLessonPriceConfiguration : IEntityTypeConfiguration<M
         OnConfigurePartial(entity);
     }
 
-    partial void OnConfigurePartial(EntityTypeBuilder<MentorLessonPriceEntity> entity);
+    partial void OnConfigurePartial(EntityTypeBuilder<UserLessonPriceEntity> entity);
 }
