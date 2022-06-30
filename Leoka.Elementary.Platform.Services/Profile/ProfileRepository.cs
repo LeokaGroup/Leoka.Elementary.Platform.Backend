@@ -521,43 +521,6 @@ public sealed class ProfileRepository : IProfileRepository
                     result.UserItems.AddRange(mentorProfileItems);
                 }
 
-                // Получит время.
-                var times = _dbContext.UserTimes
-                    .Where(t => t.UserId == userId)
-                    .Select(t => new UserTimes
-                    {
-                        TimeStart = t.TimeStart,
-                        TimeEnd = t.TimeEnd,
-                        DayName = _dbContext.DaysWeek
-                            .Where(d => d.DayId == t.DayId)
-                            .Select(d => d.DayName)
-                            .FirstOrDefault()
-                    })
-                    .AsQueryable();
-
-                // Если есть время.
-                if (times.Any())
-                {
-                    result.UserTimes.AddRange(times);
-                }
-
-                // Получит цели подготовки с подсвеченными (выбранными ранее).
-                var userTrainings = _dbContext.PurposeTrainings
-                    .Select(pt => new PurposeTrainingOutput
-                    {
-                        PurposeName = pt.PurposeName,
-                        PurposeSysName = pt.PurposeSysName,
-                        PurposeId = pt.PurposeId,
-                        IsSelected = _dbContext.UserTrainings.Any(mt => mt.PurposeId == pt.PurposeId)
-                    })
-                    .AsQueryable();
-
-                // Если есть цели.
-                if (userTrainings.Any())
-                {
-                    result.UserTrainings.AddRange(userTrainings);
-                }
-
                 // Получит опыт.
                 var mentorExperience = _dbContext.MentorExperience
                     .Where(e => e.UserId == userId)
@@ -753,6 +716,43 @@ public sealed class ProfileRepository : IProfileRepository
             if (mentorLessonDurations.Any())
             {
                 result.UserDurations.AddRange(mentorLessonDurations);
+            }
+            
+            // Получит цели подготовки с подсвеченными (выбранными ранее).
+            var userTrainings = _dbContext.PurposeTrainings
+                .Select(pt => new PurposeTrainingOutput
+                {
+                    PurposeName = pt.PurposeName,
+                    PurposeSysName = pt.PurposeSysName,
+                    PurposeId = pt.PurposeId,
+                    IsSelected = _dbContext.UserTrainings.Any(mt => mt.PurposeId == pt.PurposeId && mt.UserId == userId)
+                })
+                .AsQueryable();
+
+            // Если есть цели.
+            if (userTrainings.Any())
+            {
+                result.UserTrainings.AddRange(userTrainings);
+            }
+            
+            // Получит время.
+            var times = _dbContext.UserTimes
+                .Where(t => t.UserId == userId)
+                .Select(t => new UserTimes
+                {
+                    TimeStart = t.TimeStart,
+                    TimeEnd = t.TimeEnd,
+                    DayName = _dbContext.DaysWeek
+                        .Where(d => d.DayId == t.DayId)
+                        .Select(d => d.DayName)
+                        .FirstOrDefault()
+                })
+                .AsQueryable();
+
+            // Если есть время.
+            if (times.Any())
+            {
+                result.UserTimes.AddRange(times);
             }
 
             return result;
@@ -1638,6 +1638,40 @@ public sealed class ProfileRepository : IProfileRepository
                     UserId = userId,
                     Time = item.Time,
                     Unit = UnitTimeConst.DURATION_UNIT
+                });
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет время пользователя.
+    /// </summary>
+    /// <param name="addTimes">Добавляемое время пользователя.</param>
+    /// <param name="userId">Id пользователя.</param>
+    public async Task AddUserTimesAsync(List<UserTimes> addTimes, long userId)
+    {
+        try
+        {
+            foreach (var item in addTimes)
+            {
+                await _dbContext.UserTimes.AddAsync(new UserTimeEntity
+                {
+                    UserId = userId,
+                    TimeStart = item.TimeStart,
+                    TimeEnd = item.TimeEnd,
+                    DayId = _dbContext.DaysWeek
+                        .Where(d => d.DaySysName.Equals(item.DaySysName))
+                        .Select(d => d.DayId)
+                        .FirstOrDefault()
                 });
             }
 

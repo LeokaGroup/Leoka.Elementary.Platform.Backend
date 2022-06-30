@@ -891,34 +891,38 @@ public sealed class ProfileService : IProfileService
             
             var oldTimes = await _profileRepository.GetUserTimesAsync(user.UserId);
             
-            // Если нет времени у преподавателя.
+            // Если нет времени у пользователя, то добавляет.
             if (!oldTimes.UserTimes.Any())
             {
-                return new WorksheetOutput();
+                await _profileRepository.AddUserTimesAsync(updateTimes, user.UserId);
             }
 
-            // Проходит по старым временам.
-            for (var i = 0; i < oldTimes.UserTimes.Count; i++)
+            // Обновляем время.
+            else
             {
-                // Проходит по новым временам.
-                for (var j = 0; j < updateTimes.Count; j++)
+                // Проходит по старым временам.
+                for (var i = 0; i < oldTimes.UserTimes.Count; i++)
                 {
-                    // Если системное название времени не совпадает, значит нужно менять время.
-                    if (!oldTimes.UserTimes[i].DaySysName.Equals(updateTimes[j].DaySysName))
+                    // Проходит по новым временам.
+                    for (var j = 0; j < updateTimes.Count; j++)
                     {
-                        oldTimes.UserTimes[i].DaySysName = updateTimes[j].DaySysName;
-                        oldTimes.UserTimes[i].DayId = await _profileRepository.GetDayIdBySysNameAsync(updateTimes[j].DaySysName);
+                        // Если системное название времени не совпадает, значит нужно менять время.
+                        if (!oldTimes.UserTimes[i].DaySysName.Equals(updateTimes[j].DaySysName))
+                        {
+                            oldTimes.UserTimes[i].DaySysName = updateTimes[j].DaySysName;
+                            oldTimes.UserTimes[i].DayId = await _profileRepository.GetDayIdBySysNameAsync(updateTimes[j].DaySysName);
+                        }
+            
+                        i++;
                     }
-            
-                    i++;
                 }
-            }
 
-            var items = _mapper.Map<List<UserTimeEntity>>(oldTimes.UserTimes);
+                var items = _mapper.Map<List<UserTimeEntity>>(oldTimes.UserTimes);
             
-            items.ForEach(i => i.UserId = user.UserId);
+                items.ForEach(i => i.UserId = user.UserId);
             
-            await _profileRepository.UpdateMentorTimesAsync(items);
+                await _profileRepository.UpdateMentorTimesAsync(items);
+            }
             
             var result = await GetProfileWorkSheetAsync(account);
 

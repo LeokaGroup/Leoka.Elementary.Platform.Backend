@@ -282,7 +282,14 @@ public interface IProfileRepository
     /// <summary>
     /// Метод добавляет длительности пользователя.
     /// </summary>
-    /// <param name="addDurations">Добавляемые пользователя.</param>
+    /// <param name="addDurations">Добавляемые длительности пользователя.</param>
     /// <param name="userId">Id пользователя.</param>
     Task AddUserDurationsAsync(List<UserProfileDurations> addDurations, long userId);
+    
+    /// <summary>
+    /// Метод добавляет время пользователя.
+    /// </summary>
+    /// <param name="addTimes">Добавляемое время пользователя.</param>
+    /// <param name="userId">Id пользователя.</param>
+    Task AddUserTimesAsync(List<UserTimes> addTimes, long userId);
 }
