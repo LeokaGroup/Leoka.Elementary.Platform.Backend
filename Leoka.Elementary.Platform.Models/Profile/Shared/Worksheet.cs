@@ -107,9 +107,4 @@ public class Worksheet
     /// Данные выбранного пола преподавателя студентом.
     /// </summary>
     public StudentGenderMentorOutput StudentGenderMentor { get; set; }
-
-    /// <summary>
-    /// Список предметов студента.
-    /// </summary>
-    public List<StudentProfileItemOutput> StudentProfileItems { get; set; } = new();
 }

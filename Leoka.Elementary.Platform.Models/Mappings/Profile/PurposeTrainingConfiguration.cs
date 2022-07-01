@@ -29,7 +29,7 @@ public partial class PurposeTrainingConfiguration : IEntityTypeConfiguration<Pur
             .IsRequired();
 
         entity.HasIndex(u => u.PurposeId)
-            .HasName("LessonsDuration_pkey")
+            .HasDatabaseName("LessonsDuration_pkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

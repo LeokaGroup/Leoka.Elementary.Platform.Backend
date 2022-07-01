@@ -61,7 +61,7 @@ public partial class MentorProfileInfoConfiguration : IEntityTypeConfiguration<M
             .IsRequired();
         
         entity.HasIndex(u => u.UserProfileInfoId)
-            .HasName("PK_MentorProfileInfoUserProfileInfoId")
+            .HasDatabaseName("PK_MentorProfileInfoUserProfileInfoId")
             .IsUnique();
 
         OnConfigurePartial(entity);

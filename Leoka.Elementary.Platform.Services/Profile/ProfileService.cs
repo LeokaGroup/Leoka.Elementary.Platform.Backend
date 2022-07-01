@@ -1336,4 +1336,54 @@ public sealed class ProfileService : IProfileService
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод сохраняет желаемый возраст преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="ageId">Id возраста.</param>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task<WorksheetOutput> SaveStudententorAgeAsync(int ageId, string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            // Если не передали желаемый возраст преподавателя.
+            if (ageId <= 0)
+            {
+                throw new EmptyStudentMentorAgeException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            // Находим возраст преподавателя в БД.
+            var oldAgeId = await _profileRepository.GetMentorAgeIdByAgeIdAsync(ageId);
+
+            // Если возраст > 0, сохраняем ученику выбранный возраст преподавателя. 
+            if (oldAgeId > 0)
+            {
+                await _profileRepository.SaveStudententorAgeAsync(ageId, user.UserId);
+            }
+
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

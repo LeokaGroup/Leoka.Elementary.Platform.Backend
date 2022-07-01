@@ -27,7 +27,7 @@ public partial class MentorExperienceConfiguration : IEntityTypeConfiguration<Me
             .IsRequired();
 
         entity.HasIndex(u => u.ExperienceId)
-            .HasName("PK_MentorExperienceExperienceId")
+            .HasDatabaseName("PK_MentorExperienceExperienceId")
             .IsUnique();
 
         OnConfigurePartial(entity);

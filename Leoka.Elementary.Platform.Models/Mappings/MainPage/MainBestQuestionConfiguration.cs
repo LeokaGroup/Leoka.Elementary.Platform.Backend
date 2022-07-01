@@ -34,11 +34,11 @@ public partial class MainBestQuestionConfiguration : IEntityTypeConfiguration<Ma
             .IsRequired();
         ;
         entity.HasIndex(u => u.QuestionId)
-            .HasName("MainBestQuestionOptions_pkey")
+            .HasDatabaseName("MainBestQuestionOptions_pkey")
             .IsUnique();
         
         entity.HasIndex(u => u.MainBestOptionBlockId)
-            .HasName("MainBestQuestions_MainBestOptionBlockId_fkey")
+            .HasDatabaseName("MainBestQuestions_MainBestOptionBlockId_fkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

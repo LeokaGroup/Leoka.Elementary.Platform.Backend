@@ -39,7 +39,7 @@ public partial class HeaderConfiguration : IEntityTypeConfiguration<HeaderEntity
             .IsRequired();
         
         entity.HasIndex(u => u.HeaderId)
-            .HasName("Header_pkey")
+            .HasDatabaseName("Header_pkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

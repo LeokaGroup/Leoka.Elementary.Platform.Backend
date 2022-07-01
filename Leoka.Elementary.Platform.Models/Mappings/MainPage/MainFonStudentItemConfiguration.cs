@@ -29,7 +29,7 @@ public partial class MainFonStudentItemConfiguration : IEntityTypeConfiguration<
             .IsRequired();
         
         entity.HasIndex(u => u.ItemId)
-            .HasName("MainFonStudentItems_pkey")
+            .HasDatabaseName("MainFonStudentItems_pkey")
             .IsUnique();
         
         entity.HasOne(p => p.MainFonStudent)

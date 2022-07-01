@@ -35,7 +35,7 @@ public partial class SmartClassStudentItemConfiguration : IEntityTypeConfigurati
             .IsRequired();
         
         entity.HasIndex(u => u.ItemId)
-            .HasName("SmartClassStudentItems_pkey")
+            .HasDatabaseName("SmartClassStudentItems_pkey")
             .IsUnique();
         
         entity.HasOne(p => p.SmartClassStudent)

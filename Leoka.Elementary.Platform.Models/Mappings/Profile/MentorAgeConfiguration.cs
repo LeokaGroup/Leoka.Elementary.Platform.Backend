@@ -14,8 +14,7 @@ public partial class MentorAgeConfiguration : IEntityTypeConfiguration<MentorAge
         
         entity.Property(e => e.AgeId)
             .HasColumnName("AgeId")
-            .HasColumnType("serial")
-            .ValueGeneratedNever();
+            .HasColumnType("serial");
 
         entity.Property(e => e.StartAge)
             .HasColumnName("StartAge")

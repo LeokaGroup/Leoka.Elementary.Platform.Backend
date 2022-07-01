@@ -34,7 +34,7 @@ public partial class DayWeekConfiguration : IEntityTypeConfiguration<DayWeekEnti
             .IsRequired();
 
         entity.HasIndex(u => u.DayId)
-            .HasName("PK_DaysWeekDayId")
+            .HasDatabaseName("PK_DaysWeekDayId")
             .IsUnique();
 
         OnConfigurePartial(entity);

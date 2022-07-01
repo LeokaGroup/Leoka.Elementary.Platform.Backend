@@ -32,7 +32,7 @@ public partial class StudentProfileItemConfiguration : IEntityTypeConfiguration<
             .IsRequired();
         
         entity.HasIndex(u => u.ItemId)
-            .HasName("PK_ItemId")
+            .HasDatabaseName("PK_ItemId")
             .IsUnique();
 
         OnConfigurePartial(entity);

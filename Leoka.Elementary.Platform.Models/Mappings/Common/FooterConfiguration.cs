@@ -84,7 +84,7 @@ public partial class FooterConfiguration : IEntityTypeConfiguration<FooterEntity
             .IsRequired();
 
         entity.HasIndex(u => u.FooterId)
-            .HasName("Footer_pkey")
+            .HasDatabaseName("Footer_pkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

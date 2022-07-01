@@ -35,11 +35,11 @@ public partial class SmartClassStudentConfiguration : IEntityTypeConfiguration<S
             .IsRequired();
 
         entity.HasIndex(u => u.SmartClassId)
-            .HasName("SmartClassStudent_pkey")
+            .HasDatabaseName("SmartClassStudent_pkey")
             .IsUnique();
         
         entity.HasIndex(u => u.SmartClassItemId)
-            .HasName("Uniq_SmartClassStudent_SmartClassItemId")
+            .HasDatabaseName("Uniq_SmartClassStudent_SmartClassItemId")
             .IsUnique();
         
         OnConfigurePartial(entity);

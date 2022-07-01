@@ -15,5 +15,10 @@ public class StudentAgeMentorEntity
     /// </summary>
     public long UserId { get; set; }
 
+    /// <summary>
+    /// Id возраста.
+    /// </summary>
+    public int AgeId { get; set; }
+
     public MentorAgeEntity MentorAge { get; set; }
 }

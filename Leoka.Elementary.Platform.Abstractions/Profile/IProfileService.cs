@@ -189,4 +189,12 @@ public interface IProfileService
     /// <param name="account">Логин.</param>
     /// <returns>Данные анкеты.</returns>
     Task<WorksheetOutput> AddDefaultMentorExperienceAsync(string account);
+
+    /// <summary>
+    /// Метод сохраняет желаемый возраст преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="ageId">Id возраста.</param>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task<WorksheetOutput> SaveStudententorAgeAsync(int ageId, string account);
 }

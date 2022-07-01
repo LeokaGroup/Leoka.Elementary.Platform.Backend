@@ -464,4 +464,23 @@ public class ProfileController : BaseController
 
         return result;
     }
+    
+    /// <summary>
+    /// Метод сохраняет желаемый возраст преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Данные анкеты.</returns>
+    [HttpPatch]
+    [Route("student-mentor-age")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> SaveStudententorAgeAsync([FromBody] StudentMentorAgeInput studentMentorAgeInput)
+    {
+        var result = await _profileService.SaveStudententorAgeAsync(studentMentorAgeInput.AgeId, GetUserName());
+
+        return result;
+    }
 }

@@ -20,14 +20,19 @@ public partial class StudentAgeMentorConfiguration : IEntityTypeConfiguration<St
             .HasColumnName("UserId")
             .HasColumnType("int")
             .IsRequired();
+        
+        entity.Property(e => e.AgeId)
+            .HasColumnName("AgeId")
+            .HasColumnType("int")
+            .IsRequired();
 
         entity.HasIndex(u => u.StudentAgeMentorId)
-            .HasName("PK_StudentAgeMentorId")
+            .HasDatabaseName("PK_StudentAgeMentorId")
             .IsUnique();
         
         entity.HasOne(p => p.MentorAge)
             .WithMany(b => b.StudentAgeMentors)
-            .HasForeignKey(p => p.StudentAgeMentorId)
+            .HasForeignKey(p => p.AgeId)
             .HasConstraintName("FK_MentorAgeAgeId");
 
         OnConfigurePartial(entity);

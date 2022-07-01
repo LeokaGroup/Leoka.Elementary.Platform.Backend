@@ -41,7 +41,7 @@ public partial class ProfileItemConfiguration : IEntityTypeConfiguration<Profile
             .IsRequired();
         
         entity.HasIndex(u => u.ProfileItemId)
-            .HasName("ProfileItems_pkey")
+            .HasDatabaseName("ProfileItems_pkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

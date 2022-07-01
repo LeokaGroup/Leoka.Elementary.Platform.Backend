@@ -40,7 +40,7 @@ public partial class MainFonMentorItemConfiguration : IEntityTypeConfiguration<M
             .IsRequired();
         
         entity.HasIndex(u => u.ItemId)
-            .HasName("MainFonMentorItems_pkey")
+            .HasDatabaseName("MainFonMentorItems_pkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

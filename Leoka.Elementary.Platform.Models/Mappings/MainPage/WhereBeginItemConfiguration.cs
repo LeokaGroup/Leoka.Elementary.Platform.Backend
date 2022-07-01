@@ -40,11 +40,11 @@ public partial class WhereBeginItemConfiguration : IEntityTypeConfiguration<Wher
             .IsRequired();
         
         entity.HasIndex(u => u.ItemId)
-            .HasName("WhereBeginItems_pkey")
+            .HasDatabaseName("WhereBeginItems_pkey")
             .IsUnique();
         
         entity.HasIndex(u => u.BeginItemId)
-            .HasName("WhereBeginItems_BeginItemId_fkey")
+            .HasDatabaseName("WhereBeginItems_BeginItemId_fkey")
             .IsUnique();
         
         entity.HasOne(p => p.WhereBegin)

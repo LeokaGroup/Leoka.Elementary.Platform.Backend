@@ -52,7 +52,7 @@ public class BaseServiceTest
         MainPageService = new MainPageService(MainPageRepository, AutoFac.Resolve<IMapper>());
 
         ProfileRepository = new ProfileRepository(PostgreDbContext);
-        FtpService = new FtpService(null);
+        FtpService = new FtpService(AppConfiguration);
         ProfileService = new ProfileService(ProfileRepository, RoleRepository, UserRepository, FtpService, null);
     }
 }

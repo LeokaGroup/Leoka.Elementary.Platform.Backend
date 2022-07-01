@@ -22,7 +22,7 @@ public partial class UserTrainingConfiguration : IEntityTypeConfiguration<UserTr
             .IsRequired();
 
         entity.HasIndex(u => u.TrainingId)
-            .HasName("PK_MentorTrainingsTrainingId")
+            .HasDatabaseName("PK_MentorTrainingsTrainingId")
             .IsUnique();
         
         entity.HasOne(p => p.PurposeTraining)

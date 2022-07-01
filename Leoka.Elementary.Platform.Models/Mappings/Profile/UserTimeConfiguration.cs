@@ -37,7 +37,7 @@ public partial class UserTimeConfiguration : IEntityTypeConfiguration<UserTimeEn
             .IsRequired();
 
         entity.HasIndex(u => u.TimeId)
-            .HasName("PK_MentorTimesTimeId")
+            .HasDatabaseName("PK_MentorTimesTimeId")
             .IsUnique();
 
         OnConfigurePartial(entity);

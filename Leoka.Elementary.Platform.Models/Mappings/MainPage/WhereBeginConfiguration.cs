@@ -35,11 +35,11 @@ public partial class WhereBeginConfiguration : IEntityTypeConfiguration<WhereBeg
             .IsRequired();
         
         entity.HasIndex(u => u.WhereBeginId)
-            .HasName("WhereBegin_pkey")
+            .HasDatabaseName("WhereBegin_pkey")
             .IsUnique();
         
         entity.HasIndex(u => u.BeginItemId)
-            .HasName("WhereBegin_BeginItemId_key")
+            .HasDatabaseName("WhereBegin_BeginItemId_key")
             .IsUnique();
         
         OnConfigurePartial(entity);

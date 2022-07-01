@@ -27,7 +27,7 @@ public partial class MentorCertificateConfiguration : IEntityTypeConfiguration<M
             .IsRequired();
 
         entity.HasIndex(u => u.CertificateId)
-            .HasName("PK_MentorCertificatesCertificateId")
+            .HasDatabaseName("PK_MentorCertificatesCertificateId")
             .IsUnique();
 
         OnConfigurePartial(entity);

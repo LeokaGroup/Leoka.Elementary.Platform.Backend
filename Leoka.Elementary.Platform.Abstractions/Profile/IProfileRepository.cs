@@ -292,4 +292,18 @@ public interface IProfileRepository
     /// <param name="addTimes">Добавляемое время пользователя.</param>
     /// <param name="userId">Id пользователя.</param>
     Task AddUserTimesAsync(List<UserTimes> addTimes, long userId);
+
+    /// <summary>
+    /// Метод получает Id возраста в базе для сравнения.
+    /// </summary>
+    /// <param name="ageId">Id возраста.</param>
+    /// <returns>Id возраста.</returns>
+    Task<int> GetMentorAgeIdByAgeIdAsync(int ageId);
+
+    /// <summary>
+    /// Метод сохраняет ученику выбранный возраст преподавателя.
+    /// </summary>
+    /// <param name="ageId">Id возраста.</param>
+    /// <param name="userId">Id пользователя.</param>
+    Task SaveStudententorAgeAsync(int ageId, long userId);
 }

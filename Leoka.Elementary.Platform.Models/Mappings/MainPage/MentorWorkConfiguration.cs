@@ -45,11 +45,11 @@ public partial class MentorWorkConfiguration : IEntityTypeConfiguration<MentorWo
             .HasColumnType("text");
 
         entity.HasIndex(u => u.MentorWorkUrl)
-            .HasName("MainFonStudent_pkey")
+            .HasDatabaseName("MainFonStudent_pkey")
             .IsUnique();
         
         entity.HasIndex(u => u.MentorWorkId)
-            .HasName("MentorWork_pkey")
+            .HasDatabaseName("MentorWork_pkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

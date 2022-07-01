@@ -28,7 +28,7 @@ public partial class StudentGenderMentorConfiguration : IEntityTypeConfiguration
             .IsRequired();
         
         entity.HasIndex(u => u.StudentGenderMentorId)
-            .HasName("PK_StudentGenderMentorId")
+            .HasDatabaseName("PK_StudentGenderMentorId")
             .IsUnique();
         
         entity.HasOne(p => p.MentorGender)

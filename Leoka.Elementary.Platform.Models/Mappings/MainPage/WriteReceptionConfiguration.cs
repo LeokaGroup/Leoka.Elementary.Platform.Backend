@@ -30,7 +30,7 @@ public partial class WriteReceptionConfiguration : IEntityTypeConfiguration<Writ
             .IsRequired();
         
         entity.HasIndex(u => u.WriteReceptionId)
-            .HasName("WriteReception_pkey")
+            .HasDatabaseName("WriteReception_pkey")
             .IsUnique();
         
         OnConfigurePartial(entity);

@@ -17,7 +17,7 @@ public partial class UserClaimConfiguration : IEntityTypeConfiguration<IdentityU
             .HasColumnType("bigint");
         
         entity.HasIndex(u => u.Id)
-            .HasName("PK_UserClaims_Id")
+            .HasDatabaseName("PK_UserClaims_Id")
             .IsUnique();
 
         OnConfigurePartial(entity);

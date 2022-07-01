@@ -1685,4 +1685,85 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получает Id возраста в базе для сравнения.
+    /// </summary>
+    /// <param name="ageId">Id возраста.</param>
+    /// <returns>Id возраста.</returns>
+    public async Task<int> GetMentorAgeIdByAgeIdAsync(int ageId)
+    {
+        try
+        {
+            var result = await _dbContext.MentorAge
+                .Where(a => a.AgeId == ageId)
+                .Select(a => a.AgeId)
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод сохраняет ученику выбранный возраст преподавателя.
+    /// </summary>
+    /// <param name="ageId">Id возраста.</param>
+    /// <param name="userId">Id пользователя.</param>
+    public async Task SaveStudententorAgeAsync(int ageId, long userId)
+    {
+        try
+        {
+            // Сохранял ли ученик ранее данные возраста препода.
+            var ageData = await GetStudentMentorAgeAsync(userId);
+
+            // Если пусто, значит сохраняем новые данные.
+            if (ageData is null)
+            {
+                // TODO: тут ошибка ключей каких то, дубли вроде, надо разобраться!
+                await _dbContext.StudentAgeMentor.AddAsync(new StudentAgeMentorEntity
+                {
+                    AgeId = ageId,
+                    UserId = userId
+                });
+            }
+
+            // Иначе обновляем существующие.
+            else
+            {
+                ageData.AgeId = ageId;
+                _dbContext.StudentAgeMentor.Update(ageData);
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод проверяет, сохранял ли ученик ранее данные возраста преподавателя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные возраста.</returns>
+    private async Task<StudentAgeMentorEntity> GetStudentMentorAgeAsync(long userId)
+    {
+        var result = await _dbContext.StudentAgeMentor
+            .Include(a => a.MentorAge)
+            .Where(a => a.UserId == userId)
+            .FirstOrDefaultAsync();
+
+        return result;
+    }
 }
