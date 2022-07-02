@@ -1416,13 +1416,50 @@ public sealed class ProfileService : IProfileService
             }
             
             // Находим пол преподавателя в БД.
-            var oldAgeId = await _profileRepository.GetMentorGenderIdByGenderIdAsync(genderId);
+            var oldGenderId = await _profileRepository.GetMentorGenderIdByGenderIdAsync(genderId);
 
             // Если возраст > 0, сохраняем ученику выбранный возраст преподавателя. 
-            if (oldAgeId > 0)
+            if (oldGenderId > 0)
             {
                 await _profileRepository.SaveStudentMentorGenderAsync(genderId, user.UserId);
             }
+
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод сохраняет комментарий в анкете ученика.
+    /// </summary>
+    /// <param name="comment">Комментарий студента.</param>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task<WorksheetOutput> SaveStudentCommentAsync(string comment, string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            await _profileRepository.SaveStudentCommentAsync(comment, user.UserId);
 
             var result = await GetProfileWorkSheetAsync(account);
 

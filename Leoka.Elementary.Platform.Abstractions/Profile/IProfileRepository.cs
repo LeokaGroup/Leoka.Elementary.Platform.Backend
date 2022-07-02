@@ -311,7 +311,7 @@ public interface IProfileRepository
     /// Метод сохраняет желаемый пол преподавателя в анкете ученика.
     /// </summary>
     /// <param name="genderId">Id пола.</param>
-    /// <param name="account">Логин.</param>
+    /// <param name="userId">Id пользователя.</param>
     /// <returns>Данные анкеты.</returns>
     Task SaveStudentMentorGenderAsync(int genderId, long userId);
     
@@ -321,4 +321,12 @@ public interface IProfileRepository
     /// <param name="genderId">Id пола.</param>
     /// <returns>Id возраста.</returns>
     Task<int> GetMentorGenderIdByGenderIdAsync(int genderId);
+    
+    /// <summary>
+    /// Метод сохраняет комментарий в анкете ученика.
+    /// </summary>
+    /// <param name="comment">Комментарий студента.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task SaveStudentCommentAsync(string comment, long userId);
 }

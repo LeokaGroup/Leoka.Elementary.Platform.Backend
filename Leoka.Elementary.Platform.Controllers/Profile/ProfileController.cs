@@ -502,4 +502,23 @@ public class ProfileController : BaseController
 
         return result;
     }
+    
+    /// <summary>
+    /// Метод сохраняет комментарий в анкете ученика.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Данные анкеты.</returns>
+    [HttpPatch]
+    [Route("student-comment")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> SaveStudentCommentAsync([FromBody] StudentCommentInput studentCommentInput)
+    {
+        var result = await _profileService.SaveStudentCommentAsync(studentCommentInput.Comment, GetUserName());
+
+        return result;
+    }
 }

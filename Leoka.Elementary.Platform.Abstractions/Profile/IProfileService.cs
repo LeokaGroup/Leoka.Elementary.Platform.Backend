@@ -205,4 +205,12 @@ public interface IProfileService
     /// <param name="account">Логин.</param>
     /// <returns>Данные анкеты.</returns>
     Task<WorksheetOutput> SaveStudentMentorGenderAsync(int genderId, string account);
+
+    /// <summary>
+    /// Метод сохраняет комментарий в анкете ученика.
+    /// </summary>
+    /// <param name="comment">Комментарий студента.</param>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task<WorksheetOutput> SaveStudentCommentAsync(string comment, string account);
 }

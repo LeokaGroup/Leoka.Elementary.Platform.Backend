@@ -1846,4 +1846,46 @@ public sealed class ProfileRepository : IProfileRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод сохраняет комментарий в анкете ученика.
+    /// </summary>
+    /// <param name="comment">Комментарий студента.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task SaveStudentCommentAsync(string comment, long userId)
+    {
+        try
+        {
+            var oldUserComment = await _dbContext.StudentComments
+                .Where(c => c.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            // Если комментария еще не было у ученика, то добавляем.
+            if (oldUserComment is null)
+            {
+                await _dbContext.StudentComments.AddAsync(new StudentCommentEntity
+                {
+                    CommentText = comment,
+                    UserId = userId
+                });
+            }
+
+            // Иначе обновляем комментарий.
+            else
+            {
+                oldUserComment.CommentText = comment;
+                _dbContext.StudentComments.Update(oldUserComment);
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
