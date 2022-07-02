@@ -196,5 +196,13 @@ public interface IProfileService
     /// <param name="ageId">Id возраста.</param>
     /// <param name="account">Логин.</param>
     /// <returns>Данные анкеты.</returns>
-    Task<WorksheetOutput> SaveStudententorAgeAsync(int ageId, string account);
+    Task<WorksheetOutput> SaveStudentMentorAgeAsync(int ageId, string account);
+
+    /// <summary>
+    /// Метод сохраняет желаемый пол преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="genderId">Id пола.</param>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task<WorksheetOutput> SaveStudentMentorGenderAsync(int genderId, string account);
 }

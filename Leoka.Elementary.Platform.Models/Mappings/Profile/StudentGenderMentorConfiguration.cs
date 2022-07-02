@@ -14,8 +14,7 @@ public partial class StudentGenderMentorConfiguration : IEntityTypeConfiguration
         
         entity.Property(e => e.StudentGenderMentorId)
             .HasColumnName("StudentGenderMentorId")
-            .HasColumnType("serial")
-            .ValueGeneratedNever();
+            .HasColumnType("serial");
         
         entity.Property(e => e.UserId)
             .HasColumnName("UserId")

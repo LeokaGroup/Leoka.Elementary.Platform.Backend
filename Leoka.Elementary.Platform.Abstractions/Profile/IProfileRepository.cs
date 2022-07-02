@@ -305,5 +305,20 @@ public interface IProfileRepository
     /// </summary>
     /// <param name="ageId">Id возраста.</param>
     /// <param name="userId">Id пользователя.</param>
-    Task SaveStudententorAgeAsync(int ageId, long userId);
+    Task SaveStudentMentorAgeAsync(int ageId, long userId);
+    
+    /// <summary>
+    /// Метод сохраняет желаемый пол преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="genderId">Id пола.</param>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task SaveStudentMentorGenderAsync(int genderId, long userId);
+    
+    /// <summary>
+    /// Метод получает Id пола в базе для сравнения.
+    /// </summary>
+    /// <param name="genderId">Id пола.</param>
+    /// <returns>Id возраста.</returns>
+    Task<int> GetMentorGenderIdByGenderIdAsync(int genderId);
 }

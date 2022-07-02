@@ -1716,7 +1716,7 @@ public sealed class ProfileRepository : IProfileRepository
     /// </summary>
     /// <param name="ageId">Id возраста.</param>
     /// <param name="userId">Id пользователя.</param>
-    public async Task SaveStudententorAgeAsync(int ageId, long userId)
+    public async Task SaveStudentMentorAgeAsync(int ageId, long userId)
     {
         try
         {
@@ -1726,7 +1726,6 @@ public sealed class ProfileRepository : IProfileRepository
             // Если пусто, значит сохраняем новые данные.
             if (ageData is null)
             {
-                // TODO: тут ошибка ключей каких то, дубли вроде, надо разобраться!
                 await _dbContext.StudentAgeMentor.AddAsync(new StudentAgeMentorEntity
                 {
                     AgeId = ageId,
@@ -1765,5 +1764,86 @@ public sealed class ProfileRepository : IProfileRepository
             .FirstOrDefaultAsync();
 
         return result;
+    }
+    
+    /// <summary>
+    /// Метод сохраняет желаемый пол преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="genderId">Id пола.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task SaveStudentMentorGenderAsync(int genderId, long userId)
+    {
+        try
+        {
+            // Сохранял ли ученик ранее данные пола препода.
+            var genderData = await GetStudentMentorGenderAsync(userId);
+
+            // Если пусто, значит сохраняем новые данные.
+            if (genderData is null)
+            {
+                await _dbContext.StudentGenderMentor.AddAsync(new StudentGenderMentorEntity
+                {
+                    GenderId = genderId,
+                    UserId = userId
+                });
+            }
+
+            // Иначе обновляем существующие.
+            else
+            {
+                genderData.GenderId = genderId;
+                _dbContext.StudentGenderMentor.Update(genderData);
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод проверяет, сохранял ли ученик ранее данные пола преподавателя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные пола.</returns>
+    private async Task<StudentGenderMentorEntity> GetStudentMentorGenderAsync(long userId)
+    {
+        var result = await _dbContext.StudentGenderMentor
+            .Include(a => a.MentorGender)
+            .Where(a => a.UserId == userId)
+            .FirstOrDefaultAsync();
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод получает Id пола в базе для сравнения.
+    /// </summary>
+    /// <param name="genderId">Id пола.</param>
+    /// <returns>Id возраста.</returns>
+    public async Task<int> GetMentorGenderIdByGenderIdAsync(int genderId)
+    {
+        try
+        {
+            var result = await _dbContext.MentorGender
+                .Where(a => a.GenderId == genderId)
+                .Select(a => a.GenderId)
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }
