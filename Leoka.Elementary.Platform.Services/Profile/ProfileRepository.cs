@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Leoka.Elementary.Platform.Abstractions.Profile;
+using Leoka.Elementary.Platform.Core.Consts;
 using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.Models.Entities.Profile;
@@ -40,7 +41,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -115,7 +116,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return items;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -145,7 +146,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -174,7 +175,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -203,7 +204,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -220,7 +221,8 @@ public sealed class ProfileRepository : IProfileRepository
     /// <param name="urlAvatar">Путь к изображению профиля пользователя.</param>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Выходная модель с изменениями.</returns>
-    public async Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput, string[] urlCertificates, string urlAvatar, long userId)
+    public async Task<MentorProfileInfoOutput> SaveProfileUserInfoAsync(MentorProfileInfoInput mentorProfileInfoInput,
+        string[] urlCertificates, string urlAvatar, long userId)
     {
         try
         {
@@ -234,8 +236,8 @@ public sealed class ProfileRepository : IProfileRepository
                 Email = mentorProfileInfoInput.Email,
                 PhoneNumber = mentorProfileInfoInput.PhoneNumber,
                 ProfileIconUrl = urlAvatar,
-                FullName = mentorProfileInfoInput.FirstName 
-                           + " " + mentorProfileInfoInput.LastName 
+                FullName = mentorProfileInfoInput.FirstName
+                           + " " + mentorProfileInfoInput.LastName
                            + " " + mentorProfileInfoInput.SecondName,
                 UserId = userId
             });
@@ -246,97 +248,97 @@ public sealed class ProfileRepository : IProfileRepository
             // Добавит список предметов.
             var mentorItems = mapper.Map<List<MentorProfileItemEntity>>(mentorProfileInfoInput.MentorItems);
             var i = 0;
-            
+
             foreach (var item in mentorItems)
             {
                 if (i == 0)
                 {
                     i = 1;
                 }
-                
+
                 item.UserId = userId;
                 item.Position = i;
                 i++;
             }
-            
+
             await _dbContext.MentorProfileItems.AddRangeAsync(mentorItems);
             await _dbContext.SaveChangesAsync();
-            
-            // Добавит список цен преподавателя.
-            var mentorPrices = mapper.Map<List<MentorLessonPriceEntity>>(mentorProfileInfoInput.MentorPrices);
-            
-            foreach (var item in mentorPrices)
+
+            // Добавит список цен пользователя.
+            var userPrices = mapper.Map<List<UserLessonPriceEntity>>(mentorProfileInfoInput.UserPrices);
+
+            foreach (var item in userPrices)
             {
                 item.UserId = userId;
             }
-            
-            await _dbContext.MentorLessonPrices.AddRangeAsync(mentorPrices);
+
+            await _dbContext.UserLessonPrices.AddRangeAsync(userPrices);
             await _dbContext.SaveChangesAsync();
-            
-            // Добавит длительности занятий преподавателя.
-            var mentorDurations = mapper.Map<List<MentorLessonDurationEntity>>(mentorProfileInfoInput.MentorDurations);
-            
+
+            // Добавит длительности занятий пользователя.
+            var mentorDurations = mapper.Map<List<UserLessonDurationEntity>>(mentorProfileInfoInput.UserDurations);
+
             foreach (var item in mentorDurations)
             {
                 item.UserId = userId;
             }
-            
-            await _dbContext.MentorLessonDurations.AddRangeAsync(mentorDurations);
+
+            await _dbContext.UserLessonDurations.AddRangeAsync(mentorDurations);
             await _dbContext.SaveChangesAsync();
-            
+
             // Добавит время занятий преподавателя.
-            var mentorTimes = mapper.Map<List<MentorTimeEntity>>(mentorProfileInfoInput.MentorTimes);
-            
-            foreach (var item in mentorTimes)
+            var userTimes = mapper.Map<List<UserTimeEntity>>(mentorProfileInfoInput.UserTimes);
+
+            foreach (var item in userTimes)
             {
                 item.UserId = userId;
-                
+
                 // TODO: доработать!
                 // Получит Id дня.
             }
-            
-            await _dbContext.MentorTimes.AddRangeAsync(mentorTimes);
+
+            await _dbContext.UserTimes.AddRangeAsync(userTimes);
             await _dbContext.SaveChangesAsync();
-            
+
             // Добавит цели подготовки.
-            var mentorTrainings = mapper.Map<List<MentorTrainingEntity>>(mentorProfileInfoInput.MentorTrainings);
-            
+            var mentorTrainings = mapper.Map<List<UserTrainingEntity>>(mentorProfileInfoInput.UserTrainings);
+
             foreach (var item in mentorTrainings)
             {
                 item.UserId = userId;
-                
+
                 // Запишет Id цели подготовки.
                 item.PurposeId = await _dbContext.PurposeTrainings
                     .Where(p => p.PurposeId == item.PurposeId)
                     .Select(p => p.PurposeId)
                     .FirstOrDefaultAsync();
             }
-            
-            await _dbContext.MentorTrainings.AddRangeAsync(mentorTrainings);
+
+            await _dbContext.UserTrainings.AddRangeAsync(mentorTrainings);
             await _dbContext.SaveChangesAsync();
-            
+
             // Добавит опыт преподавателя.
             var mentorExperience = mapper.Map<List<MentorExperienceEntity>>(mentorProfileInfoInput.MentorExperience);
-            
+
             foreach (var item in mentorExperience)
             {
                 item.UserId = userId;
             }
-            
+
             await _dbContext.MentorExperience.AddRangeAsync(mentorExperience);
             await _dbContext.SaveChangesAsync();
-            
+
             // Добавит образование преподавателя.
             var mentorEducations = mapper.Map<List<MentorEducationEntity>>(mentorProfileInfoInput.MentorEducations);
-            
+
             foreach (var item in mentorEducations)
             {
                 item.UserId = userId;
             }
-            
+
             await _dbContext.MentorEducations.AddRangeAsync(mentorEducations);
             await _dbContext.SaveChangesAsync();
-            
+
             // Добавит информацию о преподавателе.
             var mentorAboutInfo = mapper.Map<List<MentorAboutInfoEntity>>(mentorProfileInfoInput.MentorAboutInfo);
 
@@ -347,13 +349,13 @@ public sealed class ProfileRepository : IProfileRepository
                 item.Position = aboutIdx;
                 aboutIdx++;
             }
-            
+
             await _dbContext.MentorAboutInfos.AddRangeAsync(mentorAboutInfo);
             await _dbContext.SaveChangesAsync();
-            
+
             // Запишет пути к сертификатам.
             var certificatesList = new List<MentorCertificateEntity>();
-            
+
             foreach (var item in urlCertificates)
             {
                 certificatesList.Add(new MentorCertificateEntity
@@ -370,7 +372,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -399,7 +401,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -424,7 +426,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -449,7 +451,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -499,7 +501,7 @@ public sealed class ProfileRepository : IProfileRepository
                 }
 
                 // Получит предметы преподавателя.
-                var mentorProfileItems = await (from mpi in _dbContext.MentorProfileItems
+                var mentorProfileItems = (from mpi in _dbContext.MentorProfileItems
                         join pi in _dbContext.ProfileItems
                             on mpi.ItemNumber
                             equals pi.ItemNumber
@@ -511,122 +513,53 @@ public sealed class ProfileRepository : IProfileRepository
                             Position = pi.Position,
                             ItemNumber = pi.ItemNumber
                         })
-                    .ToArrayAsync();
+                    .AsQueryable();
 
                 // Если есть предметы преподавателя.
                 if (mentorProfileItems.Any())
                 {
-                    result.MentorItems.AddRange(mentorProfileItems);
+                    result.UserItems.AddRange(mentorProfileItems);
                 }
-                
-                // Получит цены преподавателя.
-                var mentorLessonPrices = await _dbContext.MentorLessonPrices
-                    .Where(p => p.UserId == userId)
-                    .Select(p => new MentorProfilePrices
-                    {
-                        Price = p.Price,
-                        Unit = p.Unit
-                    })
-                    .ToArrayAsync();
 
-                // Если есть цены.
-                if (mentorLessonPrices.Any())
-                {
-                    result.MentorPrices.AddRange(mentorLessonPrices);
-                }
-                
-                // Получит длительности.
-                var mentorLessonDurations = await _dbContext.MentorLessonDurations
-                    .Where(d => d.UserId == userId)
-                    .Select(d => new MentorProfileDurations
-                    {
-                        Time = d.Time,
-                        Unit = d.Unit
-                    })
-                    .ToArrayAsync();
-                
-                // Если есть длительности.
-                if (mentorLessonDurations.Any())
-                {
-                    result.MentorDurations.AddRange(mentorLessonDurations);
-                }
-                
-                // Получит время.
-                var times = await _dbContext.MentorTimes
-                    .Where(t => t.UserId == userId)
-                    .Select(t => new MentorTimes
-                    {
-                        TimeStart = t.TimeStart,
-                        TimeEnd = t.TimeEnd,
-                        DayName = _dbContext.DaysWeek
-                            .Where(d => d.DayId == t.DayId)
-                            .Select(d => d.DayName)
-                            .FirstOrDefault()
-                    })
-                    .ToArrayAsync();
-                
-                // Если есть время.
-                if (times.Any())
-                {
-                    result.MentorTimes.AddRange(times);
-                }
-                
-                // Получит цели подготовки с подсвеченными (выбранными ранее).
-                var mentorTrainings = await _dbContext.PurposeTrainings
-                    .Select(pt => new PurposeTrainingOutput
-                    {
-                        PurposeName = pt.PurposeName,
-                        PurposeSysName = pt.PurposeSysName,
-                        PurposeId = pt.PurposeId,
-                        IsSelected = _dbContext.MentorTrainings.Any(mt => mt.PurposeId == pt.PurposeId)
-                    })
-                    .ToArrayAsync();
-                
-                // Если есть цели.
-                if (mentorTrainings.Any())
-                {
-                    result.MentorTrainings.AddRange(mentorTrainings);
-                }
-                
                 // Получит опыт.
-                var mentorExperience = await _dbContext.MentorExperience
+                var mentorExperience = _dbContext.MentorExperience
                     .Where(e => e.UserId == userId)
                     .Select(e => new MentorExperience
                     {
                         ExperienceText = e.ExperienceText
                     })
-                    .ToArrayAsync();
-                
+                    .AsQueryable();
+
                 // Если есть опыт.
                 if (mentorExperience.Any())
                 {
                     result.MentorExperience.AddRange(mentorExperience);
                 }
-                
+
                 // Получит образование.
-                var mentorEducations = await _dbContext.MentorEducations
+                var mentorEducations = _dbContext.MentorEducations
                     .Where(e => e.UserId == userId)
                     .Select(e => new MentorEducations
                     {
                         EducationText = e.EducationText
                     })
-                    .ToArrayAsync();
-                
+                    .AsQueryable();
+
                 // Если есть образование.
                 if (mentorEducations.Any())
                 {
                     result.MentorEducations.AddRange(mentorEducations);
                 }
-                
+
                 // Получит информацию.
-                var mentorAboutInfo = await _dbContext.MentorAboutInfos
+                var mentorAboutInfo = _dbContext.MentorAboutInfos
                     .Where(a => a.UserId == userId)
                     .Select(a => new MentorAboutInfo
                     {
                         AboutInfoText = a.AboutInfoText
                     })
-                    .ToArrayAsync();
-                
+                    .AsQueryable();
+
                 // Если есть информация.
                 if (mentorAboutInfo.Any())
                 {
@@ -634,9 +567,197 @@ public sealed class ProfileRepository : IProfileRepository
                 }
             }
 
+            // Если учащийся.
+            if (roleId == 1)
+            {
+                // Выбираем возрасты преподавателя для выбора.
+                var mentorAge = _dbContext.MentorAge
+                    .Select(a => new MentorAgeOutput
+                    {
+                        AgeId = a.AgeId,
+                        StartAge = a.StartAge,
+                        EndAge = a.EndAge
+                    })
+                    .AsQueryable();
+
+                // Если возраст есть.
+                if (mentorAge.Any())
+                {
+                    result.MentorAge.AddRange(mentorAge);
+                }
+
+                // Выбираем пол преподавателей для выбора.
+                var mentorGenders = _dbContext.MentorGender
+                    .Select(g => new MentorGenderOutput
+                    {
+                        GenderId = g.GenderId,
+                        GenderName = g.GenderName
+                    })
+                    .AsQueryable();
+
+                // Если пол есть.
+                if (mentorGenders.Any())
+                {
+                    result.MentorGenders.AddRange(mentorGenders);
+                }
+
+                // Выбираем комментарии студента.
+                var studentComments = await _dbContext.StudentComments
+                    .Select(c => new StudentCommentsOutput
+                    {
+                        CommentId = c.CommentId,
+                        UserId = c.UserId,
+                        CommentText = c.CommentText
+                    })
+                    .FirstOrDefaultAsync();
+
+                // Если есть комментарии
+                if (studentComments is not null)
+                {
+                    result.StudentComments = studentComments;
+                }
+
+                // Получаем выбранный возраст преподавателя.
+                var selectedMentorAge = await (from sam in _dbContext.StudentAgeMentor
+                        join ma in _dbContext.MentorAge
+                            on sam.MentorAge.AgeId
+                            equals ma.AgeId
+                        select new StudentAgeMentorOutput
+                        {
+                            MentorAge = new MentorAgeOutput
+                            {
+                                AgeId = sam.MentorAge.AgeId,
+                                EndAge = ma.EndAge,
+                                StartAge = ma.StartAge
+                            },
+                            StudentAgeMentorId = sam.StudentAgeMentorId,
+                            UserId = sam.UserId
+                        })
+                    .FirstOrDefaultAsync();
+
+                // Если студент выбирал возраст преподавателя ранее.
+                if (selectedMentorAge is not null)
+                {
+                    result.StudentAgeMentor = selectedMentorAge;
+                }
+
+                // Получаем выбранный пол преподавателя.
+                var selectedMentorGender = await (from sg in _dbContext.StudentGenderMentor
+                        join mg in _dbContext.MentorGender
+                            on sg.MentorGender.GenderId
+                            equals mg.GenderId
+                        select new StudentGenderMentorOutput
+                        {
+                            MentorGender = new MentorGenderOutput
+                            {
+                                GenderId = mg.GenderId,
+                                GenderName = mg.GenderName
+                            },
+                            StudentGenderMentorId = sg.StudentGenderMentorId,
+                            UserId = sg.UserId
+                        })
+                    .FirstOrDefaultAsync();
+
+                // Если студент выбирал пол преподавателя ранее.
+                if (selectedMentorGender is not null)
+                {
+                    result.StudentGenderMentor = selectedMentorGender;
+                }
+                
+                // Выбираем список предметов студента.
+                var studentItems = (from mpi in _dbContext.StudentProfileItems
+                        join pi in _dbContext.ProfileItems
+                            on mpi.ItemNumber
+                            equals pi.ItemNumber
+                        where mpi.UserId == userId
+                        select new ProfileItemOutput
+                        {
+                            ItemName = pi.ItemName,
+                            ItemSysName = pi.ItemSysName,
+                            Position = pi.Position,
+                            ItemNumber = pi.ItemNumber
+                        })
+                    .AsQueryable();
+                
+                // Если есть предметы преподавателя.
+                if (studentItems.Any())
+                {
+                    result.UserItems.AddRange(studentItems);
+                }
+            }
+            
+            // Получит цены пользователя.
+            var mentorLessonPrices = _dbContext.UserLessonPrices
+                .Where(p => p.UserId == userId)
+                .Select(p => new UserProfilePrices
+                {
+                    Price = p.Price,
+                    Unit = p.Unit
+                })
+                .AsQueryable();
+
+            // Если есть цены.
+            if (mentorLessonPrices.Any())
+            {
+                result.UserPrices.AddRange(mentorLessonPrices);
+            }
+            
+            // Получит длительности.
+            var mentorLessonDurations = _dbContext.UserLessonDurations
+                .Where(d => d.UserId == userId)
+                .Select(d => new UserProfileDurations
+                {
+                    Time = d.Time,
+                    Unit = d.Unit
+                })
+                .AsQueryable();
+
+            // Если есть длительности.
+            if (mentorLessonDurations.Any())
+            {
+                result.UserDurations.AddRange(mentorLessonDurations);
+            }
+            
+            // Получит цели подготовки с подсвеченными (выбранными ранее).
+            var userTrainings = _dbContext.PurposeTrainings
+                .Select(pt => new PurposeTrainingOutput
+                {
+                    PurposeName = pt.PurposeName,
+                    PurposeSysName = pt.PurposeSysName,
+                    PurposeId = pt.PurposeId,
+                    IsSelected = _dbContext.UserTrainings.Any(mt => mt.PurposeId == pt.PurposeId && mt.UserId == userId)
+                })
+                .AsQueryable();
+
+            // Если есть цели.
+            if (userTrainings.Any())
+            {
+                result.UserTrainings.AddRange(userTrainings);
+            }
+            
+            // Получит время.
+            var times = _dbContext.UserTimes
+                .Where(t => t.UserId == userId)
+                .Select(t => new UserTimes
+                {
+                    TimeStart = t.TimeStart,
+                    TimeEnd = t.TimeEnd,
+                    DayName = _dbContext.DaysWeek
+                        .Where(d => d.DayId == t.DayId)
+                        .Select(d => d.DayName)
+                        .FirstOrDefault()
+                })
+                .AsQueryable();
+
+            // Если есть время.
+            if (times.Any())
+            {
+                result.UserTimes.AddRange(times);
+            }
+
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -656,7 +777,7 @@ public sealed class ProfileRepository : IProfileRepository
         try
         {
             var result = string.Empty;
-            
+
             // Если нужно получить название аватара преподавателя.
             if (roleId == 2)
             {
@@ -668,7 +789,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -701,7 +822,7 @@ public sealed class ProfileRepository : IProfileRepository
                 }
             }
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -719,12 +840,13 @@ public sealed class ProfileRepository : IProfileRepository
     /// <param name="userId">Id пользователя.</param>
     /// <param name="roleId">Роль пользователя.</param>
     /// <returns>Измененные данные.</returns>
-    public async Task<MentorProfileInfoOutput> UpdateUserFioAsync(string firstName, string lastName, string secondName, long userId, int roleId)
+    public async Task<MentorProfileInfoOutput> UpdateUserFioAsync(string firstName, string lastName, string secondName,
+        long userId, int roleId)
     {
         try
         {
             var result = new MentorProfileInfoOutput();
-            
+
             // Если нужно обновить фио преподавателя.
             if (roleId == 2)
             {
@@ -750,7 +872,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -768,12 +890,13 @@ public sealed class ProfileRepository : IProfileRepository
     /// <param name="userId">Id пользователя.</param>
     /// <param name="roleId">Роль пользователя.</param>
     /// <returns>Измененные данные.</returns>
-    public async Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber, string email, long userId, int roleId)
+    public async Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber,
+        string email, long userId, int roleId)
     {
         try
         {
             var result = new MentorProfileInfoOutput();
-            
+
             // Если нужно обновить контактные данные преподавателя.
             if (roleId == 2)
             {
@@ -799,7 +922,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -809,30 +932,54 @@ public sealed class ProfileRepository : IProfileRepository
     }
 
     /// <summary>
-    /// Метод получит список предметов преподавателя в анкете.
+    /// Метод получит список предметов пользователя в анкете.
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Id роли пользователя.</param>
     /// <returns>Список предметов.</returns>
-    public async Task<WorksheetOutput> GetMentorItemsAsync(long userId)
+    public async Task<WorksheetOutput> GetUserItemsAsync(long userId, int roleId)
     {
         try
         {
-            var result = new WorksheetOutput
+            var result = new WorksheetOutput();
+
+            // Если преподаватель.
+            if (roleId == 2)
             {
-                MentorItems = await _dbContext.MentorProfileItems
-                    .Where(i => i.UserId == userId)
-                    .Select(i => new ProfileItemOutput
-                    {
-                        ItemId = (int)i.ItemId,
-                        ItemNumber = i.ItemNumber,
-                        Position = i.Position
-                    })
-                    .ToListAsync()
-            };
+                result = new WorksheetOutput
+                {
+                    UserItems = await _dbContext.MentorProfileItems
+                        .Where(i => i.UserId == userId)
+                        .Select(i => new ProfileItemOutput
+                        {
+                            ItemId = (int)i.ItemId,
+                            ItemNumber = i.ItemNumber,
+                            Position = i.Position
+                        })
+                        .ToListAsync()
+                };
+            }
+
+            // Если студент.
+            if (roleId == 1)
+            {
+                result = new WorksheetOutput
+                {
+                    UserItems = await _dbContext.StudentProfileItems
+                        .Where(i => i.UserId == userId)
+                        .Select(i => new ProfileItemOutput
+                        {
+                            ItemId = (int)i.ItemId,
+                            ItemNumber = i.ItemNumber,
+                            Position = i.Position
+                        })
+                        .ToListAsync()
+                };
+            }
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -853,7 +1000,7 @@ public sealed class ProfileRepository : IProfileRepository
             _dbContext.MentorProfileItems.UpdateRange(updateItems);
             await _dbContext.SaveChangesAsync();
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -863,18 +1010,18 @@ public sealed class ProfileRepository : IProfileRepository
     }
 
     /// <summary>
-    /// Метод обновит список цен преподавателя в анкете.
+    /// Метод обновит список цен пользователя в анкете.
     /// </summary>
     /// <param name="updateItems">Список предметов для обновления.</param>
     /// <returns>Обновленный список предметов.</returns>
-    public async Task UpdateMentorPricesAsync(List<MentorLessonPriceEntity> updateItems)
+    public async Task UpdateUserPricesAsync(List<UserLessonPriceEntity> updateItems)
     {
         try
         {
-            _dbContext.MentorLessonPrices.UpdateRange(updateItems);
+            _dbContext.UserLessonPrices.UpdateRange(updateItems);
             await _dbContext.SaveChangesAsync();
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -884,19 +1031,19 @@ public sealed class ProfileRepository : IProfileRepository
     }
 
     /// <summary>
-    /// Метод получит список цен преподавателя в анкете.
+    /// Метод получит список цен пользователя в анкете.
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список цен.</returns>
-    public async Task<WorksheetOutput> GetMentorPricesAsync(long userId)
+    public async Task<WorksheetOutput> GetUserPricesAsync(long userId)
     {
         try
         {
             var result = new WorksheetOutput
             {
-                MentorPrices = await _dbContext.MentorLessonPrices
+                UserPrices = await _dbContext.UserLessonPrices
                     .Where(p => p.UserId == userId)
-                    .Select(p => new MentorProfilePrices
+                    .Select(p => new UserProfilePrices
                     {
                         Price = p.Price,
                         Unit = p.Unit,
@@ -907,7 +1054,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -927,9 +1074,9 @@ public sealed class ProfileRepository : IProfileRepository
         {
             var result = new WorksheetOutput
             {
-                MentorDurations = await _dbContext.MentorLessonDurations
+                UserDurations = await _dbContext.UserLessonDurations
                     .Where(d => d.UserId == userId)
-                    .Select(d => new MentorProfileDurations
+                    .Select(d => new UserProfileDurations
                     {
                         Time = d.Time,
                         Unit = d.Unit,
@@ -940,7 +1087,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -950,18 +1097,18 @@ public sealed class ProfileRepository : IProfileRepository
     }
 
     /// <summary>
-    /// Метод обновит список длительностей преподавателя в анкете.
+    /// Метод обновит список длительностей пользователя в анкете.
     /// </summary>
     /// <param name="updateItems">Список длительностей для обновления.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    public async Task UpdateMentorDurationsAsync(List<MentorLessonDurationEntity> updateDurations)
+    public async Task UpdateMentorDurationsAsync(List<UserLessonDurationEntity> updateDurations)
     {
         try
         {
-            _dbContext.MentorLessonDurations.UpdateRange(updateDurations);
+            _dbContext.UserLessonDurations.UpdateRange(updateDurations);
             await _dbContext.SaveChangesAsync();
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -975,15 +1122,15 @@ public sealed class ProfileRepository : IProfileRepository
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список времен.</returns>
-    public async Task<WorksheetOutput> GetMentorTimesAsync(long userId)
+    public async Task<WorksheetOutput> GetUserTimesAsync(long userId)
     {
         try
         {
             var result = new WorksheetOutput
             {
-                MentorTimes = await _dbContext.MentorTimes
+                UserTimes = await _dbContext.UserTimes
                     .Where(d => d.UserId == userId)
-                    .Select(d => new MentorTimes
+                    .Select(d => new UserTimes
                     {
                         TimeStart = d.TimeStart,
                         TimeEnd = d.TimeEnd,
@@ -998,7 +1145,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -1012,14 +1159,14 @@ public sealed class ProfileRepository : IProfileRepository
     /// </summary>
     /// <param name="updateTimes">Список времени для обновления.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    public async Task UpdateMentorTimesAsync(List<MentorTimeEntity> updateTimes)
+    public async Task UpdateMentorTimesAsync(List<UserTimeEntity> updateTimes)
     {
         try
         {
-            _dbContext.MentorTimes.UpdateRange(updateTimes);
+            _dbContext.UserTimes.UpdateRange(updateTimes);
             await _dbContext.SaveChangesAsync();
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -1040,7 +1187,7 @@ public sealed class ProfileRepository : IProfileRepository
             _dbContext.MentorAboutInfos.UpdateRange(updateAboutInfo);
             await _dbContext.SaveChangesAsync();
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -1065,7 +1212,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -1097,7 +1244,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -1129,7 +1276,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -1150,7 +1297,7 @@ public sealed class ProfileRepository : IProfileRepository
             _dbContext.MentorEducations.UpdateRange(updateEducations);
             await _dbContext.SaveChangesAsync();
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -1182,7 +1329,7 @@ public sealed class ProfileRepository : IProfileRepository
 
             return result;
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -1203,7 +1350,7 @@ public sealed class ProfileRepository : IProfileRepository
             _dbContext.MentorExperience.UpdateRange(updateExperience);
             await _dbContext.SaveChangesAsync();
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -1228,7 +1375,7 @@ public sealed class ProfileRepository : IProfileRepository
             }));
             await _dbContext.SaveChangesAsync();
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -1271,7 +1418,7 @@ public sealed class ProfileRepository : IProfileRepository
                 await _dbContext.SaveChangesAsync();
             }
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -1310,7 +1457,7 @@ public sealed class ProfileRepository : IProfileRepository
                 await _dbContext.SaveChangesAsync();
             }
         }
-        
+
         // TODO: добавить логирование ошибок.
         catch (Exception e)
         {
@@ -1348,6 +1495,390 @@ public sealed class ProfileRepository : IProfileRepository
                 });
                 await _dbContext.SaveChangesAsync();
             }
+        }
+
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет новые предметы преподавателю.
+    /// </summary>
+    /// <param name="addItems">Список предметов для добавления.</param>
+    /// <param name="userId">Id пользователя.</param>
+    public async Task AddMentorItemsAsync(List<ProfileItemOutput> addItems, long userId)
+    {
+        try
+        {
+            // i = 1 Позиция по дефолту ставим 1.
+            for (var i = 1; i < addItems.Count; i++)
+            {
+                await _dbContext.MentorProfileItems.AddAsync(new MentorProfileItemEntity
+                {
+                    UserId = userId,
+                    Position = i,
+                    ItemNumber = i
+                });
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет новые предметы ученика.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="addItems">Список предметов для добавления.</param>
+    public async Task AddStudentItemsAsync(List<ProfileItemOutput> addItems, long userId)
+    {
+        try
+        {
+            // i = 1 Позиция по дефолту ставим 1.
+            var pos = 1;
+            
+            foreach (var _ in addItems)
+            {
+                await _dbContext.StudentProfileItems.AddAsync(new StudentProfileItemEntity
+                {
+                    UserId = userId,
+                    Position = pos,
+                    ItemNumber = pos
+                });
+
+                pos++;
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод обновит список предметов ученика в анкете.
+    /// </summary>
+    /// <param name="updateItems">Список предметов для обновления.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    public async Task UpdateStudentItemsAsync(List<StudentProfileItemEntity> updateItems)
+    {
+        try
+        {
+            _dbContext.StudentProfileItems.UpdateRange(updateItems);
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет цены пользователя.
+    /// </summary>
+    /// <param name="updatePrices">Добавляемые цены.</param>
+    /// <param name="userId">Id пользователя.</param>
+    public async Task AddUserPricesAsync(List<UserProfilePrices> addPrices, long userId)
+    {
+        try
+        {
+            foreach (var item in addPrices)
+            {
+                await _dbContext.UserLessonPrices.AddAsync(new UserLessonPriceEntity
+                {
+                    UserId = userId,
+                    Price = item.Price,
+                    Unit = UnitPriceConst.UNIT_RUB
+                });
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет длительности пользователя.
+    /// </summary>
+    /// <param name="addDurations">Добавляемые пользователя.</param>
+    /// <param name="userId">Id пользователя.</param>
+    public async Task AddUserDurationsAsync(List<UserProfileDurations> addDurations, long userId)
+    {
+        try
+        {
+            foreach (var item in addDurations)
+            {
+                await _dbContext.UserLessonDurations.AddAsync(new UserLessonDurationEntity
+                {
+                    UserId = userId,
+                    Time = item.Time,
+                    Unit = UnitTimeConst.DURATION_UNIT
+                });
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет время пользователя.
+    /// </summary>
+    /// <param name="addTimes">Добавляемое время пользователя.</param>
+    /// <param name="userId">Id пользователя.</param>
+    public async Task AddUserTimesAsync(List<UserTimes> addTimes, long userId)
+    {
+        try
+        {
+            foreach (var item in addTimes)
+            {
+                await _dbContext.UserTimes.AddAsync(new UserTimeEntity
+                {
+                    UserId = userId,
+                    TimeStart = item.TimeStart,
+                    TimeEnd = item.TimeEnd,
+                    DayId = _dbContext.DaysWeek
+                        .Where(d => d.DaySysName.Equals(item.DaySysName))
+                        .Select(d => d.DayId)
+                        .FirstOrDefault()
+                });
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получает Id возраста в базе для сравнения.
+    /// </summary>
+    /// <param name="ageId">Id возраста.</param>
+    /// <returns>Id возраста.</returns>
+    public async Task<int> GetMentorAgeIdByAgeIdAsync(int ageId)
+    {
+        try
+        {
+            var result = await _dbContext.MentorAge
+                .Where(a => a.AgeId == ageId)
+                .Select(a => a.AgeId)
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод сохраняет ученику выбранный возраст преподавателя.
+    /// </summary>
+    /// <param name="ageId">Id возраста.</param>
+    /// <param name="userId">Id пользователя.</param>
+    public async Task SaveStudentMentorAgeAsync(int ageId, long userId)
+    {
+        try
+        {
+            // Сохранял ли ученик ранее данные возраста препода.
+            var ageData = await GetStudentMentorAgeAsync(userId);
+
+            // Если пусто, значит сохраняем новые данные.
+            if (ageData is null)
+            {
+                await _dbContext.StudentAgeMentor.AddAsync(new StudentAgeMentorEntity
+                {
+                    AgeId = ageId,
+                    UserId = userId
+                });
+            }
+
+            // Иначе обновляем существующие.
+            else
+            {
+                ageData.AgeId = ageId;
+                _dbContext.StudentAgeMentor.Update(ageData);
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод проверяет, сохранял ли ученик ранее данные возраста преподавателя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные возраста.</returns>
+    private async Task<StudentAgeMentorEntity> GetStudentMentorAgeAsync(long userId)
+    {
+        var result = await _dbContext.StudentAgeMentor
+            .Include(a => a.MentorAge)
+            .Where(a => a.UserId == userId)
+            .FirstOrDefaultAsync();
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод сохраняет желаемый пол преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="genderId">Id пола.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task SaveStudentMentorGenderAsync(int genderId, long userId)
+    {
+        try
+        {
+            // Сохранял ли ученик ранее данные пола препода.
+            var genderData = await GetStudentMentorGenderAsync(userId);
+
+            // Если пусто, значит сохраняем новые данные.
+            if (genderData is null)
+            {
+                await _dbContext.StudentGenderMentor.AddAsync(new StudentGenderMentorEntity
+                {
+                    GenderId = genderId,
+                    UserId = userId
+                });
+            }
+
+            // Иначе обновляем существующие.
+            else
+            {
+                genderData.GenderId = genderId;
+                _dbContext.StudentGenderMentor.Update(genderData);
+            }
+
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод проверяет, сохранял ли ученик ранее данные пола преподавателя.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные пола.</returns>
+    private async Task<StudentGenderMentorEntity> GetStudentMentorGenderAsync(long userId)
+    {
+        var result = await _dbContext.StudentGenderMentor
+            .Include(a => a.MentorGender)
+            .Where(a => a.UserId == userId)
+            .FirstOrDefaultAsync();
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод получает Id пола в базе для сравнения.
+    /// </summary>
+    /// <param name="genderId">Id пола.</param>
+    /// <returns>Id возраста.</returns>
+    public async Task<int> GetMentorGenderIdByGenderIdAsync(int genderId)
+    {
+        try
+        {
+            var result = await _dbContext.MentorGender
+                .Where(a => a.GenderId == genderId)
+                .Select(a => a.GenderId)
+                .FirstOrDefaultAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод сохраняет комментарий в анкете ученика.
+    /// </summary>
+    /// <param name="comment">Комментарий студента.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task SaveStudentCommentAsync(string comment, long userId)
+    {
+        try
+        {
+            var oldUserComment = await _dbContext.StudentComments
+                .Where(c => c.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            // Если комментария еще не было у ученика, то добавляем.
+            if (oldUserComment is null)
+            {
+                await _dbContext.StudentComments.AddAsync(new StudentCommentEntity
+                {
+                    CommentText = comment,
+                    UserId = userId
+                });
+            }
+
+            // Иначе обновляем комментарий.
+            else
+            {
+                oldUserComment.CommentText = comment;
+                _dbContext.StudentComments.Update(oldUserComment);
+            }
+
+            await _dbContext.SaveChangesAsync();
         }
         
         // TODO: добавить логирование ошибок.

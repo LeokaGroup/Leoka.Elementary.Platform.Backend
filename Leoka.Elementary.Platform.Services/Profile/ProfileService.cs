@@ -277,25 +277,25 @@ public sealed class ProfileService : IProfileService
         }
 
         // Проверит список цен преподавателя.
-        if (!mentorProfileInfo.MentorPrices.Any())
+        if (!mentorProfileInfo.UserPrices.Any())
         {
             throw new EmptyPricesException();
         }
 
         // Проверит длительности занятий преподавателя.
-        if (!mentorProfileInfo.MentorDurations.Any())
+        if (!mentorProfileInfo.UserDurations.Any())
         {
             throw new EmptyDurationException();
         }
 
         // Проверит время занятий преподавателя.
-        if (!mentorProfileInfo.MentorTimes.Any())
+        if (!mentorProfileInfo.UserTimes.Any())
         {
             throw new EmptyTimeException();
         }
 
         // Проверит цели подготовки.
-        if (!mentorProfileInfo.MentorTrainings.Any())
+        if (!mentorProfileInfo.UserTrainings.Any())
         {
             throw new EmptyTrainingException();
         }
@@ -580,12 +580,12 @@ public sealed class ProfileService : IProfileService
     }
 
     /// <summary>
-    /// Метод обновит список предметов преподавателя в анкете.
+    /// Метод обновит или добавит список предметов в анкете.
     /// </summary>
     /// <param name="updateItems">Список предметов для обновления.</param>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список предметов.</returns>
-    public async Task<WorksheetOutput> UpdateMentorItemsAsync(List<ProfileItemOutput> updateItems, string account)
+    public async Task<WorksheetOutput> SaveItemsAsync(List<ProfileItemOutput> updateItems, string account)
     {
         try
         {
@@ -606,36 +606,99 @@ public sealed class ProfileService : IProfileService
             {
                 throw new NotFoundUserException(account);
             }
-
-            var oldItems = await _profileRepository.GetMentorItemsAsync(user.UserId);
-
-            // Если нет предметов у преподавателя.
-            if (!oldItems.MentorItems.Any())
-            {
-                return new WorksheetOutput();
-            }
-
-            // Проходит по старым предметам.
-            for (var i = 0; i < oldItems.MentorItems.Count; i++)
-            {
-                // Проходит по новым предметам.
-                for (var j = 0; j < updateItems.Count; j++)
-                {
-                    // Если номер предмета не совпадает, значит нужно менять предмет.
-                    if (oldItems.MentorItems[i].ItemNumber != updateItems[j].ItemNumber)
-                    {
-                        oldItems.MentorItems[i].ItemNumber = updateItems[j].ItemNumber;
-                    }
             
-                    i++;
+            // Получаем роль пользователя.
+            var roleId = await _roleRepository.GetUserRoleAsync(user.UserId);
+
+            List<ProfileItemOutput> addItems;
+
+            // Если преподаватель.
+            if (roleId == 2)
+            {
+                // Получаем список предметов преподавателя.
+                var oldItems = await _profileRepository.GetUserItemsAsync(user.UserId, roleId);
+
+                // Если нет предметов у преподавателя, то добавляем из входного списка.
+                if (!oldItems.UserItems.Any())
+                {
+                    addItems = updateItems;
+                    
+                    // Предметов еще не было, добавляем их.
+                    await _profileRepository.AddMentorItemsAsync(addItems, user.UserId);
+                }
+
+                // Обновляем предметы преподавателя.
+                else
+                {
+                    // Проходит по старым предметам.
+                    for (var i = 0; i < oldItems.UserItems.Count; i++)
+                    {
+                        // Проходит по новым предметам.
+                        for (var j = 0; j < updateItems.Count; j++)
+                        {
+                            // Если номер предмета не совпадает, значит нужно менять предмет.
+                            if (oldItems.UserItems[i].ItemNumber != updateItems[j].ItemNumber)
+                            {
+                                oldItems.UserItems[i].ItemNumber = updateItems[j].ItemNumber;
+                            }
+            
+                            i++;
+                        }
+                    }
+
+                    addItems = oldItems.UserItems;
+
+                    var items = _mapper.Map<List<MentorProfileItemEntity>>(addItems);
+            
+                    items.ForEach(i => i.UserId = user.UserId);
+            
+                    await _profileRepository.UpdateMentorItemsAsync(items);
                 }
             }
 
-            var items = _mapper.Map<List<MentorProfileItemEntity>>(oldItems.MentorItems);
+            // Если ученик.
+            if (roleId == 1)
+            {
+                // Получаем список предметов ученика.
+                var studentItems = await _profileRepository.GetUserItemsAsync(user.UserId, roleId);
+                
+                // Если нет предметов у преподавателя.
+                if (!studentItems.UserItems.Any())
+                {
+                    addItems = updateItems;
+                    
+                    // Предметов еще не было, добавляем их.
+                    await _profileRepository.AddStudentItemsAsync(addItems, user.UserId);
+                }
+
+                // Обновляем предметы ученика.
+                else
+                {
+                    // Проходит по старым предметам.
+                    for (var i = 0; i < studentItems.UserItems.Count; i++)
+                    {
+                        // Проходит по новым предметам.
+                        for (var j = 0; j < updateItems.Count; j++)
+                        {
+                            // Если номер предмета не совпадает, значит нужно менять предмет.
+                            if (studentItems.UserItems[i].ItemNumber != updateItems[j].ItemNumber)
+                            {
+                                studentItems.UserItems[i].ItemNumber = updateItems[j].ItemNumber;
+                            }
             
-            items.ForEach(i => i.UserId = user.UserId);
+                            i++;
+                        }
+                    }
+
+                    addItems = studentItems.UserItems;
+
+                    var items = _mapper.Map<List<StudentProfileItemEntity>>(addItems);
             
-            await _profileRepository.UpdateMentorItemsAsync(items);
+                    items.ForEach(i => i.UserId = user.UserId);
+            
+                    await _profileRepository.UpdateStudentItemsAsync(items);
+                }
+            }
 
             var result = await GetProfileWorkSheetAsync(account);
 
@@ -651,12 +714,12 @@ public sealed class ProfileService : IProfileService
     }
 
     /// <summary>
-    /// Метод обновит список предметов преподавателя в анкете.
+    /// Метод сохранит список предметов пользователя в анкете.
     /// </summary>
     /// <param name="updatePrices">Список цен для обновления.</param>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список предметов.</returns>
-    public async Task<WorksheetOutput> UpdateMentorPricesAsync(List<MentorProfilePrices> updatePrices, string account)
+    public async Task<WorksheetOutput> UpdateUserPricesAsync(List<UserProfilePrices> updatePrices, string account)
     {
         try
         {
@@ -678,35 +741,38 @@ public sealed class ProfileService : IProfileService
                 throw new NotFoundUserException(account);
             }
 
-            var oldPrices = await _profileRepository.GetMentorPricesAsync(user.UserId);
+            var oldPrices = await _profileRepository.GetUserPricesAsync(user.UserId);
             
-            // Если нет цен у преподавателя.
-            if (!oldPrices.MentorPrices.Any())
+            // Если нет цен у пользователя, то добавляем.
+            if (!oldPrices.UserPrices.Any())
             {
-                return new WorksheetOutput();
+                await _profileRepository.AddUserPricesAsync(updatePrices, user.UserId);
             }
 
-            // Проходит по старым ценам.
-            for (var i = 0; i < oldPrices.MentorPrices.Count; i++)
+            else
             {
-                // Проходит по новым ценам.
-                for (var j = 0; j < updatePrices.Count; j++)
+                // Проходит по старым ценам.
+                for (var i = 0; i < oldPrices.UserPrices.Count; i++)
                 {
-                    // Если цены не совпадает, значит нужно менять цену.
-                    if (oldPrices.MentorPrices[i].Price != updatePrices[j].Price)
+                    // Проходит по новым ценам.
+                    for (var j = 0; j < updatePrices.Count; j++)
                     {
-                        oldPrices.MentorPrices[i].Price = updatePrices[j].Price;
+                        // Если цены не совпадает, значит нужно менять цену.
+                        if (oldPrices.UserPrices[i].Price != updatePrices[j].Price)
+                        {
+                            oldPrices.UserPrices[i].Price = updatePrices[j].Price;
+                        }
+            
+                        i++;
                     }
-            
-                    i++;
                 }
+            
+                var items = _mapper.Map<List<UserLessonPriceEntity>>(oldPrices.UserPrices);
+            
+                items.ForEach(i => i.UserId = user.UserId);
+            
+                await _profileRepository.UpdateUserPricesAsync(items);
             }
-            
-            var items = _mapper.Map<List<MentorLessonPriceEntity>>(oldPrices.MentorPrices);
-            
-            items.ForEach(i => i.UserId = user.UserId);
-            
-            await _profileRepository.UpdateMentorPricesAsync(items);
 
             var result = await GetProfileWorkSheetAsync(account);
 
@@ -722,12 +788,12 @@ public sealed class ProfileService : IProfileService
     }
 
     /// <summary>
-    /// Метод обновит список длительностей преподавателя в анкете.
+    /// Метод обновит список длительностей пользователя в анкете.
     /// </summary>
     /// <param name="updatePrices">Список длительностей для обновления.</param>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    public async Task<WorksheetOutput> UpdateMentorDurationsAsync(List<MentorProfileDurations> updateDurations, string account)
+    public async Task<WorksheetOutput> UpdateMentorDurationsAsync(List<UserProfileDurations> updateDurations, string account)
     {
         try
         {
@@ -751,34 +817,38 @@ public sealed class ProfileService : IProfileService
 
             var oldDurations = await _profileRepository.GetMentorDurationsAsync(user.UserId);
             
-            // Если нет длительностей у преподавателя.
-            if (!oldDurations.MentorDurations.Any())
+            // Если нет длительностей у пользователя, то добавляем их.
+            if (!oldDurations.UserDurations.Any())
             {
-                return new WorksheetOutput();
+                await _profileRepository.AddUserDurationsAsync(updateDurations, user.UserId);
             }
 
-            // Проходит по старым длительностям.
-            for (var i = 0; i < oldDurations.MentorDurations.Count; i++)
+            // Обновляем длительности.
+            else
             {
-                // Проходит по новым длительностям.
-                for (var j = 0; j < updateDurations.Count; j++)
+                // Проходит по старым длительностям.
+                for (var i = 0; i < oldDurations.UserDurations.Count; i++)
                 {
-                    // Если номер предмета не совпадает, значит нужно менять предмет.
-                    if (oldDurations.MentorDurations[i].Time != updateDurations[j].Time)
+                    // Проходит по новым длительностям.
+                    for (var j = 0; j < updateDurations.Count; j++)
                     {
-                        oldDurations.MentorDurations[i].Time = updateDurations[j].Time;
-                    }
+                        // Если номер предмета не совпадает, значит нужно менять предмет.
+                        if (oldDurations.UserDurations[i].Time != updateDurations[j].Time)
+                        {
+                            oldDurations.UserDurations[i].Time = updateDurations[j].Time;
+                        }
             
-                    i++;
+                        i++;
+                    }
                 }
+
+                var items = _mapper.Map<List<UserLessonDurationEntity>>(oldDurations.UserDurations);
+            
+                items.ForEach(i => i.UserId = user.UserId);
+            
+                await _profileRepository.UpdateMentorDurationsAsync(items);
             }
 
-            var items = _mapper.Map<List<MentorLessonDurationEntity>>(oldDurations.MentorDurations);
-            
-            items.ForEach(i => i.UserId = user.UserId);
-            
-            await _profileRepository.UpdateMentorDurationsAsync(items);
-            
             var result = await GetProfileWorkSheetAsync(account);
 
             return result;
@@ -797,7 +867,7 @@ public sealed class ProfileService : IProfileService
     /// </summary>
     /// <param name="updateTimes">Входная модель.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    public async Task<WorksheetOutput> UpdateMentorTimesAsync(List<MentorTimes> updateTimes, string account)
+    public async Task<WorksheetOutput> UpdateUserTimesAsync(List<UserTimes> updateTimes, string account)
     {
         try
         {
@@ -819,36 +889,44 @@ public sealed class ProfileService : IProfileService
                 throw new NotFoundUserException(account);
             }
             
-            var oldTimes = await _profileRepository.GetMentorTimesAsync(user.UserId);
+            var oldTimes = await _profileRepository.GetUserTimesAsync(user.UserId);
             
-            // Если нет времени у преподавателя.
-            if (!oldTimes.MentorTimes.Any())
+            // Если нет времени у пользователя, то добавляет.
+            if (!oldTimes.UserTimes.Any())
             {
-                return new WorksheetOutput();
+                await _profileRepository.AddUserTimesAsync(updateTimes, user.UserId);
             }
 
-            // Проходит по старым временам.
-            for (var i = 0; i < oldTimes.MentorTimes.Count; i++)
+            // Обновляем время.
+            else
             {
-                // Проходит по новым временам.
-                for (var j = 0; j < updateTimes.Count; j++)
+                // Проходит по старым временам.
+                for (var i = 0; i < oldTimes.UserTimes.Count; i++)
                 {
-                    // Если системное название времени не совпадает, значит нужно менять время.
-                    if (!oldTimes.MentorTimes[i].DaySysName.Equals(updateTimes[j].DaySysName))
+                    // Проходит по новым временам.
+                    for (var j = 0; j < updateTimes.Count; j++)
                     {
-                        oldTimes.MentorTimes[i].DaySysName = updateTimes[j].DaySysName;
-                        oldTimes.MentorTimes[i].DayId = await _profileRepository.GetDayIdBySysNameAsync(updateTimes[j].DaySysName);
+                        // Если системное название времени не совпадает или время начала или время конца, значит нужно менять время.
+                        if (!oldTimes.UserTimes[i].DaySysName.Equals(updateTimes[j].DaySysName) 
+                            || TimeSpan.Compare(oldTimes.UserTimes[i].TimeStart, updateTimes[j].TimeStart) != 0
+                            || TimeSpan.Compare(oldTimes.UserTimes[i].TimeEnd, updateTimes[j].TimeEnd) != 0)
+                        {
+                            oldTimes.UserTimes[i].DaySysName = updateTimes[j].DaySysName;
+                            oldTimes.UserTimes[i].TimeStart = updateTimes[j].TimeStart;
+                            oldTimes.UserTimes[i].TimeEnd = updateTimes[j].TimeEnd;
+                            oldTimes.UserTimes[i].DayId = await _profileRepository.GetDayIdBySysNameAsync(updateTimes[j].DaySysName);
+                        }
+            
+                        i++;
                     }
-            
-                    i++;
                 }
-            }
 
-            var items = _mapper.Map<List<MentorTimeEntity>>(oldTimes.MentorTimes);
+                var items = _mapper.Map<List<UserTimeEntity>>(oldTimes.UserTimes);
             
-            items.ForEach(i => i.UserId = user.UserId);
+                items.ForEach(i => i.UserId = user.UserId);
             
-            await _profileRepository.UpdateMentorTimesAsync(items);
+                await _profileRepository.UpdateMentorTimesAsync(items);
+            }
             
             var result = await GetProfileWorkSheetAsync(account);
 
@@ -1250,6 +1328,143 @@ public sealed class ProfileService : IProfileService
 
             await _profileRepository.AddDefaultMentorExperienceAsync(user.UserId);
             
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод сохраняет желаемый возраст преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="ageId">Id возраста.</param>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task<WorksheetOutput> SaveStudentMentorAgeAsync(int ageId, string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            // Если не передали желаемый возраст преподавателя.
+            if (ageId <= 0)
+            {
+                throw new EmptyStudentMentorAgeException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            // Находим возраст преподавателя в БД.
+            var oldAgeId = await _profileRepository.GetMentorAgeIdByAgeIdAsync(ageId);
+
+            // Если возраст > 0, сохраняем ученику выбранный возраст преподавателя. 
+            if (oldAgeId > 0)
+            {
+                await _profileRepository.SaveStudentMentorAgeAsync(ageId, user.UserId);
+            }
+
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод сохраняет желаемый пол преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="genderId">Id пола.</param>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task<WorksheetOutput> SaveStudentMentorGenderAsync(int genderId, string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            // Если не передали желаемый пол преподавателя.
+            if (genderId <= 0)
+            {
+                throw new EmptyStudentMentorGenderException(account);
+            }
+            
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            // Находим пол преподавателя в БД.
+            var oldGenderId = await _profileRepository.GetMentorGenderIdByGenderIdAsync(genderId);
+
+            // Если возраст > 0, сохраняем ученику выбранный возраст преподавателя. 
+            if (oldGenderId > 0)
+            {
+                await _profileRepository.SaveStudentMentorGenderAsync(genderId, user.UserId);
+            }
+
+            var result = await GetProfileWorkSheetAsync(account);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод сохраняет комментарий в анкете ученика.
+    /// </summary>
+    /// <param name="comment">Комментарий студента.</param>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    public async Task<WorksheetOutput> SaveStudentCommentAsync(string comment, string account)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(account))
+            {
+                throw new NotFoundUserException(account);
+            }
+
+            var user = await _userRepository.GetUserByEmailAsync(account);
+            
+            if (user is null)
+            {
+                throw new NotFoundUserException(account);
+            }
+            
+            await _profileRepository.SaveStudentCommentAsync(comment, user.UserId);
+
             var result = await GetProfileWorkSheetAsync(account);
 
             return result;

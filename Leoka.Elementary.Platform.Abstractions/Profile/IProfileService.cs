@@ -105,35 +105,35 @@ public interface IProfileService
     Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber, string email, string account);
 
     /// <summary>
-    /// Метод обновит список предметов преподавателя в анкете.
+    /// Метод обновит или добавит список предметов в анкете.
     /// </summary>
     /// <param name="updateItems">Список предметов для обновления.</param>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список предметов.</returns>
-    Task<WorksheetOutput> UpdateMentorItemsAsync(List<ProfileItemOutput> updateItems, string account);
+    Task<WorksheetOutput> SaveItemsAsync(List<ProfileItemOutput> updateItems, string account);
     
     /// <summary>
-    /// Метод обновит список предметов преподавателя в анкете.
+    /// Метод обновит список предметов пользователя в анкете.
     /// </summary>
     /// <param name="updatePrices">Список цен для обновления.</param>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список предметов.</returns>
-    Task<WorksheetOutput> UpdateMentorPricesAsync(List<MentorProfilePrices> updatePrices, string account);
+    Task<WorksheetOutput> UpdateUserPricesAsync(List<UserProfilePrices> updatePrices, string account);
     
     /// <summary>
-    /// Метод обновит список длительностей преподавателя в анкете.
+    /// Метод обновит список длительностей пользователя в анкете.
     /// </summary>
     /// <param name="updatePrices">Список длительностей для обновления.</param>
     /// <param name="account">Аккаунт.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    Task<WorksheetOutput> UpdateMentorDurationsAsync(List<MentorProfileDurations> updateDurations, string account);
+    Task<WorksheetOutput> UpdateMentorDurationsAsync(List<UserProfileDurations> updateDurations, string account);
     
     /// <summary>
     /// Метод обновит список времени преподавателя в анкете.
     /// </summary>
     /// <param name="updateTimes">Список времени для обновления.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    Task<WorksheetOutput> UpdateMentorTimesAsync(List<MentorTimes> updateTimes, string account);
+    Task<WorksheetOutput> UpdateUserTimesAsync(List<UserTimes> updateTimes, string account);
     
     /// <summary>
     /// Метод обновит данные о себе преподавателя в анкете.
@@ -189,4 +189,28 @@ public interface IProfileService
     /// <param name="account">Логин.</param>
     /// <returns>Данные анкеты.</returns>
     Task<WorksheetOutput> AddDefaultMentorExperienceAsync(string account);
+
+    /// <summary>
+    /// Метод сохраняет желаемый возраст преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="ageId">Id возраста.</param>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task<WorksheetOutput> SaveStudentMentorAgeAsync(int ageId, string account);
+
+    /// <summary>
+    /// Метод сохраняет желаемый пол преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="genderId">Id пола.</param>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task<WorksheetOutput> SaveStudentMentorGenderAsync(int genderId, string account);
+
+    /// <summary>
+    /// Метод сохраняет комментарий в анкете ученика.
+    /// </summary>
+    /// <param name="comment">Комментарий студента.</param>
+    /// <param name="account">Логин.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task<WorksheetOutput> SaveStudentCommentAsync(string comment, string account);
 }

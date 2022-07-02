@@ -118,11 +118,12 @@ public interface IProfileRepository
     Task<MentorProfileInfoOutput> UpdateUserContactsAsync(bool isVisibleContacts, string phoneNumber, string email, long userId, int roleId);
     
     /// <summary>
-    /// Метод получит список предметов преподавателя в анкете.
+    /// Метод получит список предметов пользователя в анкете.
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
+    /// <param name="roleId">Id роли пользователя.</param>
     /// <returns>Список предметов.</returns>
-    Task<WorksheetOutput> GetMentorItemsAsync(long userId);
+    Task<WorksheetOutput> GetUserItemsAsync(long userId, int roleId);
 
     /// <summary>
     /// Метод обновит список предметов преподавателя в анкете.
@@ -132,18 +133,18 @@ public interface IProfileRepository
     Task UpdateMentorItemsAsync(List<MentorProfileItemEntity> updateItems);
     
     /// <summary>
-    /// Метод обновит список цен преподавателя в анкете.
+    /// Метод обновит список цен пользователя в анкете.
     /// </summary>
     /// <param name="updateItems">Список предметов для обновления.</param>
     /// <returns>Обновленный список предметов.</returns>
-    Task UpdateMentorPricesAsync(List<MentorLessonPriceEntity> updateItems);
+    Task UpdateUserPricesAsync(List<UserLessonPriceEntity> updateItems);
     
     /// <summary>
-    /// Метод получит список цен преподавателя в анкете.
+    /// Метод получит список цен пользователя в анкете.
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список цен.</returns>
-    Task<WorksheetOutput> GetMentorPricesAsync(long userId);
+    Task<WorksheetOutput> GetUserPricesAsync(long userId);
     
     /// <summary>
     /// Метод получит список длительностей преподавателя в анкете.
@@ -153,25 +154,25 @@ public interface IProfileRepository
     Task<WorksheetOutput> GetMentorDurationsAsync(long userId);
     
     /// <summary>
-    /// Метод обновит список длительностей преподавателя в анкете.
+    /// Метод обновит список длительностей пользователя в анкете.
     /// </summary>
     /// <param name="updateItems">Список длительностей для обновления.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    Task UpdateMentorDurationsAsync(List<MentorLessonDurationEntity> updateDurations);
+    Task UpdateMentorDurationsAsync(List<UserLessonDurationEntity> updateDurations);
     
     /// <summary>
-    /// Метод получит список времен преподавателя в анкете.
+    /// Метод получит список времен пользователя в анкете.
     /// </summary>
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Список времен.</returns>
-    Task<WorksheetOutput> GetMentorTimesAsync(long userId);
+    Task<WorksheetOutput> GetUserTimesAsync(long userId);
     
     /// <summary>
     /// Метод обновит время преподавателя в анкете.
     /// </summary>
     /// <param name="updateTimes">Список времени для обновления.</param>
     /// <returns>Обновленный список длительностей.</returns>
-    Task UpdateMentorTimesAsync(List<MentorTimeEntity> updateTimes);
+    Task UpdateMentorTimesAsync(List<UserTimeEntity> updateTimes);
 
     /// <summary>
     /// Метод обновит данные о себе преподавателя в анкете.
@@ -249,4 +250,83 @@ public interface IProfileRepository
     /// <param name="userId">Id пользователя.</param>
     /// <returns>Данные анкеты.</returns>
     Task AddDefaultMentorExperienceAsync(long userId);
+
+    /// <summary>
+    /// Метод добавляет новые предметы преподавателю.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="addItems">Список предметов для добавления.</param>
+    Task AddMentorItemsAsync(List<ProfileItemOutput> addItems, long userId);
+    
+    /// <summary>
+    /// Метод добавляет новые предметы ученика.
+    /// </summary>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="addItems">Список предметов для добавления.</param>
+    Task AddStudentItemsAsync(List<ProfileItemOutput> addItems, long userId);
+    
+    /// <summary>
+    /// Метод обновит список предметов ученика в анкете.
+    /// </summary>
+    /// <param name="updateItems">Список предметов для обновления.</param>
+    /// <returns>Обновленный список предметов.</returns>
+    Task UpdateStudentItemsAsync(List<StudentProfileItemEntity> updateItems);
+
+    /// <summary>
+    /// Метод добавляет цены пользователя.
+    /// </summary>
+    /// <param name="updatePrices">Добавляемые цены.</param>
+    /// <param name="userId">Id пользователя.</param>
+    Task AddUserPricesAsync(List<UserProfilePrices> addPrices, long userId);
+
+    /// <summary>
+    /// Метод добавляет длительности пользователя.
+    /// </summary>
+    /// <param name="addDurations">Добавляемые длительности пользователя.</param>
+    /// <param name="userId">Id пользователя.</param>
+    Task AddUserDurationsAsync(List<UserProfileDurations> addDurations, long userId);
+    
+    /// <summary>
+    /// Метод добавляет время пользователя.
+    /// </summary>
+    /// <param name="addTimes">Добавляемое время пользователя.</param>
+    /// <param name="userId">Id пользователя.</param>
+    Task AddUserTimesAsync(List<UserTimes> addTimes, long userId);
+
+    /// <summary>
+    /// Метод получает Id возраста в базе для сравнения.
+    /// </summary>
+    /// <param name="ageId">Id возраста.</param>
+    /// <returns>Id возраста.</returns>
+    Task<int> GetMentorAgeIdByAgeIdAsync(int ageId);
+
+    /// <summary>
+    /// Метод сохраняет ученику выбранный возраст преподавателя.
+    /// </summary>
+    /// <param name="ageId">Id возраста.</param>
+    /// <param name="userId">Id пользователя.</param>
+    Task SaveStudentMentorAgeAsync(int ageId, long userId);
+    
+    /// <summary>
+    /// Метод сохраняет желаемый пол преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="genderId">Id пола.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task SaveStudentMentorGenderAsync(int genderId, long userId);
+    
+    /// <summary>
+    /// Метод получает Id пола в базе для сравнения.
+    /// </summary>
+    /// <param name="genderId">Id пола.</param>
+    /// <returns>Id возраста.</returns>
+    Task<int> GetMentorGenderIdByGenderIdAsync(int genderId);
+    
+    /// <summary>
+    /// Метод сохраняет комментарий в анкете ученика.
+    /// </summary>
+    /// <param name="comment">Комментарий студента.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные анкеты.</returns>
+    Task SaveStudentCommentAsync(string comment, long userId);
 }

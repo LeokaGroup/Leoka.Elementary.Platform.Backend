@@ -28,11 +28,11 @@ public partial class MainBestQuestionAcceptAnswerConfiguration : IEntityTypeConf
             .HasConstraintName("MainBestQuestionOptions_QuestionId_fkey");
         
         entity.HasIndex(u => u.AnswerId)
-            .HasName("MainBestQuestionAcceptAnswers_pkey")
+            .HasDatabaseName("MainBestQuestionAcceptAnswers_pkey")
             .IsUnique();
         
         entity.HasIndex(u => u.QuestionVariantId)
-            .HasName("MainBestQuestionAcceptAnswers_QuestionVariantId_fkey")
+            .HasDatabaseName("MainBestQuestionAcceptAnswers_QuestionVariantId_fkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

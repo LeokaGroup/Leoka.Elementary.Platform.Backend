@@ -28,7 +28,7 @@ public partial class LessonDurationConfiguration : IEntityTypeConfiguration<Less
             .IsRequired();
 
         entity.HasIndex(u => u.DurationId)
-            .HasName("LessonsDuration_pkey")
+            .HasDatabaseName("LessonsDuration_pkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

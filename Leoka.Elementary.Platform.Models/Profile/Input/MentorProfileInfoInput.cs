@@ -43,22 +43,22 @@ public class MentorProfileInfoInput
     /// <summary>
     /// Список цен преподавателя.
     /// </summary>
-    public List<MentorProfilePrices> MentorPrices { get; set; } = new();
+    public List<UserProfilePrices> UserPrices { get; set; } = new();
     
     /// <summary>
     /// Список длительностей преподавателя.
     /// </summary>
-    public List<MentorProfileDurations> MentorDurations { get; set; } = new();
+    public List<UserProfileDurations> UserDurations { get; set; } = new();
     
     /// <summary>
-    /// Список свободного времени преподавателя.
+    /// Список свободного времени пользователя.
     /// </summary>
-    public List<MentorTimes> MentorTimes { get; set; } = new();
+    public List<UserTimes> UserTimes { get; set; } = new();
 
     /// <summary>
-    /// Список целей подготовки преподавателя.
+    /// Список целей подготовки пользователя.
     /// </summary>
-    public List<MentorTrainings> MentorTrainings { get; set; } = new();
+    public List<UserTrainings> UserTrainings { get; set; } = new();
 
     /// <summary>
     /// Список опыта преподавателя.

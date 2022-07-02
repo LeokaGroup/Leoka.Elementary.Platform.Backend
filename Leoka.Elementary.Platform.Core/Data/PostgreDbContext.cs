@@ -164,19 +164,19 @@ public class PostgreDbContext : DbContext
     public DbSet<MentorProfileItemEntity> MentorProfileItems { get; set; }
 
     /// <summary>
-    /// Таблица Profile.MentorLessonPrices.
+    /// Таблица Profile.UserLessonPrices.
     /// </summary>
-    public DbSet<MentorLessonPriceEntity> MentorLessonPrices { get; set; }
+    public DbSet<UserLessonPriceEntity> UserLessonPrices { get; set; }
 
     /// <summary>
-    /// Таблица Profile.MentorLessonDurations.
+    /// Таблица Profile.UserLessonDurations.
     /// </summary>
-    public DbSet<MentorLessonDurationEntity> MentorLessonDurations { get; set; }
+    public DbSet<UserLessonDurationEntity> UserLessonDurations { get; set; }
 
     /// <summary>
-    /// Таблица Profile.MentorTrainings.
+    /// Таблица Profile.UserTrainings.
     /// </summary>
-    public DbSet<MentorTrainingEntity> MentorTrainings { get; set; }
+    public DbSet<UserTrainingEntity> UserTrainings { get; set; }
 
     /// <summary>
     /// Таблица Profile.MentorEducations.
@@ -194,9 +194,9 @@ public class PostgreDbContext : DbContext
     public DbSet<MentorCertificateEntity> MentorCertificates { get; set; }
 
     /// <summary>
-    /// Таблица Profile.MentorTimes.
+    /// Таблица Profile.UserTimes.
     /// </summary>
-    public DbSet<MentorTimeEntity> MentorTimes { get; set; }
+    public DbSet<UserTimeEntity> UserTimes { get; set; }
 
     /// <summary>
     /// Таблица Profile.DaysWeek.
@@ -207,4 +207,34 @@ public class PostgreDbContext : DbContext
     /// Таблица Profile.MentorAboutInfo.
     /// </summary>
     public DbSet<MentorAboutInfoEntity> MentorAboutInfos { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorAge.
+    /// </summary>
+    public DbSet<MentorAgeEntity> MentorAge { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.MentorGender.
+    /// </summary>
+    public DbSet<MentorGenderEntity> MentorGender { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.StudentComments.
+    /// </summary>
+    public DbSet<StudentCommentEntity> StudentComments { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.StudentAgeMentor.
+    /// </summary>
+    public DbSet<StudentAgeMentorEntity> StudentAgeMentor { get; set; }
+    
+    /// <summary>
+    /// Таблица Profile.StudentGenderMentor.
+    /// </summary>
+    public DbSet<StudentGenderMentorEntity> StudentGenderMentor { get; set; }
+
+    /// <summary>
+    /// Таблица Profile.StudentProfileItems.
+    /// </summary>
+    public DbSet<StudentProfileItemEntity> StudentProfileItems { get; set; }
 }

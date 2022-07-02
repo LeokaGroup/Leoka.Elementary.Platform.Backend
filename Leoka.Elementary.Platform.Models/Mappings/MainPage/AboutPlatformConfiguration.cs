@@ -62,7 +62,7 @@ public partial class AboutPlatformConfiguration : IEntityTypeConfiguration<About
             .HasColumnType("text");
 
         entity.HasIndex(u => u.AboutId)
-            .HasName("AboutPlatform_pkey")
+            .HasDatabaseName("AboutPlatform_pkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

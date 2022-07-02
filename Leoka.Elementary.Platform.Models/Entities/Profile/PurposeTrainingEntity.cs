@@ -7,7 +7,7 @@ public class PurposeTrainingEntity
 {
     public PurposeTrainingEntity()
     {
-        MentorTrainings = new HashSet<MentorTrainingEntity>();
+        UserTrainings = new HashSet<UserTrainingEntity>();
     }
 
     /// <summary>
@@ -25,5 +25,5 @@ public class PurposeTrainingEntity
     /// </summary>
     public string PurposeName { get; set; }
 
-    public virtual ICollection<MentorTrainingEntity> MentorTrainings { get; set; }
+    public virtual ICollection<UserTrainingEntity> UserTrainings { get; set; }
 }

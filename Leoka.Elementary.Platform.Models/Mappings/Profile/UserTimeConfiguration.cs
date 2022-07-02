@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Leoka.Elementary.Platform.Models.Mappings.Profile;
 
-public partial class MentorTimeConfiguration : IEntityTypeConfiguration<MentorTimeEntity>
+public partial class UserTimeConfiguration : IEntityTypeConfiguration<UserTimeEntity>
 {
-    public void Configure(EntityTypeBuilder<MentorTimeEntity> entity)
+    public void Configure(EntityTypeBuilder<UserTimeEntity> entity)
     {
-        entity.ToTable("MentorTimes", "Profile");
+        entity.ToTable("UserTimes", "Profile");
 
         entity.HasKey(e => e.TimeId);
         
@@ -37,11 +37,11 @@ public partial class MentorTimeConfiguration : IEntityTypeConfiguration<MentorTi
             .IsRequired();
 
         entity.HasIndex(u => u.TimeId)
-            .HasName("PK_MentorTimesTimeId")
+            .HasDatabaseName("PK_MentorTimesTimeId")
             .IsUnique();
 
         OnConfigurePartial(entity);
     }
 
-    partial void OnConfigurePartial(EntityTypeBuilder<MentorTimeEntity> entity);
+    partial void OnConfigurePartial(EntityTypeBuilder<UserTimeEntity> entity);
 }

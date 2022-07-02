@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Leoka.Elementary.Platform.Models.Mappings.Profile;
 
-public partial class MentorLessonPriceConfiguration : IEntityTypeConfiguration<MentorLessonPriceEntity>
+public partial class MentorLessonPriceConfiguration : IEntityTypeConfiguration<UserLessonPriceEntity>
 {
-    public void Configure(EntityTypeBuilder<MentorLessonPriceEntity> entity)
+    public void Configure(EntityTypeBuilder<UserLessonPriceEntity> entity)
     {
-        entity.ToTable("MentorLessonPrices", "Profile");
+        entity.ToTable("UserLessonPrices", "Profile");
 
         entity.HasKey(e => e.PriceId);
         
@@ -32,11 +32,11 @@ public partial class MentorLessonPriceConfiguration : IEntityTypeConfiguration<M
             .IsRequired();
 
         entity.HasIndex(u => u.PriceId)
-            .HasName("PK_MentorLessonPricesPriceId")
+            .HasDatabaseName("PK_MentorLessonPricesPriceId")
             .IsUnique();
 
         OnConfigurePartial(entity);
     }
 
-    partial void OnConfigurePartial(EntityTypeBuilder<MentorLessonPriceEntity> entity);
+    partial void OnConfigurePartial(EntityTypeBuilder<UserLessonPriceEntity> entity);
 }

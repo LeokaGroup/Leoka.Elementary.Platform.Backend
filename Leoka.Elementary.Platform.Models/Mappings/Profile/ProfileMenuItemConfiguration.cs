@@ -69,7 +69,7 @@ public partial class ProfileMenuItemConfiguration : IEntityTypeConfiguration<Pro
             .IsRequired();
         
         entity.HasIndex(u => u.ProfileMenuId)
-            .HasName("ProfileMenuItems_pkey")
+            .HasDatabaseName("ProfileMenuItems_pkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

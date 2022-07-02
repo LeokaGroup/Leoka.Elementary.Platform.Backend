@@ -1,9 +1,9 @@
 ﻿namespace Leoka.Elementary.Platform.Models.Profile.Input;
 
 /// <summary>
-/// Класс описывает список длительностей преподавателя.
+/// Класс описывает список длительностей пользователя.
 /// </summary>
-public class MentorProfileDurations
+public class UserProfileDurations
 {
     /// <summary>
     /// PK.

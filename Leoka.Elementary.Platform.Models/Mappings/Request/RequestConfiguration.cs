@@ -65,7 +65,7 @@ public partial class RequestConfiguration : IEntityTypeConfiguration<RequestEnti
             .IsRequired();
         
         entity.HasIndex(u => u.RequestId)
-            .HasName("LandingRequest_pkey")
+            .HasDatabaseName("LandingRequest_pkey")
             .IsUnique();
 
         OnConfigurePartial(entity);

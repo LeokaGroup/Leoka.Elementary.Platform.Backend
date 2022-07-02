@@ -33,7 +33,7 @@ public partial class ProfileInfoConfiguration : IEntityTypeConfiguration<Profile
             .IsRequired();
         
         entity.HasIndex(u => u.ProfileInfoId)
-            .HasName("ProfileInfoId")
+            .HasDatabaseName("ProfileInfoId")
             .IsUnique();
 
         OnConfigurePartial(entity);

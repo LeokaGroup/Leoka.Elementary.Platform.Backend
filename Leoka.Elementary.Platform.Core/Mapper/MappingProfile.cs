@@ -25,12 +25,12 @@ public class MappingProfile : Profile
         CreateMap<MainBestOptionEntity, OptionOutput>();
         
         CreateMap<MentorProfileItems, MentorProfileItemEntity>();
-        CreateMap<MentorProfilePrices, MentorLessonPriceEntity>();
-        CreateMap<MentorLessonPriceEntity, MentorProfilePrices>();
-        CreateMap<MentorProfileDurations, MentorLessonDurationEntity>();
-        CreateMap<MentorTimes, MentorTimeEntity>();
-        CreateMap<MentorTimeEntity, MentorTimes>();
-        CreateMap<MentorTrainings, MentorTrainingEntity>();
+        CreateMap<UserProfilePrices, UserLessonPriceEntity>();
+        CreateMap<UserLessonPriceEntity, UserProfilePrices>();
+        CreateMap<UserProfileDurations, UserLessonDurationEntity>();
+        CreateMap<UserTimes, UserTimeEntity>();
+        CreateMap<UserTimeEntity, UserTimes>();
+        CreateMap<UserTrainings, UserTrainingEntity>();
         CreateMap<MentorExperience, MentorExperienceEntity>();
         CreateMap<MentorEducations, MentorEducationEntity>();
         CreateMap<MentorAboutInfo, MentorAboutInfoEntity>();
@@ -40,5 +40,6 @@ public class MappingProfile : Profile
         
         CreateMap<MentorProfileInfoInput, MentorProfileInfoOutput>();
         CreateMap<ProfileItemOutput, MentorProfileItemEntity>();
+        CreateMap<ProfileItemOutput, StudentProfileItemEntity>();
     }
 }

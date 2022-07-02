@@ -41,27 +41,27 @@ public class Worksheet
     /// <summary>
     /// Список предметов.
     /// </summary>
-    public List<ProfileItemOutput> MentorItems { get; set; } = new();
+    public List<ProfileItemOutput> UserItems { get; set; } = new();
     
     /// <summary>
-    /// Список цен преподавателя.
+    /// Список цен пользователя.
     /// </summary>
-    public List<MentorProfilePrices> MentorPrices { get; set; } = new();
+    public List<UserProfilePrices> UserPrices { get; set; } = new();
     
     /// <summary>
-    /// Список длительностей преподавателя.
+    /// Список длительностей пользователя.
     /// </summary>
-    public List<MentorProfileDurations> MentorDurations { get; set; } = new();
+    public List<UserProfileDurations> UserDurations { get; set; } = new();
     
     /// <summary>
-    /// Список свободного времени преподавателя.
+    /// Список свободного времени пользователя.
     /// </summary>
-    public List<MentorTimes> MentorTimes { get; set; } = new();
+    public List<UserTimes> UserTimes { get; set; } = new();
 
     /// <summary>
     /// Список целей подготовки преподавателя.
     /// </summary>
-    public List<PurposeTrainingOutput> MentorTrainings { get; set; } = new();
+    public List<PurposeTrainingOutput> UserTrainings { get; set; } = new();
 
     /// <summary>
     /// Список опыта преподавателя.
@@ -82,4 +82,29 @@ public class Worksheet
     /// Роль пользователя.
     /// </summary>
     public int UserRole { get; set; }
+
+    /// <summary>
+    /// Данные возрастов преподавателя для выбора.
+    /// </summary>
+    public List<MentorAgeOutput> MentorAge { get; set; } = new();
+
+    /// <summary>
+    /// Данные пола преподавателя для выбора.
+    /// </summary>
+    public List<MentorGenderOutput> MentorGenders { get; set; } = new();
+
+    /// <summary>
+    /// Данные комментария студента.
+    /// </summary>
+    public StudentCommentsOutput StudentComments { get; set; }
+
+    /// <summary>
+    /// Данные выбранных возрастов преподавателя студентом.
+    /// </summary>
+    public StudentAgeMentorOutput StudentAgeMentor { get; set; }
+
+    /// <summary>
+    /// Данные выбранного пола преподавателя студентом.
+    /// </summary>
+    public StudentGenderMentorOutput StudentGenderMentor { get; set; }
 }

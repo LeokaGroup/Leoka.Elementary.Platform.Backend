@@ -35,11 +35,11 @@ public partial class MainFonStudentConfiguration : IEntityTypeConfiguration<Main
             .IsRequired();
 
         entity.HasIndex(u => u.FonId)
-            .HasName("MainFonStudent_pkey")
+            .HasDatabaseName("MainFonStudent_pkey")
             .IsUnique();
         
         entity.HasIndex(u => u.FonSubTitleId)
-            .HasName("Uniq_MainFonStudent_FonSubTitleId")
+            .HasDatabaseName("Uniq_MainFonStudent_FonSubTitleId")
             .IsUnique();
 
         OnConfigurePartial(entity);

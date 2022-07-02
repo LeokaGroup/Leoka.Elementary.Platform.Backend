@@ -1,9 +1,9 @@
 ﻿namespace Leoka.Elementary.Platform.Models.Entities.Profile;
 
 /// <summary>
-/// Класс сопоставляется с таблицей длительностей урока преподавателя Profile.MentorLessonDurations.
+/// Класс сопоставляется с таблицей длительностей урока преподавателя Profile.UserLessonDurations.
 /// </summary>
-public class MentorLessonDurationEntity
+public class UserLessonDurationEntity
 {
     /// <summary>
     /// PK.

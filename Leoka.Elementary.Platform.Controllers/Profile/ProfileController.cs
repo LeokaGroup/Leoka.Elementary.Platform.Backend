@@ -243,20 +243,20 @@ public class ProfileController : BaseController
     }
 
     /// <summary>
-    /// Метод обновит список предметов преподавателя в анкете.
+    /// Метод обновит или добавит список предметов в анкете.
     /// </summary>
     /// <param name="worksheetInput">Входная модель.</param>
     /// <returns>Обновленный список предметов.</returns>
     [HttpPatch]
-    [Route("mentor-items")]
+    [Route("items")]
     [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<WorksheetOutput> UpdateMentorItemsAsync([FromBody] WorksheetInput worksheetInput)
+    public async Task<WorksheetOutput> SaveItemsAsync([FromBody] WorksheetInput worksheetInput)
     {
-        var result = await _profileService.UpdateMentorItemsAsync(worksheetInput.MentorItems, GetUserName());
+        var result = await _profileService.SaveItemsAsync(worksheetInput.UserItems, GetUserName());
 
         return result;
     }
@@ -267,15 +267,15 @@ public class ProfileController : BaseController
     /// <param name="worksheetInput">Входная модель.</param>
     /// <returns>Обновленный список цен.</returns>
     [HttpPatch]
-    [Route("mentor-prices")]
+    [Route("user-prices")]
     [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<WorksheetOutput> UpdateMentorPricesAsync([FromBody] WorksheetInput worksheetInput)
+    public async Task<WorksheetOutput> UpdateUserPricesAsync([FromBody] WorksheetInput worksheetInput)
     {
-        var result = await _profileService.UpdateMentorPricesAsync(worksheetInput.MentorPrices, GetUserName());
+        var result = await _profileService.UpdateUserPricesAsync(worksheetInput.UserPrices, GetUserName());
 
         return result;
     }
@@ -286,7 +286,7 @@ public class ProfileController : BaseController
     /// <param name="worksheetInput">Входная модель.</param>
     /// <returns>Обновленный список длительностей.</returns>
     [HttpPatch]
-    [Route("mentor-durations")]
+    [Route("user-durations")]
     [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
@@ -294,7 +294,7 @@ public class ProfileController : BaseController
     [ProducesResponseType(404)]
     public async Task<WorksheetOutput> UpdateMentorDurationsAsync([FromBody] WorksheetInput worksheetInput)
     {
-        var result = await _profileService.UpdateMentorDurationsAsync(worksheetInput.MentorDurations, GetUserName());
+        var result = await _profileService.UpdateMentorDurationsAsync(worksheetInput.UserDurations, GetUserName());
         
         return result;
     }
@@ -305,15 +305,15 @@ public class ProfileController : BaseController
     /// <param name="worksheetInput">Входная модель.</param>
     /// <returns>Обновленный список длительностей.</returns>
     [HttpPatch]
-    [Route("mentor-times")]
+    [Route("user-times")]
     [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<WorksheetOutput> UpdateMentorTimesAsync([FromBody] WorksheetInput worksheetInput)
+    public async Task<WorksheetOutput> UpdateUserTimesAsync([FromBody] WorksheetInput worksheetInput)
     {
-        var result = await _profileService.UpdateMentorTimesAsync(worksheetInput.MentorTimes, GetUserName());
+        var result = await _profileService.UpdateUserTimesAsync(worksheetInput.UserTimes, GetUserName());
 
         return result;
     }
@@ -461,6 +461,63 @@ public class ProfileController : BaseController
     public async Task<WorksheetOutput> AddDefaultMentorExperienceAsync()
     {
         var result = await _profileService.AddDefaultMentorExperienceAsync(GetUserName());
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод сохраняет желаемый возраст преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Данные анкеты.</returns>
+    [HttpPatch]
+    [Route("student-mentor-age")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> SaveStudentMentorAgeAsync([FromBody] StudentMentorAgeInput studentMentorAgeInput)
+    {
+        var result = await _profileService.SaveStudentMentorAgeAsync(studentMentorAgeInput.AgeId, GetUserName());
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод сохраняет желаемый пол преподавателя в анкете ученика.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Данные анкеты.</returns>
+    [HttpPatch]
+    [Route("student-mentor-gender")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> SaveStudentMentorGenderAsync([FromBody] StudentMentorGenderInput studentMentorGenderInput)
+    {
+        var result = await _profileService.SaveStudentMentorGenderAsync(studentMentorGenderInput.GenderId, GetUserName());
+
+        return result;
+    }
+    
+    /// <summary>
+    /// Метод сохраняет комментарий в анкете ученика.
+    /// </summary>
+    /// <param name="worksheetInput">Входная модель.</param>
+    /// <returns>Данные анкеты.</returns>
+    [HttpPatch]
+    [Route("student-comment")]
+    [ProducesResponseType(200, Type = typeof(WorksheetOutput))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<WorksheetOutput> SaveStudentCommentAsync([FromBody] StudentCommentInput studentCommentInput)
+    {
+        var result = await _profileService.SaveStudentCommentAsync(studentCommentInput.Comment, GetUserName());
 
         return result;
     }

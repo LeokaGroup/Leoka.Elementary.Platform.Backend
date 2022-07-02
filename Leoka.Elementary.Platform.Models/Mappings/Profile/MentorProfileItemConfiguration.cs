@@ -32,7 +32,7 @@ public partial class MentorProfileItemConfiguration : IEntityTypeConfiguration<M
             .IsRequired();
 
         entity.HasIndex(u => u.ItemId)
-            .HasName("PK_MentorProfileItemsItemId")
+            .HasDatabaseName("PK_MentorProfileItemsItemId")
             .IsUnique();
 
         OnConfigurePartial(entity);
