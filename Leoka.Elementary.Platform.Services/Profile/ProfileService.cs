@@ -906,10 +906,14 @@ public sealed class ProfileService : IProfileService
                     // Проходит по новым временам.
                     for (var j = 0; j < updateTimes.Count; j++)
                     {
-                        // Если системное название времени не совпадает, значит нужно менять время.
-                        if (!oldTimes.UserTimes[i].DaySysName.Equals(updateTimes[j].DaySysName))
+                        // Если системное название времени не совпадает или время начала или время конца, значит нужно менять время.
+                        if (!oldTimes.UserTimes[i].DaySysName.Equals(updateTimes[j].DaySysName) 
+                            || TimeSpan.Compare(oldTimes.UserTimes[i].TimeStart, updateTimes[j].TimeStart) != 0
+                            || TimeSpan.Compare(oldTimes.UserTimes[i].TimeEnd, updateTimes[j].TimeEnd) != 0)
                         {
                             oldTimes.UserTimes[i].DaySysName = updateTimes[j].DaySysName;
+                            oldTimes.UserTimes[i].TimeStart = updateTimes[j].TimeStart;
+                            oldTimes.UserTimes[i].TimeEnd = updateTimes[j].TimeEnd;
                             oldTimes.UserTimes[i].DayId = await _profileRepository.GetDayIdBySysNameAsync(updateTimes[j].DaySysName);
                         }
             
