@@ -5,7 +5,7 @@
 <strong>Tests:</strong> NUnit (юнит-тесты + интеграционные).<br/>
 <strong>ORM:</strong> LINQ, Entity Framework Core.<br/>
 <strong>SQL:</strong> Postgres.<br/>
-<strong>NoSQL:</strong> MongoDB, Redis.<br/>
+<strong>NoSQL:</strong> Redis.<br/>
 <strong>DI:</strong> Autofac.<br/>
 <strong>CI/CD:</strong> Github, TeamCity.<br/>
 <strong>Работа с очередями сообщений:</strong> RabbitMQ + SignalR.<br/>
