@@ -30,6 +30,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.Messagings", "Leoka.Elementary.Platform.Messagings\Leoka.Elementary.Platform.Messagings.csproj", "{3FAF0F24-6453-45C3-86B4-81834A3809DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Leoka.Elementary.Platform.LessonTemplates", "Leoka.Elementary.Platform.LessonTemplates\Leoka.Elementary.Platform.LessonTemplates.csproj", "{5014592B-A6A1-4AFD-8FA6-9562DE538AE6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,5 +98,9 @@ Global
 		{3FAF0F24-6453-45C3-86B4-81834A3809DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FAF0F24-6453-45C3-86B4-81834A3809DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FAF0F24-6453-45C3-86B4-81834A3809DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5014592B-A6A1-4AFD-8FA6-9562DE538AE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5014592B-A6A1-4AFD-8FA6-9562DE538AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5014592B-A6A1-4AFD-8FA6-9562DE538AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5014592B-A6A1-4AFD-8FA6-9562DE538AE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
