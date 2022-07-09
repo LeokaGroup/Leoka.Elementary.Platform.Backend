@@ -36,4 +36,22 @@ public class TemplateController : BaseController
 
         return result;
     }
+
+    /// <summary>
+    /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.
+    /// </summary>
+    /// <returns>Список названий шаблонов</returns>
+    [HttpGet]
+    [Route("all")]
+    [ProducesResponseType(200, Type = typeof(IEnumerable<string>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task<IEnumerable<string>> GetTemplateNamesByTypeAsync([FromQuery] string templateType)
+    {
+        var result = await _templateService.GetTemplateNamesByTypeAsync(templateType);
+
+        return result;
+    }
 }

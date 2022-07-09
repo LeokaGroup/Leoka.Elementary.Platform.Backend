@@ -11,4 +11,10 @@ public interface ITemplateService
     /// <param name="templateType">Тип шаблрона, который нужно создать.</param>
     /// <returns>Шаблон урока xml.</returns>
     Task<string> CreateTemplateAsync(string templateType);
+
+    /// <summary>
+    /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.
+    /// </summary>
+    /// <returns>Список названий шаблонов</returns>
+    Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(string templateType);
 }

@@ -40,4 +40,28 @@ public class TemplateRepository : ITemplateRepository
             throw;
         }
     }
+
+    /// <summary>
+    /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.
+    /// </summary>
+    /// <returns>Список названий шаблонов</returns>
+    public async Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(string searchParam)
+    {
+        try
+        {
+            var result = await _dbContext.LessonTemplates
+                .Where(t => t.TemplateType.Contains(searchParam))
+                .Select(t => t.TemplateType)
+                .ToListAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }

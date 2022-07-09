@@ -25,56 +25,90 @@ public class TemplateService: ITemplateService
     /// <returns>Шаблон урока xml.</returns>
     public async Task<string> CreateTemplateAsync(string templateType)
     {
-        // Если не передали тип шаблона.
-        if (string.IsNullOrEmpty(templateType))
+        try
         {
-            throw new EmptyTemplateTypeException(templateType);
-        }
+            // Если не передали тип шаблона.
+            if (string.IsNullOrEmpty(templateType))
+            {
+                throw new EmptyTemplateTypeException(templateType);
+            }
         
-        var templateNamespace = await _templateRepository.GetTemplatePatternNamespaceAsync(templateType);
+            var templateNamespace = await _templateRepository.GetTemplatePatternNamespaceAsync(templateType);
         
-        // Если не нашли namespace расположения шаблона.
-        if (string.IsNullOrEmpty(templateNamespace))
-        {
-            throw new NotFoundNamespaceException(templateType);
-        }
+            // Если не нашли namespace расположения шаблона.
+            if (string.IsNullOrEmpty(templateNamespace))
+            {
+                throw new NotFoundNamespaceException(templateType);
+            }
 
-        // Получаем расположение пространство шаблона по системному имени типа.
-        var type = Type.GetType(templateNamespace);
+            // Получаем расположение пространство шаблона по системному имени типа.
+            var type = Type.GetType(templateNamespace);
         
-        // Если не удалось определить тип шаблона.
-        if (type is null)
-        {
-            throw new UnknownTemplateTypeException(templateNamespace);
-        }
+            // Если не удалось определить тип шаблона.
+            if (type is null)
+            {
+                throw new UnknownTemplateTypeException(templateNamespace);
+            }
         
-        // Создаем инстанс от типа.
-        var instantiatedObject = Activator.CreateInstance(type);
+            // Создаем инстанс от типа.
+            var instantiatedObject = Activator.CreateInstance(type);
         
-        // Сам шаблон.
-        var template = instantiatedObject as LessonTemplateFactory;
+            // Сам шаблон.
+            var template = instantiatedObject as LessonTemplateFactory;
         
-        // Если не удалось сформировать шаблон для указанного типа шаблона.
-        if (template is null)
-        {
-            throw new ErrorGenerateTemplateException(templateType);
-        }
+            // Если не удалось сформировать шаблон для указанного типа шаблона.
+            if (template is null)
+            {
+                throw new ErrorGenerateTemplateException(templateType);
+            }
         
-        // Сериализуем шаблон в xml для отдачи фронту.
-        // Получаем модель шаблона.
-        var templateModel = template.CreateTemplateFactoryMethod();
+            // Сериализуем шаблон в xml для отдачи фронту.
+            // Получаем модель шаблона.
+            var templateModel = template.CreateTemplateFactoryMethod();
         
-        // Получаем тип модели.
-        var getTypeTemplate = templateModel.GetType();
+            // Получаем тип модели.
+            var getTypeTemplate = templateModel.GetType();
         
-        // Сериализуем в xml.
-        var xmlSerializer = new XmlSerializer(getTypeTemplate);
-        await using var sww = new StringWriter();
-        var writerSettings = new XmlWriterSettings { Async = true };    
-        await using var writer = XmlWriter.Create(sww, writerSettings);
-        xmlSerializer.Serialize(writer, templateModel);
-        var xml = sww.ToString();
+            // Сериализуем в xml.
+            var xmlSerializer = new XmlSerializer(getTypeTemplate);
+            await using var sww = new StringWriter();
+            var writerSettings = new XmlWriterSettings { Async = true };    
+            await using var writer = XmlWriter.Create(sww, writerSettings);
+            xmlSerializer.Serialize(writer, templateModel);
+            var xml = sww.ToString();
 
-        return xml;
+            return xml;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.
+    /// </summary>
+    /// <returns>Список названий шаблонов</returns>
+    public async Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(string templateType)
+    {
+        try
+        {
+            // Берем только ту часть названия, по которой удобно искать.
+            var searchParam = templateType.Split("_").FirstOrDefault();
+
+            var result = await _templateRepository.GetTemplateNamesByTypeAsync(searchParam);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }
