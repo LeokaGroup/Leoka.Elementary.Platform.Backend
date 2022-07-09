@@ -1,6 +1,4 @@
-﻿using Leoka.Elementary.Platform.LessonTemplates.Abstractions.Humanitarian.English;
-
-namespace Leoka.Elementary.Platform.LessonTemplates.Abstractions.Base;
+﻿namespace Leoka.Elementary.Platform.LessonTemplates.Abstractions.Base;
 
 /// <summary>
 /// Базовая фабрика фабрик для создания шаблона урока.
@@ -8,8 +6,8 @@ namespace Leoka.Elementary.Platform.LessonTemplates.Abstractions.Base;
 public abstract class LessonTemplateFactory
 {
     /// <summary>
-    /// Метод создает шаблон английского.
+    /// Фабричный метод создает шаблон нужного урока.
     /// </summary>
-    /// <returns>Экземпляр класса шаблона.</returns>
-    public abstract EnglishTemplateFactory CreateEnglishTemplate();
+    /// <returns>Шаблон урока.</returns>
+    public abstract LessonTemplate CreateTemplateFactoryMethod();
 }
