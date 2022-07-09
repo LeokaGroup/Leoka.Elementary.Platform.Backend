@@ -4,7 +4,7 @@ using Leoka.Elementary.Platform.LessonTemplates.Models.Shared.English;
 namespace Leoka.Elementary.Platform.LessonTemplates.Abstractions.Humanitarian.English;
 
 /// <summary>
-/// Фабрика создает шаблоны английского.
+/// Создаем шаблон_1 английского.
 /// </summary>
 public class EnglishTemplate_1 : LessonTemplateFactory
 {

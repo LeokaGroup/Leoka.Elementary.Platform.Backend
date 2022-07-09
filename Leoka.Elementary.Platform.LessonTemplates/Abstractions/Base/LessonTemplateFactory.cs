@@ -1,7 +1,7 @@
 ﻿namespace Leoka.Elementary.Platform.LessonTemplates.Abstractions.Base;
 
 /// <summary>
-/// Базовая фабрика фабрик для создания шаблона урока.
+/// Фабрика для создания шаблона урока.
 /// </summary>
 public abstract class LessonTemplateFactory
 {

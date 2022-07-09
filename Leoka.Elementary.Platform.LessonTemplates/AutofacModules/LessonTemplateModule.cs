@@ -16,5 +16,9 @@ public sealed class LessonTemplateModule : Module
         // Сервис шаблонов урока.
         builder.RegisterType<TemplateService>().Named<ITemplateService>("TemplateService");
         builder.RegisterType<TemplateService>().As<ITemplateService>();
+        
+        // Репозиторий шаблонов урока.
+        builder.RegisterType<TemplateRepository>().Named<ITemplateRepository>("TemplateRepository");
+        builder.RegisterType<TemplateRepository>().As<ITemplateRepository>();
     }
 }
