@@ -1,5 +1,6 @@
 ﻿using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.LessonTemplates.Abstractions;
+using Leoka.Elementary.Platform.Models.Template.Output;
 using Microsoft.EntityFrameworkCore;
 
 namespace Leoka.Elementary.Platform.LessonTemplates.Services;
@@ -7,7 +8,7 @@ namespace Leoka.Elementary.Platform.LessonTemplates.Services;
 /// <summary>
 /// Класс реализует методы репозитория шаблонов пользователя.
 /// </summary>
-public class TemplateRepository : ITemplateRepository
+public sealed class TemplateRepository : ITemplateRepository
 {
     private readonly PostgreDbContext _dbContext;
     
@@ -52,6 +53,36 @@ public class TemplateRepository : ITemplateRepository
             var result = await _dbContext.LessonTemplates
                 .Where(t => t.TemplateType.Contains(searchParam))
                 .Select(t => t.TemplateType)
+                .ToListAsync();
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получает список шаблонов уроков.
+    /// </summary>
+    /// <returns>Список шаблонов уроков.</returns>
+    public async Task<IEnumerable<TemplateOutput>> GetItemTemplatesAsync()
+    {
+        try
+        {
+            var result = await (from lt in _dbContext.LessonTemplates
+                    join pi in _dbContext.ProfileItems
+                        on lt.TemplateItemId
+                        equals pi.ProfileItemId
+                    select new TemplateOutput
+                    {
+                        ItemName = pi.ItemName,
+                        TemplateItemId = pi.ProfileItemId
+                    })
                 .ToListAsync();
 
             return result;

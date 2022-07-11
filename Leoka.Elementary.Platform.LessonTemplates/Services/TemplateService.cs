@@ -3,13 +3,14 @@ using System.Xml.Serialization;
 using Leoka.Elementary.Platform.LessonTemplates.Abstractions;
 using Leoka.Elementary.Platform.LessonTemplates.Abstractions.Base;
 using Leoka.Elementary.Platform.LessonTemplates.Exceptions;
+using Leoka.Elementary.Platform.Models.Template.Output;
 
 namespace Leoka.Elementary.Platform.LessonTemplates.Services;
 
 /// <summary>
 /// Класс реализует методы сервиса создания шаблонов урока.
 /// </summary>
-public class TemplateService: ITemplateService
+public sealed class TemplateService: ITemplateService
 {
     private readonly ITemplateRepository _templateRepository;
     
@@ -100,6 +101,27 @@ public class TemplateService: ITemplateService
             var searchParam = templateType.Split("_").FirstOrDefault();
 
             var result = await _templateRepository.GetTemplateNamesByTypeAsync(searchParam);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получает список шаблонов уроков.
+    /// </summary>
+    /// <returns>Список шаблонов уроков.</returns>
+    public async Task<IEnumerable<TemplateOutput>> GetItemTemplatesAsync()
+    {
+        try
+        {
+            var result = await _templateRepository.GetItemTemplatesAsync();
 
             return result;
         }

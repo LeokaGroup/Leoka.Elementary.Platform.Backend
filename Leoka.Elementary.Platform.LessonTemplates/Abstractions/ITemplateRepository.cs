@@ -1,4 +1,6 @@
-﻿namespace Leoka.Elementary.Platform.LessonTemplates.Abstractions;
+﻿using Leoka.Elementary.Platform.Models.Template.Output;
+
+namespace Leoka.Elementary.Platform.LessonTemplates.Abstractions;
 
 /// <summary>
 /// Абстракция шаблонов пользователя.
@@ -17,4 +19,10 @@ public interface ITemplateRepository
     /// </summary>
     /// <returns>Список названий шаблонов</returns>
     Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(string searchParam);
+    
+    /// <summary>
+    /// Метод получает список шаблонов уроков.
+    /// </summary>
+    /// <returns>Список шаблонов уроков.</returns>
+    Task<IEnumerable<TemplateOutput>> GetItemTemplatesAsync();
 }
