@@ -91,16 +91,14 @@ public sealed class TemplateService: ITemplateService
 
     /// <summary>
     /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.
+    /// <param name="idItemTemplate">Id предмета, шаблоны которого нужно получить.</param>
     /// </summary>
     /// <returns>Список названий шаблонов</returns>
-    public async Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(string templateType)
+    public async Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(long idItemTemplate)
     {
         try
         {
-            // Берем только ту часть названия, по которой удобно искать.
-            var searchParam = templateType.Split("_").FirstOrDefault();
-
-            var result = await _templateRepository.GetTemplateNamesByTypeAsync(searchParam);
+            var result = await _templateRepository.GetTemplateNamesByTypeAsync(idItemTemplate);
 
             return result;
         }

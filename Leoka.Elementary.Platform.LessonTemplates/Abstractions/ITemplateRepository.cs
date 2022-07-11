@@ -16,9 +16,10 @@ public interface ITemplateRepository
     
     /// <summary>
     /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.
+    /// <param name="idItemTemplate">Id предмета, шаблоны которого нужно получить.</param>
     /// </summary>
     /// <returns>Список названий шаблонов</returns>
-    Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(string searchParam);
+    Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(long idItemTemplate);
     
     /// <summary>
     /// Метод получает список шаблонов уроков.

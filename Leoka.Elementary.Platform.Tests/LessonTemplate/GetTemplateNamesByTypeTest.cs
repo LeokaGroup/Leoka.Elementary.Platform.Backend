@@ -10,7 +10,7 @@ public class GetTemplateNamesByTypeTest : BaseServiceTest
     [Test]
     public async Task GetTemplateNamesByTypeAsyncTest()
     {
-        var result = await TemplateService.GetTemplateNamesByTypeAsync("EnglishTemplate_1");
+        var result = await TemplateService.GetTemplateNamesByTypeAsync(1);
 
         Assert.IsTrue(result.Any());
     }

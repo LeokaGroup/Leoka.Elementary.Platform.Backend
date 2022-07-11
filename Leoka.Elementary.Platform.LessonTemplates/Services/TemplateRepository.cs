@@ -44,14 +44,15 @@ public sealed class TemplateRepository : ITemplateRepository
 
     /// <summary>
     /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.
+    /// <param name="idItemTemplate">Id предмета, шаблоны которого нужно получить.</param>
     /// </summary>
     /// <returns>Список названий шаблонов</returns>
-    public async Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(string searchParam)
+    public async Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(long idItemTemplate)
     {
         try
         {
             var result = await _dbContext.LessonTemplates
-                .Where(t => t.TemplateType.Contains(searchParam))
+                .Where(t => t.TemplateItemId == idItemTemplate)
                 .Select(t => t.TemplateType)
                 .ToListAsync();
 

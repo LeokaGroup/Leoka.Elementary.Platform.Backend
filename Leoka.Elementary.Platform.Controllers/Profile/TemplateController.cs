@@ -1,4 +1,5 @@
 ﻿using Leoka.Elementary.Platform.Base;
+using Leoka.Elementary.Platform.Core.Filters;
 using Leoka.Elementary.Platform.LessonTemplates.Abstractions;
 using Leoka.Elementary.Platform.Models.Template.Output;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ namespace Leoka.Elementary.Platform.Controllers.Profile;
 /// <summary>
 /// Контроллер работы с шаблонами уроков.
 /// </summary>
-// [AuthFilter]
+[AuthFilter]
 [ApiController, Route("template")]
 public class TemplateController : BaseController
 {
@@ -40,6 +41,7 @@ public class TemplateController : BaseController
 
     /// <summary>
     /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.
+    /// <param name="idItemTemplate">Id предмета, шаблоны которого нужно получить.</param>
     /// </summary>
     /// <returns>Список названий шаблонов</returns>
     [HttpGet]
@@ -49,9 +51,9 @@ public class TemplateController : BaseController
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<IEnumerable<string>> GetTemplateNamesByTypeAsync([FromQuery] string templateType)
+    public async Task<IEnumerable<string>> GetTemplateNamesByTypeAsync([FromQuery] long idItemTemplate)
     {
-        var result = await _templateService.GetTemplateNamesByTypeAsync(templateType);
+        var result = await _templateService.GetTemplateNamesByTypeAsync(idItemTemplate);
 
         return result;
     }
@@ -61,7 +63,7 @@ public class TemplateController : BaseController
     /// </summary>
     /// <returns>Список шаблонов уроков.</returns>
     [HttpGet]
-    [Route("item-templates")]
+    [Route("items")]
     [ProducesResponseType(200, Type = typeof(IEnumerable<TemplateOutput>))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
