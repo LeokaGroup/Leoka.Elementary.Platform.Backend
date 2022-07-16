@@ -1,6 +1,8 @@
-﻿using Leoka.Elementary.Platform.Base;
+﻿using System.Xml.Linq;
+using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Core.Filters;
 using Leoka.Elementary.Platform.LessonTemplates.Abstractions;
+using Leoka.Elementary.Platform.LessonTemplates.Abstractions.Base;
 using Leoka.Elementary.Platform.Models.Template.Output;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +34,7 @@ public class TemplateController : BaseController
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<string> CreateTemplateAsync([FromQuery] string templateType)
+    public async Task<TemplateOutput> CreateTemplateAsync([FromQuery] string templateType)
     {
         var result = await _templateService.CreateTemplateAsync(templateType);
 

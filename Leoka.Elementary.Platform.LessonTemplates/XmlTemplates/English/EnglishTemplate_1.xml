@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/css" href="control.css"?>
+<EnglishTemplate_1 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <TemplateId>
+        <input Value=""/>
+    </TemplateId>
+
+    <br/>
+
+    <LessonTheme xsi:nil="true">
+        <input Value=""/>
+    </LessonTheme>
+
+    <br/>
+
+    <GoalsObOjectives xsi:nil="true">
+        <input Value=""/>
+    </GoalsObOjectives>
+
+    <br/>
+
+    <Feedback xsi:nil="true">
+        <input Value=""/>
+    </Feedback>
+
+    <br/>
+
+    <TrackFileUrl xsi:nil="true">
+        <input Value=""/>
+    </TrackFileUrl>
+
+    <br/>
+
+    <TrackFileName xsi:nil="true">
+        <input Value=""/>
+    </TrackFileName>
+
+    <br/>
+
+    <AdditionalMaterialsText xsi:nil="true">
+        <input Value=""/>
+    </AdditionalMaterialsText>
+
+    <br/>
+
+    <AdditionalMaterialsUrl xsi:nil="true">
+        <input Value=""/>
+    </AdditionalMaterialsUrl>
+</EnglishTemplate_1>

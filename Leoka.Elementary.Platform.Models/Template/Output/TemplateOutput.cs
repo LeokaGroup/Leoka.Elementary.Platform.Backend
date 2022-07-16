@@ -14,4 +14,9 @@ public class TemplateOutput
     /// Id предмета.
     /// </summary>
     public long TemplateItemId { get; set; }
+
+    /// <summary>
+    /// Xml-шаблон.
+    /// </summary>
+    public string Template { get; set; }
 }
