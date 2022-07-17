@@ -1,5 +1,6 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Leoka.Elementary.Platform.Access.IdentityServer;
 using Leoka.Elementary.Platform.Backend.Core.Data;
 using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.Core.Utils;
@@ -63,18 +64,20 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+// Добавляем IdentityServer4.
+builder.Services.AddIdentityServer()
+    .AddInMemoryApiResources(Configuration.ApiResources)
+    .AddInMemoryIdentityResources(Configuration.IdentityResources)
+    .AddInMemoryApiScopes(Configuration.ApiScopes)
+    .AddInMemoryClients(Configuration.Clients)
+    .AddDeveloperSigningCredential();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    // app.UseExceptionHandler("Добавить описание ошибки.");
 }
-
-// else
-// {
-//     app.UseExceptionHandler();
-// }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -83,8 +86,8 @@ app.UseRouting();
 app.UseAuthorization();
 app.UseRouting();
 app.UseCors("ApiCorsPolicy");
-
 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Leoka.Elementary.Platform"));
+app.UseIdentityServer();
 app.Run();
