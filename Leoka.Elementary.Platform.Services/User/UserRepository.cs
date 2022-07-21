@@ -1,7 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Leoka.Elementary.Platform.Abstractions.User;
-using Leoka.Elementary.Platform.Backend.Core.Data;
 using Leoka.Elementary.Platform.Base.Abstraction;
 using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.Core.Exceptions;
@@ -9,7 +7,6 @@ using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.Models.Entities.User;
 using Leoka.Elementary.Platform.Models.User.Output;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Leoka.Elementary.Platform.Services.User;
 
@@ -143,7 +140,13 @@ public sealed class UserRepository : IUserRepository
         }
     }
 
-    public async Task<ClaimOutput> SignInAsync(string userLogin, string userPassword)
+    /// <summary>
+    /// Метод авторизует пользователя.
+    /// </summary>
+    /// <param name="userLogin">Email или номер телефона.</param>
+    /// <param name="userPassword">Пароль.</param>
+    /// <returns>Статус авторизации.</returns>
+    public async Task<bool> SignInAsync(string userLogin, string userPassword)
     {
         try
         {
@@ -175,20 +178,8 @@ public sealed class UserRepository : IUserRepository
             {
                 throw new ErrorUserPasswordException();
             }
-            
-            var claim = GetIdentityClaim(userLogin);
-            
-            // Генерация токен юзеру.
-            var token = GenerateToken(claim).Result;
 
-            var result = new ClaimOutput
-            {
-                User = userLogin,
-                Token = token,
-                IsSuccess = true
-            };
-
-            return result;
+            return true;
         }
         
         // TODO: добавить логирование ошибок.
@@ -221,30 +212,30 @@ public sealed class UserRepository : IUserRepository
     /// </summary>
     /// <param name="claimsIdentity">Объект полномочий.</param>
     /// <returns>Строку токена.</returns>
-    private Task<string> GenerateToken(ClaimsIdentity claimsIdentity)
-    {
-        try
-        {
-            var now = DateTime.UtcNow;
-            var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
-                notBefore: now,
-                claims: claimsIdentity.Claims,
-                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            return Task.FromResult(encodedJwt);
-        }
-        
-        // TODO: добавить логирование ошибок.
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
+    // private string GenerateToken(ClaimsIdentity claimsIdentity)
+    // {
+    //     try
+    //     {
+    //         var now = DateTime.UtcNow;
+    //         var jwt = new JwtSecurityToken(
+    //             issuer: AuthOptions.ISSUER,
+    //             audience: AuthOptions.AUDIENCE,
+    //             notBefore: now,
+    //             claims: claimsIdentity.Claims,
+    //             expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+    //             signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+    //         var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+    //         
+    //         return encodedJwt;
+    //     }
+    //     
+    //     // TODO: добавить логирование ошибок.
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine(e);
+    //         throw;
+    //     }
+    // }
     
     /// <summary>
     /// Метод найдет пользователя по его email.
@@ -292,7 +283,7 @@ public sealed class UserRepository : IUserRepository
         try
         {
             var isParseNumber = long.TryParse(id, out _);
-            UserEntity user = null;
+            UserEntity user;
             
             // Если передали UserId.
             if (isParseNumber)

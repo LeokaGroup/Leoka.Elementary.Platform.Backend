@@ -3,6 +3,7 @@ using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Core.Filters;
 using Leoka.Elementary.Platform.Models.Profile.Input;
 using Leoka.Elementary.Platform.Models.Profile.Output;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +12,7 @@ namespace Leoka.Elementary.Platform.Controllers.Profile;
 /// <summary>
 /// Контроллер работы с профилем пользователя.
 /// </summary>
-[AuthFilter]
+// [AuthFilter]
 [ApiController, Route("profile")]
 public class ProfileController : BaseController
 {
@@ -26,6 +27,7 @@ public class ProfileController : BaseController
     /// Метод получит информацию для профиля пользователя при входе после регистрации.
     /// </summary>
     /// <returns>Данные о профиле.</returns>
+    [Authorize]
     [HttpGet]
     [Route("info")]
     [ProducesResponseType(200, Type = typeof(ProfileInfoOutput))]
@@ -44,6 +46,7 @@ public class ProfileController : BaseController
     /// Метод получит список элементов для меню профиля пользователя.
     /// </summary>
     /// <returns>Список элементов меню.</returns>
+    [Authorize]
     [HttpGet]
     [Route("menu")]
     [ProducesResponseType(200, Type = typeof(ProfileMenuItemResult))]
@@ -171,6 +174,7 @@ public class ProfileController : BaseController
     /// Метод получит данные анкеты пользователя.
     /// </summary>
     /// <returns>Данные анкеты пользователя.</returns>
+    [Authorize]
     [HttpGet]
     [Route("worksheet")]
     [ProducesResponseType(200, Type = typeof(WorksheetOutput))]

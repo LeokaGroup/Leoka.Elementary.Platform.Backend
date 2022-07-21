@@ -1,9 +1,11 @@
-﻿using Leoka.Elementary.Platform.Abstractions.User;
+﻿using IdentityModel.Client;
+using Leoka.Elementary.Platform.Abstractions.User;
 using Leoka.Elementary.Platform.Base.Abstraction;
 using Leoka.Elementary.Platform.Core.Exceptions;
 using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.Mailings.Abstractions;
 using Leoka.Elementary.Platform.Models.User.Output;
+using Microsoft.AspNetCore.Http;
 
 namespace Leoka.Elementary.Platform.Services.User;
 
@@ -14,12 +16,15 @@ public sealed class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IMailingsService _mailingsService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     
     public UserService(IUserRepository userRepository,
-        IMailingsService mailingsService)
+        IMailingsService mailingsService,
+        IHttpContextAccessor httpContextAccessor)
     {
         _userRepository = userRepository;
         _mailingsService = mailingsService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     /// <summary>
@@ -69,13 +74,45 @@ public sealed class UserService : IUserService
         }
     }
 
-    public async Task<ClaimOutput> SignInAsync(string userLogin, string userPassword)
+    /// <summary>
+    /// TODO: Когда будет переделано на хранение токена в куках, возврат ClaimOutput наверно не нужен будет.
+    /// Метод авторизует пользователя.
+    /// </summary>
+    /// <param name="userLogin">Email или номер телефона.</param>
+    /// <param name="userPassword">Пароль.</param>
+    public async Task SignInAsync(string userLogin, string userPassword)
     {
         try
         {
-            var result = await _userRepository.SignInAsync(userLogin, userPassword);
+            userPassword = userPassword.Replace("/.well-known/openid-configuration", "");
+            var IsAuth = await _userRepository.SignInAsync(userLogin, userPassword);
+            
+            if (!IsAuth)
+            {
+                throw new ErrorUserAuthorizeException(userLogin);
+            }
+            
+            var client = new HttpClient();
+            var disco = await client.GetDiscoveryDocumentAsync("http://localhost:9991");
+            var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            {
+                Address = disco.TokenEndpoint,
+                ClientId = "client",
+                ClientSecret = "secret",
+                Scope = "api1"
+            });
 
-            return result;
+            // _httpContextAccessor.HttpContext?.Response.Cookies.Append("token", tokenResponse.AccessToken);
+            // _httpContextAccessor.HttpContext?.Response.Headers.Add("Authorization", "Bearer " + tokenResponse.AccessToken);
+            // Console.WriteLine();
+            // var result = new ClaimOutput
+            // {
+            //     User = userLogin,
+            //     Token = tokenResponse.AccessToken,
+            //     IsSuccess = true
+            // };
+            //
+            // return result;
         }
         
         // TODO: добавить логирование ошибок.
@@ -98,7 +135,7 @@ public sealed class UserService : IUserService
         
         var rnd = new Random();
         
-        for (int i = 0; i < 8; i = i + 1)
+        for (var i = 0; i < 8; i += 1)
         {
             result += arr[rnd.Next(0, 57)];
         }

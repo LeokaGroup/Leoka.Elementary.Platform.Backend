@@ -41,37 +41,37 @@ public class RoleService : IRoleService
         }
     }
     
-    /// <summary>
-    /// Метод обновит токен.
-    /// </summary>
-    /// <returns>Новый токен.</returns>
-    public async Task<ClaimOutput> GenerateTokenAsync(string account)
-    {
-        try
-        {
-            var now = DateTime.UtcNow;
-            var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
-                notBefore: now,
-                claims: new ClaimsIdentity().Claims,
-                expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-            var result = new ClaimOutput
-            {
-                Token = encodedJwt
-            };
-
-            return await Task.FromResult(result);
-        }
-
-        // TODO: добавить логирование ошибок.
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
+    // /// <summary>
+    // /// Метод обновит токен.
+    // /// </summary>
+    // /// <returns>Новый токен.</returns>
+    // public async Task<ClaimOutput> GenerateTokenAsync(string account)
+    // {
+    //     try
+    //     {
+    //         var now = DateTime.UtcNow;
+    //         var jwt = new JwtSecurityToken(
+    //             issuer: AuthOptions.ISSUER,
+    //             audience: AuthOptions.AUDIENCE,
+    //             notBefore: now,
+    //             claims: new ClaimsIdentity().Claims,
+    //             expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+    //             signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+    //         var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+    //
+    //         var result = new ClaimOutput
+    //         {
+    //             Token = encodedJwt
+    //         };
+    //
+    //         return await Task.FromResult(result);
+    //     }
+    //
+    //     // TODO: добавить логирование ошибок.
+    //     catch (Exception e)
+    //     {
+    //         Console.WriteLine(e);
+    //         throw;
+    //     }
+    // }
 }

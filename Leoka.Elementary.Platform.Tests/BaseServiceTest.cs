@@ -48,7 +48,7 @@ public class BaseServiceTest
         MailingsService = new MailingsService(null);
         UserRepository = new UserRepository(PostgreDbContext);
         
-        UserService = new UserService(UserRepository, MailingsService);
+        UserService = new UserService(UserRepository, MailingsService, null);
         RoleRepository = new RoleRepository(PostgreDbContext);
         RoleService = new RoleService(RoleRepository);
         MainPageRepository = new MainPageRepository(PostgreDbContext);

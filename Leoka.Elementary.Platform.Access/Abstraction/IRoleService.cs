@@ -1,5 +1,4 @@
 ﻿using Leoka.Elementary.Platform.Models.Role.Output;
-using Leoka.Elementary.Platform.Models.User.Output;
 
 namespace Leoka.Elementary.Platform.Access.Abstraction;
 
@@ -18,5 +17,5 @@ public interface IRoleService
     /// Метод обновит токен.
     /// </summary>
     /// <returns>Новый токен.</returns>
-    Task<ClaimOutput> GenerateTokenAsync(string account);
+    // Task<ClaimOutput> GenerateTokenAsync(string account);
 }

@@ -29,8 +29,8 @@ public interface IUserRepository
     /// </summary>
     /// <param name="userLogin">Email или номер телефона.</param>
     /// <param name="userPassword">Пароль.</param>
-    /// <returns>Данные пользователя.</returns>
-    Task<ClaimOutput> SignInAsync(string userLogin, string userPassword);
+    /// <returns>Статус авторизации.</returns>
+    Task<bool> SignInAsync(string userLogin, string userPassword);
 
     /// <summary>
     /// Метод найдет пользователя по его email.

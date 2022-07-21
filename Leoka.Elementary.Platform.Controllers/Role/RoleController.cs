@@ -39,16 +39,16 @@ public class RoleController : BaseController
     /// Метод обновит токен.
     /// </summary>
     /// <returns>Новый токен.</returns>
-    [HttpGet, Route("token")]
-    [ProducesResponseType(200, Type = typeof(ClaimOutput))]
-    [ProducesResponseType(400)]
-    [ProducesResponseType(403)]
-    [ProducesResponseType(500)]
-    [ProducesResponseType(404)]
-    public async Task<IActionResult> GenerateTokenAsync()
-    {
-        var result = await _roleService.GenerateTokenAsync(GetUserName());
-
-        return Ok(result);
-    }
+    // [HttpGet, Route("token")]
+    // [ProducesResponseType(200, Type = typeof(ClaimOutput))]
+    // [ProducesResponseType(400)]
+    // [ProducesResponseType(403)]
+    // [ProducesResponseType(500)]
+    // [ProducesResponseType(404)]
+    // public async Task<IActionResult> GenerateTokenAsync()
+    // {
+    //     var result = await _roleService.GenerateTokenAsync(GetUserName());
+    //
+    //     return Ok(result);
+    // }
 }

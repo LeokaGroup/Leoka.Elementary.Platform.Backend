@@ -3,6 +3,7 @@ using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Models.User.Input;
 using Leoka.Elementary.Platform.Models.User.Output;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Leoka.Elementary.Platform.Controllers.User;
@@ -45,7 +46,6 @@ public class UserController : BaseController
     /// </summary>
     /// <param name="userLogin">Email или номер телефона.</param>
     /// <param name="userPassword">Пароль.</param>
-    /// <returns>Данные пользователя.</returns>
     [AllowAnonymous]
     [HttpGet]
     [Route("signin")]
@@ -54,11 +54,18 @@ public class UserController : BaseController
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<ClaimOutput> SignInAsync([FromQuery] string userLogin, string userPassword)
+    public async Task SignInAsync([FromQuery] string userLogin, string userPassword)
     {
-        var result = await _userService.SignInAsync(userLogin, userPassword);
-
-        return result;
+        await _userService.SignInAsync(userLogin, userPassword);
+        // HttpContext.Response.Cookies.Append("token", "111");
+        // HttpContext.Response.Headers.Add("Authorization", "Bearer " + "111");
+        // HttpContext.Request.Headers.Add("Authorization", "Bearer " + "11111");
+        // HttpContext.Response.Cookies.Append("token",
+        //     "11111",
+        //     new CookieOptions
+        //     {
+        //         MaxAge = TimeSpan.FromMinutes(60)
+        //     });
     }
 
     /// <summary>
