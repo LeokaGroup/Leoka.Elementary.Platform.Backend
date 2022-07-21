@@ -43,7 +43,7 @@ builder.WebHost.UseKestrel().UseContentRoot(Directory.GetCurrentDirectory()).Use
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer("Bearer", options =>
     {
-        // options.Authority = "http://localhost:9991";
+        options.Authority = "http://localhost:9991";
         // options.Authority = "http://localhost:4200";
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
@@ -93,7 +93,7 @@ builder.Services.AddIdentityServer()
 // .AddDeveloperSigningCredential();
 
 // Для доступа к HttpContext из других модулей.
-builder.Services.AddHttpContextAccessor();
+// builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -104,20 +104,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-// app.Use(async (context, next) =>
-// {
-//     var token = context.Request.Cookies["token"];
-//
-//     if (!string.IsNullOrEmpty(token))
-//     {
-//         context.Request.Headers.Add("Authorization", "Bearer " + token);
-//         context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-//         context.Response.Headers.Add("X-Xss-Protection", "1");
-//         context.Response.Headers.Add("X-Frame-Options", "DENY");
-//     }
-//
-//     await next();
-// });
+//TODO: вынести лучше это в мидлварю!
+app.Use(async (context, next) =>
+{
+    var token = context.Request.Cookies["token"];
+
+    if (!string.IsNullOrEmpty(token))
+    {
+        context.Request.Headers.Add("Authorization", "Bearer " + token);
+    }
+
+    await next();
+});
 app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
@@ -130,7 +128,6 @@ app.UseCookiePolicy(new CookiePolicyOptions
 {
     MinimumSameSitePolicy = SameSiteMode.Strict,
     HttpOnly = HttpOnlyPolicy.Always,
-    // Secure = CookieSecurePolicy.Always
-    Secure = CookieSecurePolicy.None
+    Secure = CookieSecurePolicy.Always
 });
 app.Run();

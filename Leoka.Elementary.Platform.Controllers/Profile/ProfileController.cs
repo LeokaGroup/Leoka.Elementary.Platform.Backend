@@ -1,8 +1,8 @@
 ﻿using Leoka.Elementary.Platform.Abstractions.Profile;
 using Leoka.Elementary.Platform.Base;
-using Leoka.Elementary.Platform.Core.Filters;
 using Leoka.Elementary.Platform.Models.Profile.Input;
 using Leoka.Elementary.Platform.Models.Profile.Output;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +13,7 @@ namespace Leoka.Elementary.Platform.Controllers.Profile;
 /// Контроллер работы с профилем пользователя.
 /// </summary>
 // [AuthFilter]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 [ApiController, Route("profile")]
 public class ProfileController : BaseController
 {
@@ -27,7 +28,6 @@ public class ProfileController : BaseController
     /// Метод получит информацию для профиля пользователя при входе после регистрации.
     /// </summary>
     /// <returns>Данные о профиле.</returns>
-    [Authorize]
     [HttpGet]
     [Route("info")]
     [ProducesResponseType(200, Type = typeof(ProfileInfoOutput))]
@@ -46,7 +46,6 @@ public class ProfileController : BaseController
     /// Метод получит список элементов для меню профиля пользователя.
     /// </summary>
     /// <returns>Список элементов меню.</returns>
-    [Authorize]
     [HttpGet]
     [Route("menu")]
     [ProducesResponseType(200, Type = typeof(ProfileMenuItemResult))]

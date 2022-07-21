@@ -5,7 +5,6 @@ using Leoka.Elementary.Platform.Core.Exceptions;
 using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.Mailings.Abstractions;
 using Leoka.Elementary.Platform.Models.User.Output;
-using Microsoft.AspNetCore.Http;
 
 namespace Leoka.Elementary.Platform.Services.User;
 
@@ -16,15 +15,12 @@ public sealed class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly IMailingsService _mailingsService;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    
+
     public UserService(IUserRepository userRepository,
-        IMailingsService mailingsService,
-        IHttpContextAccessor httpContextAccessor)
+        IMailingsService mailingsService)
     {
         _userRepository = userRepository;
         _mailingsService = mailingsService;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     /// <summary>
@@ -75,12 +71,11 @@ public sealed class UserService : IUserService
     }
 
     /// <summary>
-    /// TODO: Когда будет переделано на хранение токена в куках, возврат ClaimOutput наверно не нужен будет.
     /// Метод авторизует пользователя.
     /// </summary>
     /// <param name="userLogin">Email или номер телефона.</param>
     /// <param name="userPassword">Пароль.</param>
-    public async Task SignInAsync(string userLogin, string userPassword)
+    public async Task<string> SignInAsync(string userLogin, string userPassword)
     {
         try
         {
@@ -101,18 +96,8 @@ public sealed class UserService : IUserService
                 ClientSecret = "secret",
                 Scope = "api1"
             });
-
-            // _httpContextAccessor.HttpContext?.Response.Cookies.Append("token", tokenResponse.AccessToken);
-            // _httpContextAccessor.HttpContext?.Response.Headers.Add("Authorization", "Bearer " + tokenResponse.AccessToken);
-            // Console.WriteLine();
-            // var result = new ClaimOutput
-            // {
-            //     User = userLogin,
-            //     Token = tokenResponse.AccessToken,
-            //     IsSuccess = true
-            // };
-            //
-            // return result;
+            
+            return tokenResponse.AccessToken;
         }
         
         // TODO: добавить логирование ошибок.
