@@ -58,14 +58,14 @@ public class UserController : BaseController
     [ProducesResponseType(404)]
     public async Task SignInAsync([FromQuery] string userLogin, string userPassword)
     {
-        var token = await _userService.SignInAsync(userLogin, userPassword);
+        await _userService.SignInAsync(userLogin, userPassword);
         
-        HttpContext.Response.Headers.Add("Authorization", "Bearer " + token);
-        HttpContext.Response.Cookies.Append("token", token, 
-            new CookieOptions
-            {
-                MaxAge = TimeSpan.FromMinutes(60)
-            });
+        // HttpContext.Response.Headers.Add("Authorization", "Bearer " + token);
+        // HttpContext.Response.Cookies.Append("token", token, 
+        //     new CookieOptions
+        //     {
+        //         MaxAge = TimeSpan.FromMinutes(60)
+        //     });
     }
 
     /// <summary>

@@ -22,7 +22,7 @@ public interface IUserService
     /// </summary>
     /// <param name="userLogin">Email или номер телефона.</param>
     /// <param name="userPassword">Пароль.</param>
-    Task<string> SignInAsync(string userLogin, string userPassword);
+    Task SignInAsync(string userLogin, string userPassword);
 
     /// <summary>
     /// Метод отправит пользователя на страницу успешного подтверждения почты.

@@ -75,7 +75,7 @@ public sealed class UserService : IUserService
     /// </summary>
     /// <param name="userLogin">Email или номер телефона.</param>
     /// <param name="userPassword">Пароль.</param>
-    public async Task<string> SignInAsync(string userLogin, string userPassword)
+    public async Task SignInAsync(string userLogin, string userPassword)
     {
         try
         {
@@ -96,8 +96,6 @@ public sealed class UserService : IUserService
                 ClientSecret = "secret",
                 Scope = "api1"
             });
-            
-            return tokenResponse.AccessToken;
         }
         
         // TODO: добавить логирование ошибок.
