@@ -10,16 +10,16 @@ public interface ITemplateRepository
     /// <summary>
     /// Метод получает расположение шаблона по его типу.
     /// </summary>
-    /// <param name="templateType">Тип шаблона.</param>
+    /// <param name="templateId">Id шаблона.</param>
     /// <returns>Расположение шаблона.</returns>
-    Task<string> GetTemplatePatternNamespaceAsync(string templateType);
+    Task<TemplateOutput> GetTemplatePatternNamespaceAsync(long templateId);
     
     /// <summary>
     /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.
     /// <param name="idItemTemplate">Id предмета, шаблоны которого нужно получить.</param>
     /// </summary>
     /// <returns>Список названий шаблонов</returns>
-    Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(long idItemTemplate);
+    Task<IEnumerable<TemplateOutput>> GetTemplateNamesByTypeAsync(long idItemTemplate);
     
     /// <summary>
     /// Метод получает список шаблонов уроков.

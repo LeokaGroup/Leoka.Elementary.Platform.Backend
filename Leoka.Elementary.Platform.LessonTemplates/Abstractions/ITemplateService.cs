@@ -1,6 +1,4 @@
-﻿using System.Xml.Linq;
-using Leoka.Elementary.Platform.LessonTemplates.Abstractions.Base;
-using Leoka.Elementary.Platform.Models.Template.Output;
+﻿using Leoka.Elementary.Platform.Models.Template.Output;
 
 namespace Leoka.Elementary.Platform.LessonTemplates.Abstractions;
 
@@ -12,16 +10,16 @@ public interface ITemplateService
     /// <summary>
     /// Метод создает экземпляр нужного нам шаблона фабрики.
     /// </summary>
-    /// <param name="templateType">Тип шаблрона, который нужно создать.</param>
+    /// <param name="templateId">Id шаблона, который нужно создать.</param>
     /// <returns>Шаблон урока xml.</returns>
-    Task<TemplateOutput> CreateTemplateAsync(string templateType);
+    Task<TemplateOutput> CreateTemplateAsync(long templateId);
 
     /// <summary>
     /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.
     /// <param name="idItemTemplate">Id предмета, шаблоны которого нужно получить.</param>
     /// </summary>
     /// <returns>Список названий шаблонов</returns>
-    Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(long idItemTemplate);
+    Task<IEnumerable<TemplateOutput>> GetTemplateNamesByTypeAsync(long idItemTemplate);
 
     /// <summary>
     /// Метод получает список шаблонов уроков.

@@ -1,8 +1,6 @@
-﻿using System.Xml.Linq;
-using Leoka.Elementary.Platform.Base;
+﻿using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Core.Filters;
 using Leoka.Elementary.Platform.LessonTemplates.Abstractions;
-using Leoka.Elementary.Platform.LessonTemplates.Abstractions.Base;
 using Leoka.Elementary.Platform.Models.Template.Output;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +23,7 @@ public class TemplateController : BaseController
     /// <summary>
     /// Метод формирует шаблон урока конкретного типа.
     /// </summary>
-    /// <param name="templateType">Тип шаблона.</param>
+    /// <param name="templateId">Id шаблона.</param>
     /// <returns>Шаблон урока xml.</returns>
     [HttpGet]
     [Route("generate")]
@@ -34,9 +32,9 @@ public class TemplateController : BaseController
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<TemplateOutput> CreateTemplateAsync([FromQuery] string templateType)
+    public async Task<TemplateOutput> CreateTemplateAsync([FromQuery] long templateId)
     {
-        var result = await _templateService.CreateTemplateAsync(templateType);
+        var result = await _templateService.CreateTemplateAsync(templateId);
 
         return result;
     }
@@ -53,7 +51,7 @@ public class TemplateController : BaseController
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<IEnumerable<string>> GetTemplateNamesByTypeAsync([FromQuery] long idItemTemplate)
+    public async Task<IEnumerable<TemplateOutput>> GetTemplateNamesByTypeAsync([FromQuery] long idItemTemplate)
     {
         var result = await _templateService.GetTemplateNamesByTypeAsync(idItemTemplate);
 

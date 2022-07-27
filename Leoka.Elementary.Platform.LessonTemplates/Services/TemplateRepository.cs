@@ -20,15 +20,21 @@ public sealed class TemplateRepository : ITemplateRepository
     /// <summary>
     /// Метод получает расположение шаблона по его типу.
     /// </summary>
-    /// <param name="templateType">Тип шаблона.</param>
+    /// <param name="templateId">Id шаблона.</param>
     /// <returns>Расположение шаблона.</returns>
-    public async Task<string> GetTemplatePatternNamespaceAsync(string templateType)
+    public async Task<TemplateOutput> GetTemplatePatternNamespaceAsync(long templateId)
     {
         try
         {
             var result = await _dbContext.LessonTemplates
-                .Where(t => t.TemplateType.Equals(templateType))
-                .Select(t => t.PatternNamespace)
+                .Where(t => t.TemplateId == templateId)
+                .Select(t => new TemplateOutput
+                {
+                    PatternNamespace = t.PatternNamespace,
+                    TemplateId = t.TemplateId,
+                    TemplateName = t.TemplateName,
+                    TemplateType = t.TemplateType
+                })
                 .FirstOrDefaultAsync();
 
             return result;
@@ -47,13 +53,17 @@ public sealed class TemplateRepository : ITemplateRepository
     /// <param name="idItemTemplate">Id предмета, шаблоны которого нужно получить.</param>
     /// </summary>
     /// <returns>Список названий шаблонов</returns>
-    public async Task<IEnumerable<string>> GetTemplateNamesByTypeAsync(long idItemTemplate)
+    public async Task<IEnumerable<TemplateOutput>> GetTemplateNamesByTypeAsync(long idItemTemplate)
     {
         try
         {
             var result = await _dbContext.LessonTemplates
                 .Where(t => t.TemplateItemId == idItemTemplate)
-                .Select(t => t.TemplateType)
+                .Select(t => new TemplateOutput
+                {
+                    TemplateName = t.TemplateName,
+                    TemplateId = t.TemplateId
+                })
                 .ToListAsync();
 
             return result;

@@ -36,6 +36,11 @@ public partial class LessonTemplateConfiguration : IEntityTypeConfiguration<Less
             .HasColumnType("varchar(300)")
             .IsRequired();
         
+        entity.Property(e => e.TemplateName)
+            .HasColumnName("TemplateName")
+            .HasColumnType("varchar(150)")
+            .IsRequired();
+        
         entity.HasIndex(u => u.TemplateId)
             .HasDatabaseName("PK_TemplateId")
             .IsUnique();

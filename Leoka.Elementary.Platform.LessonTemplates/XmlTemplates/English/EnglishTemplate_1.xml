@@ -2,12 +2,20 @@
 <?xml-stylesheet type="text/css" href="control.css"?>
 <EnglishTemplate_1 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <TemplateId>
+        <text>Тема урока</text>
+        
+        <br/>
+        
         <input Value=""/>
     </TemplateId>
 
     <br/>
 
     <LessonTheme xsi:nil="true">
+        <text>Постановка цели и задач урока</text>
+        
+        <br/>
+        
         <input Value=""/>
     </LessonTheme>
 

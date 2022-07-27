@@ -29,4 +29,9 @@ public class LessonTemplateEntity
     /// Тип шаблона.
     /// </summary>
     public string TemplateType { get; set; }
+
+    /// <summary>
+    /// Название шаблона.
+    /// </summary>
+    public string TemplateName { get; set; }
 }
