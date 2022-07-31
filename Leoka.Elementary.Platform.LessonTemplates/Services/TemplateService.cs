@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using Leoka.Elementary.Platform.LessonTemplates.Abstractions;
+﻿using Leoka.Elementary.Platform.LessonTemplates.Abstractions;
 using Leoka.Elementary.Platform.LessonTemplates.Exceptions;
 using Leoka.Elementary.Platform.Models.Template.Output;
 
@@ -22,7 +21,7 @@ public sealed class TemplateService: ITemplateService
     /// </summary>
     /// <param name="templateId">Тип шаблрона, который нужно создать.</param>
     /// <returns>Шаблон урока xml.</returns>
-    public async Task<TemplateOutput> CreateTemplateAsync(long templateId)
+    public async Task<string> CreateTemplateAsync(long templateId)
     {
         try
         {
@@ -33,14 +32,18 @@ public sealed class TemplateService: ITemplateService
             }
         
             // Получаем нахождение шаблона.
-            var result = await _templateRepository.GetTemplatePatternNamespaceAsync(templateId);
+            var templateNamespace = await _templateRepository.GetTemplatePatternNamespaceAsync(templateId);
 
-            var path = Directory.GetCurrentDirectory()
+            var basePath = Directory.GetCurrentDirectory()
                 .Remove(Directory.GetCurrentDirectory()
                 .LastIndexOf(@"\", StringComparison.InvariantCulture));
-            var fullPath = path + result.PatternNamespace + result.TemplateType + ".xml";
-            var xml = XElement.Load(fullPath);
-            result.Template = xml.ToString();
+            
+            // Получаем полный путь к файлу шаблона.
+            var path = basePath + templateNamespace.PatternNamespace + templateNamespace.TemplateType + ".json";
+            
+            // Читаем файл конфига шаблона.
+            using var sr = new StreamReader(path);
+            var result = await sr.ReadToEndAsync();
 
             return result;
         }

@@ -32,7 +32,7 @@ public class TemplateController : BaseController
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<TemplateOutput> CreateTemplateAsync([FromQuery] long templateId)
+    public async Task<string> CreateTemplateAsync([FromQuery] long templateId)
     {
         var result = await _templateService.CreateTemplateAsync(templateId);
 

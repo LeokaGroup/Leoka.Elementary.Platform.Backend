@@ -12,7 +12,7 @@ public interface ITemplateService
     /// </summary>
     /// <param name="templateId">Id шаблона, который нужно создать.</param>
     /// <returns>Шаблон урока xml.</returns>
-    Task<TemplateOutput> CreateTemplateAsync(long templateId);
+    Task<string> CreateTemplateAsync(long templateId);
 
     /// <summary>
     /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.

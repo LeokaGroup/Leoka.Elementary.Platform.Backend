@@ -1,0 +1,29 @@
+﻿[
+  {
+    "Label": "Тема урока",
+    "Value": "",
+    "FieldName": "LessonTheme",
+    "FieldType": "input"
+  },
+  {
+    "Label": "Постановка цели и задач урока",
+    "Value": "",
+    "FieldName": "SettingLesson",
+    "FieldType": "textarea",
+    "Cols": "10"
+  },
+  {
+    "Label": "Домашнее задание",
+    "Value": "",
+    "FieldName": "Homework",
+    "FieldType": "textarea",
+    "Cols": "10"
+  },
+  {
+    "Label": "Обратная связь",
+    "Value": "",
+    "FieldName": "Feedback",
+    "FieldType": "textarea",
+    "Cols": "10"
+  }
+]
