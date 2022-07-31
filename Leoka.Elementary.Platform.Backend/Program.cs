@@ -87,5 +87,4 @@ app.UseCors("ApiCorsPolicy");
 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Leoka.Elementary.Platform"));
-
-await app.RunAsync();
+app.Run();

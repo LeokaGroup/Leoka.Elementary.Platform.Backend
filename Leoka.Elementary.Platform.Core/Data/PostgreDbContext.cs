@@ -3,6 +3,7 @@ using Leoka.Elementary.Platform.Models.Entities.Common;
 using Leoka.Elementary.Platform.Models.Entities.MainPage;
 using Leoka.Elementary.Platform.Models.Entities.Profile;
 using Leoka.Elementary.Platform.Models.Entities.Request;
+using Leoka.Elementary.Platform.Models.Entities.Template;
 using Leoka.Elementary.Platform.Models.Entities.User;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,7 +20,7 @@ public class PostgreDbContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // base.OnModelCreating(modelBuilder);
+        // Настраиваем все маппинги приложения.
         MappingsExtensions.Configure(modelBuilder);
     }
     
@@ -237,4 +238,14 @@ public class PostgreDbContext : DbContext
     /// Таблица Profile.StudentProfileItems.
     /// </summary>
     public DbSet<StudentProfileItemEntity> StudentProfileItems { get; set; }
+
+    /// <summary>
+    /// Таблица LessonTemplates.LessonTemplates.
+    /// </summary>
+    public DbSet<LessonTemplateEntity> LessonTemplates { get; set; }
+    
+    /// <summary>
+    /// Таблица LessonTemplates.LessonUserTemplates.
+    /// </summary>
+    public DbSet<LessonUserTemplateEntity> LessonUserTemplates { get; set; }
 }

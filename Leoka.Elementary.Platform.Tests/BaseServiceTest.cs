@@ -3,6 +3,7 @@ using Leoka.Elementary.Platform.Access.Service;
 using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.Core.Utils;
 using Leoka.Elementary.Platform.FTP.Services;
+using Leoka.Elementary.Platform.LessonTemplates.Services;
 using Leoka.Elementary.Platform.Mailings.Services;
 using Leoka.Elementary.Platform.Services.MainPage;
 using Leoka.Elementary.Platform.Services.Profile;
@@ -30,6 +31,8 @@ public class BaseServiceTest
     protected ProfileRepository ProfileRepository;
     protected ProfileService ProfileService;
     protected FtpService FtpService;
+    protected TemplateService TemplateService;
+    protected TemplateRepository TemplateRepository;
     
     public BaseServiceTest()
     {
@@ -54,5 +57,7 @@ public class BaseServiceTest
         ProfileRepository = new ProfileRepository(PostgreDbContext);
         FtpService = new FtpService(AppConfiguration);
         ProfileService = new ProfileService(ProfileRepository, RoleRepository, UserRepository, FtpService, null);
+        TemplateRepository = new TemplateRepository(PostgreDbContext);
+        TemplateService = new TemplateService(TemplateRepository);
     }
 }

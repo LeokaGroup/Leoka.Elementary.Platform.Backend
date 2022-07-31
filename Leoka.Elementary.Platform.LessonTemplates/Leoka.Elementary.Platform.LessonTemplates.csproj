@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Models\Input\English" />
+      <Folder Include="Models\Output\English" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Leoka.Elementary.Platform.Abstractions\Leoka.Elementary.Platform.Abstractions.csproj" />
+      <ProjectReference Include="..\Leoka.Elementary.Platform.Core\Leoka.Elementary.Platform.Core.csproj" />
+      <ProjectReference Include="..\Leoka.Elementary.Platform.Models\Leoka.Elementary.Platform.Models.csproj" />
+    </ItemGroup>
+
+</Project>
