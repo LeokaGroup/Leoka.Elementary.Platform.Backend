@@ -21,20 +21,20 @@ public class TemplateController : BaseController
     }
 
     /// <summary>
-    /// Метод формирует шаблон урока конкретного типа.
+    /// Метод получает шаблон урока.
     /// </summary>
     /// <param name="templateId">Id шаблона.</param>
-    /// <returns>Шаблон урока xml.</returns>
+    /// <returns>Шаблон урока.</returns>
     [HttpGet]
-    [Route("generate")]
+    [Route("template")]
     [ProducesResponseType(200, Type = typeof(string))]
     [ProducesResponseType(400)]
     [ProducesResponseType(403)]
     [ProducesResponseType(500)]
     [ProducesResponseType(404)]
-    public async Task<string> CreateTemplateAsync([FromQuery] long templateId)
+    public async Task<TemplateOutput> GetTemplateAsync([FromQuery] long templateId)
     {
-        var result = await _templateService.CreateTemplateAsync(templateId);
+        var result = await _templateService.GetTemplateAsync(templateId);
 
         return result;
     }

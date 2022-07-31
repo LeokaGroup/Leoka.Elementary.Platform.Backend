@@ -8,11 +8,11 @@ namespace Leoka.Elementary.Platform.LessonTemplates.Abstractions;
 public interface ITemplateRepository
 {
     /// <summary>
-    /// Метод получает расположение шаблона по его типу.
+    /// Метод получает шаблон по его Id.
     /// </summary>
     /// <param name="templateId">Id шаблона.</param>
-    /// <returns>Расположение шаблона.</returns>
-    Task<TemplateOutput> GetTemplatePatternNamespaceAsync(long templateId);
+    /// <returns>Шаблон урока.</returns>
+    Task<TemplateOutput> GetTemplateAsync(long templateId);
     
     /// <summary>
     /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.

@@ -17,11 +17,11 @@ public sealed class TemplateService: ITemplateService
     }
 
     /// <summary>
-    /// Метод создает экземпляр нужного нам шаблона фабрики.
+    /// Метод получает шаблон урока.
     /// </summary>
-    /// <param name="templateId">Тип шаблрона, который нужно создать.</param>
-    /// <returns>Шаблон урока xml.</returns>
-    public async Task<string> CreateTemplateAsync(long templateId)
+    /// <param name="templateId">Id шаблона, который нужно создать.</param>
+    /// <returns>Шаблон урока.</returns>
+    public async Task<TemplateOutput> GetTemplateAsync(long templateId)
     {
         try
         {
@@ -30,20 +30,8 @@ public sealed class TemplateService: ITemplateService
             {
                 throw new EmptyTemplateTypeException(templateId);
             }
-        
-            // Получаем нахождение шаблона.
-            var templateNamespace = await _templateRepository.GetTemplatePatternNamespaceAsync(templateId);
-
-            var basePath = Directory.GetCurrentDirectory()
-                .Remove(Directory.GetCurrentDirectory()
-                .LastIndexOf(@"\", StringComparison.InvariantCulture));
             
-            // Получаем полный путь к файлу шаблона.
-            var path = basePath + templateNamespace.PatternNamespace + templateNamespace.TemplateType + ".json";
-            
-            // Читаем файл конфига шаблона.
-            using var sr = new StreamReader(path);
-            var result = await sr.ReadToEndAsync();
+            var result = await _templateRepository.GetTemplateAsync(templateId);
 
             return result;
         }

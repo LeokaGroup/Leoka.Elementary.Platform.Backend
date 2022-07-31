@@ -8,11 +8,11 @@ namespace Leoka.Elementary.Platform.LessonTemplates.Abstractions;
 public interface ITemplateService
 {
     /// <summary>
-    /// Метод создает экземпляр нужного нам шаблона фабрики.
+    /// Метод получает шаблон урока.
     /// </summary>
     /// <param name="templateId">Id шаблона, который нужно создать.</param>
-    /// <returns>Шаблон урока xml.</returns>
-    Task<string> CreateTemplateAsync(long templateId);
+    /// <returns>Шаблон урока.</returns>
+    Task<TemplateOutput> GetTemplateAsync(long templateId);
 
     /// <summary>
     /// Метод получает список названий шаблонов в зависимости от переданного типа шаблона.

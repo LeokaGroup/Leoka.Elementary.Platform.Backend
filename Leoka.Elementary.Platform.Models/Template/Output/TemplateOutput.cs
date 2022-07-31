@@ -31,11 +31,6 @@ public class TemplateOutput
     public long TemplateId { get; set; }
 
     /// <summary>
-    /// Местоположение шаблона.
-    /// </summary>
-    public string PatternNamespace { get; set; }
-
-    /// <summary>
     /// Тип шаблона.
     /// </summary>
     public string TemplateType { get; set; }

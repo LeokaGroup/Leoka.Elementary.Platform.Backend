@@ -18,11 +18,11 @@ public sealed class TemplateRepository : ITemplateRepository
     }
 
     /// <summary>
-    /// Метод получает расположение шаблона по его типу.
+    /// Метод получает шаблон по его Id.
     /// </summary>
     /// <param name="templateId">Id шаблона.</param>
-    /// <returns>Расположение шаблона.</returns>
-    public async Task<TemplateOutput> GetTemplatePatternNamespaceAsync(long templateId)
+    /// <returns>Шаблон урока.</returns>
+    public async Task<TemplateOutput> GetTemplateAsync(long templateId)
     {
         try
         {
@@ -30,10 +30,10 @@ public sealed class TemplateRepository : ITemplateRepository
                 .Where(t => t.TemplateId == templateId)
                 .Select(t => new TemplateOutput
                 {
-                    PatternNamespace = t.PatternNamespace,
                     TemplateId = t.TemplateId,
                     TemplateName = t.TemplateName,
-                    TemplateType = t.TemplateType
+                    TemplateType = t.TemplateType,
+                    Template = t.Template
                 })
                 .FirstOrDefaultAsync();
 

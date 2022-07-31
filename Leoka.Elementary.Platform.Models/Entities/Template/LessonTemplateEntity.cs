@@ -21,11 +21,6 @@ public class LessonTemplateEntity
     public string Template { get; set; }
 
     /// <summary>
-    /// Пространство имен паттерна.
-    /// </summary>
-    public string PatternNamespace { get; set; }
-
-    /// <summary>
     /// Тип шаблона.
     /// </summary>
     public string TemplateType { get; set; }

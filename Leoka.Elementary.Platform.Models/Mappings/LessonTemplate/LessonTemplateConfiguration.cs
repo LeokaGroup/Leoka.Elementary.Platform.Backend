@@ -25,12 +25,7 @@ public partial class LessonTemplateConfiguration : IEntityTypeConfiguration<Less
             .HasColumnName("Template")
             .HasColumnType("xml")
             .IsRequired();
-        
-        entity.Property(e => e.PatternNamespace)
-            .HasColumnName("PatternNamespace")
-            .HasColumnType("varchar(300)")
-            .IsRequired();
-        
+
         entity.Property(e => e.TemplateType)
             .HasColumnName("TemplateType")
             .HasColumnType("varchar(300)")
