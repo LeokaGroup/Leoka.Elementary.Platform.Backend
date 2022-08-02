@@ -1,6 +1,7 @@
 ﻿using Leoka.Elementary.Platform.Base;
 using Leoka.Elementary.Platform.Core.Filters;
 using Leoka.Elementary.Platform.LessonTemplates.Abstractions;
+using Leoka.Elementary.Platform.Models.Template.Input;
 using Leoka.Elementary.Platform.Models.Template.Output;
 using Microsoft.AspNetCore.Mvc;
 
@@ -74,5 +75,21 @@ public class TemplateController : BaseController
         var result = await _templateService.GetItemTemplatesAsync();
 
         return result;
+    }
+
+    /// <summary>
+    /// Метод сохраняет шаблон урока.
+    /// </summary>
+    /// <param name="templateInput">Входная модель.</param>
+    [HttpPatch]
+    [Route("template")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(403)]
+    [ProducesResponseType(500)]
+    [ProducesResponseType(404)]
+    public async Task SaveTemplateAsync([FromBody] TemplateInput templateInput)
+    {
+        await _templateService.SaveTemplateAsync(templateInput.TemplateId, templateInput.Template, GetUserName());
     }
 }

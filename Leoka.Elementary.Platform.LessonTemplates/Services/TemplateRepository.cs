@@ -1,5 +1,6 @@
 ﻿using Leoka.Elementary.Platform.Core.Data;
 using Leoka.Elementary.Platform.LessonTemplates.Abstractions;
+using Leoka.Elementary.Platform.Models.Entities.Template;
 using Leoka.Elementary.Platform.Models.Template.Output;
 using Microsoft.EntityFrameworkCore;
 
@@ -97,6 +98,80 @@ public sealed class TemplateRepository : ITemplateRepository
                 .ToListAsync();
 
             return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод получает шаблон урока, если он был добавлен ранее преподавателем.
+    /// </summary>
+    /// <param name="templateId">Id шаблона.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <returns>Данные шаблона.</returns>
+    public async Task<LessonUserTemplateEntity> GetUserTemplateByTemplateIdAsync(long templateId, long userId)
+    {
+        try
+        {
+            var result = await _dbContext.LessonUserTemplates
+                .FirstOrDefaultAsync(t => t.TemplateId == templateId
+                                          && t.UserId == userId);
+
+            return result;
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод добавляет шаблон урока преподавателя.
+    /// </summary>
+    /// <param name="templateId">Id шаблона.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="template">Шаблон (json).</param>
+    public async Task AddTemplateAsync(long templateId, long userId, string template)
+    {
+        try
+        {
+            await _dbContext.LessonUserTemplates.AddAsync(new LessonUserTemplateEntity
+            {
+                TemplateId = templateId,
+                UserId = userId,
+                Template = template
+            });
+            await _dbContext.SaveChangesAsync();
+        }
+        
+        // TODO: добавить логирование ошибок.
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    /// <summary>
+    /// Метод изменяет шаблон урока преподавателя.
+    /// </summary>
+    /// <param name="templateId">Id шаблона.</param>
+    /// <param name="userId">Id пользователя.</param>
+    /// <param name="template">Шаблон (json).</param>
+    public async Task ChangeTemplateAsync(LessonUserTemplateEntity template)
+    {
+        try
+        {
+            _dbContext.LessonUserTemplates.Update(template);
+            await _dbContext.SaveChangesAsync();
         }
         
         // TODO: добавить логирование ошибок.
