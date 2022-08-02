@@ -26,4 +26,11 @@ public interface ITemplateService
     /// </summary>
     /// <returns>Список шаблонов уроков.</returns>
     Task<IEnumerable<TemplateOutput>> GetItemTemplatesAsync();
+
+    /// <summary>
+    /// Метод сохраняет шаблон урока.
+    /// </summary>
+    /// <param name="templateId">Id шаблона.</param>
+    /// /// <param name="template">Шаблон (json).</param>
+    Task SaveTemplateAsync(long templateId, string template, string account);
 }

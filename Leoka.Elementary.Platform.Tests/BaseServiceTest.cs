@@ -58,6 +58,6 @@ public class BaseServiceTest
         FtpService = new FtpService(AppConfiguration);
         ProfileService = new ProfileService(ProfileRepository, RoleRepository, UserRepository, FtpService, null);
         TemplateRepository = new TemplateRepository(PostgreDbContext);
-        TemplateService = new TemplateService(TemplateRepository);
+        TemplateService = new TemplateService(TemplateRepository, UserRepository);
     }
 }
