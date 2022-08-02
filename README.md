@@ -8,5 +8,6 @@
 <strong>NoSQL:</strong> Redis.<br/>
 <strong>DI:</strong> Autofac.<br/>
 <strong>CI/CD:</strong> Github, TeamCity.<br/>
-<strong>Работа с очередями сообщений:</strong> RabbitMQ + SignalR.<br/>
+<strong>Работа с очередями сообщений:</strong> RabbitMQ.<br/>
+<strong>Real-time:</strong> SignalR.<br/>
 <strong>OC:</strong> Linux (CentOS 7).<br/>
