@@ -9,6 +9,6 @@ public class CreateTemplateTest : BaseServiceTest
     [Test]
     public async Task CreateTemplateAsyncTest()
     {
-        var result = await TemplateService.SaveTemplateAsync(4, );
+        // var result = await TemplateService.SaveTemplateAsync(4, );
     }
 }
